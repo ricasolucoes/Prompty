@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-05-07T12:07:55.725Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-05-07T12:34:23.005Z"
 progress:
   total_phases: 3
   completed_phases: 0
@@ -49,6 +49,7 @@ Plan: 1 of 9
 | Phase 01 P04 | 5 | 3 tasks | 10 files |
 | Phase 01 P01 | 5 | 3 tasks | 13 files |
 | Phase 01-foundation P03 | 7min | 2 tasks | 5 files |
+| Phase 01-foundation P02 | 20min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,7 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: profiles INSERT added explicitly to seed (not relying on trigger) — trigger only fires on INSERT not when auth.users row pre-exists via ON CONFLICT DO NOTHING
 - [Phase 01-foundation]: Seed applied via psql + DATABASE_URL (not supabase db execute) — CLI access token unavailable; psql is more reliable for CI scenarios
 - [Phase 01-foundation]: verify-seed.ts kept permanently as reusable smoke check, not deleted after first run
+- [Phase 01-foundation]: Migration repair used (supabase migration repair --status applied) to reconcile CLI history when psql-applied migrations bypass CLI tracking
 
 ### Pending Todos
 
@@ -80,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T12:07:55.723Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-05-07T12:34:22.994Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None

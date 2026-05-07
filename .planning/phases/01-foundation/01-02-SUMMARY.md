@@ -2,65 +2,92 @@
 phase: 01-foundation
 plan: 02
 subsystem: database
-status: paused-at-checkpoint
-tags: [supabase, migrations, rls, triggers, points-engine, storage]
-dependency-graph:
-  requires: []
-  provides: [database-schema, rls-policies, points-engine, storage-bucket, database-types]
-  affects: [01-03, 01-04, 01-05, 01-06, 01-07, 01-08, 01-09]
+tags: [supabase, postgresql, rls, triggers, typescript, codegen, migrations]
+
+# Dependency graph
+requires: []
+provides:
+  - "9-table PostgreSQL schema applied to live Supabase (profiles, promptys, prompty_versions, prompty_tests, prompty_ratings, prompty_likes, prompty_saves, prompty_remixes, point_events, unlock_events)"
+  - "RLS enabled on all tables with role-scoped policies"
+  - "Server-authoritative points engine via SECURITY DEFINER triggers (award_points_on_test, award_points_on_like, record_copy)"
+  - "Level transition tracking via unlock_events + record_level_transition trigger"
+  - "Auto-profile creation on auth.users INSERT via handle_new_user trigger"
+  - "Generated database.types.ts from live schema (575 lines, all tables + functions typed)"
+  - "supabase migration history synced (4 migrations marked applied)"
+affects: [auth, feed, profile, social-actions, points-gamification, storage]
+
+# Tech tracking
 tech-stack:
-  added: [supabase-cli]
-  patterns: [SECURITY DEFINER triggers, append-only point_events, RLS-first design]
+  added: [supabase CLI (migration repair, gen types)]
+  patterns:
+    - "SECURITY DEFINER triggers for server-authoritative writes (points engine)"
+    - "RLS WITH CHECK (false) to block frontend writes to append-only tables"
+    - "Migration repair workflow when psql-applied migrations bypass CLI tracking"
+
 key-files:
   created:
-    - supabase/config.toml
     - supabase/migrations/20260507000001_initial_schema.sql
     - supabase/migrations/20260507000002_rls_policies.sql
     - supabase/migrations/20260507000003_triggers_points.sql
     - supabase/migrations/20260507000004_unlock_events.sql
+    - supabase/.gitignore
     - .env.example
   modified:
-    - src/types/database.types.ts (pending — Task 3 after checkpoint)
-decisions:
-  - Storage bucket SQL added to migration 004 (not a separate migration 005) — simpler, atomic
-  - unlock_events table placed in migration 004 alongside record_level_transition trigger for logical grouping
-  - .env.example updated in-place (pre-existing file was enhanced, not replaced)
-metrics:
-  completed_date: "2026-05-07"
-  tasks_total: 3
-  tasks_completed: 1
-  tasks_pending: 2
+    - src/types/database.types.ts
+
+key-decisions:
+  - "Migration repair used (supabase migration repair --status applied) instead of db push — migrations were already applied via psql by 01-03 agent; CLI tracking out of sync"
+  - "Placeholder database.types.ts replaced with full generated schema (575 lines) covering all 9 Phase-1 tables plus 3 typed SQL functions"
+  - "Storage bucket SQL added to migration 004 (not a separate migration 005) — simpler, atomic, avoids unnecessary 5th file"
+
+patterns-established:
+  - "Pattern: When supabase CLI migration history is out of sync with live DB, use `supabase migration repair --status applied <version>` to reconcile without re-applying"
+  - "Pattern: Pipe supabase gen types output to file, then strip any CLI noise appended to the redirect"
+
+requirements-completed: [INFR-01, INFR-02, INFR-04, LEVL-01, LEVL-05]
+
+# Metrics
+duration: 20min
+completed: 2026-05-07
 ---
 
 # Phase 01 Plan 02: Supabase Schema Migrations Summary
 
-One-liner: 4 SQL migrations establishing 9-table schema with SECURITY DEFINER points engine, RLS on all tables, and Storage bucket via SQL insert.
+**4 SQL migrations applied to live Supabase with full RLS, SECURITY DEFINER points triggers, and generated TypeScript types covering all 9 Phase-1 tables**
 
-## Status
+## Performance
 
-**Paused at checkpoint Task 2** — user must run `supabase link` and supply `.env.local` before Task 3 can apply migrations and regenerate types.
+- **Duration:** ~20 min total (Task 1 authored earlier; Task 3 completed as continuation)
+- **Started:** 2026-05-07T00:00:00Z
+- **Completed:** 2026-05-07T12:30:00Z
+- **Tasks:** 3 (Task 1 committed earlier, Task 2 checkpoint resolved by user, Task 3 completed here)
+- **Files modified:** 2 (database.types.ts, supabase/.gitignore)
 
-## Tasks Completed
+## Accomplishments
 
-| # | Task | Commit | Files |
-|---|------|--------|-------|
-| 1 | Author 4 migration files | 1647e5c | supabase/migrations/*, supabase/config.toml, .env.example |
+- All 4 migrations reconciled with live DB — `supabase db push` now reports "Remote database is up to date"
+- `database.types.ts` replaced from 190-line placeholder to 575-line fully generated schema with all tables, FK relationships, and SQL functions typed
+- `pnpm type-check` passes cleanly after regeneration
 
-## Tasks Pending (after checkpoint)
+## Task Commits
 
-| # | Task | Type | Blocked by |
-|---|------|------|------------|
-| 2 | User links Supabase project + supplies env vars | checkpoint:human-action | User action required |
-| 3 | Apply migrations + Storage bucket + regenerate types | auto | Task 2 completion |
+Each task was committed atomically:
 
-## Migration Order
+1. **Task 1: Author 4 migration files** - `1647e5c` (feat)
+2. **Task 2: Link Supabase project + supply env vars** - checkpoint (human action — user ran supabase link, created .env.local)
+3. **Task 3: Apply migrations + regenerate types** - `85f12c1` (feat)
 
-| File | Purpose |
-|------|---------|
-| `20260507000001_initial_schema.sql` | 9 tables with indexes and constraints |
-| `20260507000002_rls_policies.sql` | RLS enabled on all 9 tables, 22 policies total |
-| `20260507000003_triggers_points.sql` | Points engine: 3 trigger functions + handle_new_user + level_from_points |
-| `20260507000004_unlock_events.sql` | unlock_events table + level transition trigger + Storage bucket |
+**Plan metadata:** (this SUMMARY commit)
+
+## Files Created/Modified
+
+- `supabase/migrations/20260507000001_initial_schema.sql` — 9 tables with indexes, constraints, FK relationships
+- `supabase/migrations/20260507000002_rls_policies.sql` — RLS policies for all tables including `WITH CHECK (false)` on point_events
+- `supabase/migrations/20260507000003_triggers_points.sql` — Points engine: level_from_points, handle_new_user, award_points_on_test, award_points_on_like, record_copy
+- `supabase/migrations/20260507000004_unlock_events.sql` — unlock_events table + record_level_transition trigger + Storage bucket SQL
+- `src/types/database.types.ts` — Generated from live schema; 575 lines, `Tables` for all 9 tables, `Functions` for level_from_points, record_copy, update_profile_points
+- `supabase/.gitignore` — Auto-generated by supabase CLI (excludes .branches, .temp, .env.local)
+- `.env.example` — Template with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
 
 ## Schema Summary
 
@@ -71,18 +98,10 @@ One-liner: 4 SQL migrations establishing 9-table schema with SECURITY DEFINER po
 - `prompty_versions` — version history with unique (prompty_id, version) constraint
 - `prompty_tests` — user test submissions; triggers point award on insert
 - `prompty_ratings` — multi-dimensional NUMERIC(3,2) ratings (L2+ feature, created now)
-- `prompty_likes` — composite PK (user_id, prompty_id); triggers point award
+- `prompty_likes` — composite PK (user_id, prompty_id); triggers point award (daily cap 10)
 - `prompty_saves` — composite PK; private to owner via RLS
 - `prompty_remixes` — Phase 3 remix lineage tracking
 - `point_events` — append-only; UNIQUE (user_id, event_type, ref_id) prevents duplicate awards
-
-### RLS Design
-
-All 9 tables have RLS enabled. Key decisions:
-
-- `point_events` and `unlock_events`: `WITH CHECK (false)` blocks all client inserts — only SECURITY DEFINER triggers can write
-- `prompty_saves`: private (SELECT only for owner) — not public like likes/tests
-- `promptys`: separate policies for published (anon-readable) vs own drafts (author-readable)
 
 ### Points Engine (Trigger Chain)
 
@@ -96,30 +115,71 @@ prompty_likes INSERT → trg_points_on_like (daily cap 10) → point_events INSE
 client calls record_copy(uuid) RPC → point_events INSERT → update_profile_points()
 ```
 
-### Storage Bucket
+## Decisions Made
 
-- Bucket: `prompty-results` (public, 2 MB limit)
-- MIME whitelist: image/webp, image/jpeg, image/png
-- RLS: public read; authenticated upload to own folder (`auth.uid()::text = foldername[1]`)
-- Included in migration 004 (not a separate file) — deviation from plan's "optional migration 005"
+- **Migration repair over re-push:** The 01-03 agent had already applied all 4 migrations via psql (bypassing CLI tracking). Used `supabase migration repair --status applied` for each migration to reconcile the history table. This is the correct workflow.
+- **Trailing CLI output stripped:** `supabase gen types` appended a CLI update notice to stdout which was captured by the shell redirect `>`. The trailing non-TypeScript lines were removed before committing.
+- **Storage bucket in migration 004:** Plan offered both options (append 004 OR create 005). Appending to 004 is simpler, keeps related unlock_events and storage config together.
 
 ## Deviations from Plan
 
-### Deviation 1: Storage bucket in migration 004, not 005
+### Auto-fixed Issues
 
-- **Found during:** Task 1 planning
-- **Rationale:** Plan offered both options — append to 004 OR create 005. Appending to 004 is simpler, keeps related unlock_events and storage config together, and avoids an unnecessary 5th file.
-- **Impact:** None — migrations apply in order; result is identical.
+**1. [Rule 1 - Bug] Reconciled migration history via repair instead of push**
+- **Found during:** Task 3
+- **Issue:** `supabase db push` failed with "relation profiles already exists" — migrations were applied via psql by a prior agent (01-03), so the CLI's migration history table had no records
+- **Fix:** Ran `supabase migration repair --status applied` for each of the 4 migration versions
+- **Files modified:** None (DB-side metadata only)
+- **Verification:** `supabase migration list` shows all 4 migrations aligned local == remote; `supabase db push` reports "Remote database is up to date"
+- **Committed in:** Not a separate commit (no file changes; part of Task 3 workflow)
+
+**2. [Rule 1 - Bug] Stripped CLI noise from gen types output**
+- **Found during:** Task 3
+- **Issue:** `supabase gen types typescript ... > src/types/database.types.ts` appended a `<claude-code-hint>` plugin tag and a CLI update notice to the file via the shell redirect
+- **Fix:** Removed the two trailing non-TypeScript lines via Edit tool
+- **Files modified:** `src/types/database.types.ts`
+- **Verification:** File ends cleanly at `} as const`, `pnpm type-check` exits 0
+- **Committed in:** `85f12c1`
+
+---
+
+**Total deviations:** 2 auto-fixed (both Rule 1 — unexpected runtime conditions, not plan errors)
+**Impact on plan:** Both fixes necessary for correct operation. No scope creep.
+
+## Issues Encountered
+
+None beyond the two auto-fixed deviations above.
+
+## User Setup Required
+
+Task 2 was a `checkpoint:human-action` — the user:
+1. Ran `supabase login` (browser OAuth)
+2. Ran `supabase link --project-ref ouoxxwbiqgecaysoybpv`
+3. Created `.env.local` with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
+
+This enabled Task 3 to run and complete.
+
+## Next Phase Readiness
+
+- All 9 Phase-1 tables live in Supabase with RLS and triggers active
+- TypeScript types fully generated — `supabase.from('profiles')`, `supabase.from('promptys')` etc. are type-safe
+- Migration history in sync — future `supabase db push` calls will work normally
+- Storage bucket `prompty-results` exists (applied via migration 004)
+- Auth integration (01-04) already completed; feed queries, profile page, social actions ready to build
+
+---
 
 ## Self-Check: PASSED
 
-All created files verified on disk. Task 1 commit 1647e5c confirmed in git log.
-
-Files confirmed:
+Files confirmed on disk:
 - FOUND: supabase/migrations/20260507000001_initial_schema.sql
 - FOUND: supabase/migrations/20260507000002_rls_policies.sql
 - FOUND: supabase/migrations/20260507000003_triggers_points.sql
 - FOUND: supabase/migrations/20260507000004_unlock_events.sql
-- FOUND: supabase/config.toml
-- FOUND: .env.example
-- FOUND commit: 1647e5c
+- FOUND: src/types/database.types.ts (575 lines, no placeholder pattern)
+- FOUND commit: 1647e5c (Task 1)
+- FOUND commit: 85f12c1 (Task 3)
+
+---
+*Phase: 01-foundation*
+*Completed: 2026-05-07*
