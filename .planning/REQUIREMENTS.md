@@ -15,7 +15,7 @@
 
 ### Feed — L1 (Core Experience)
 
-- [ ] **FEED-01**: Any visitor sees a vertical feed of published Promptys with cover image, title, category badge, and a preview of the beginner_prompt
+- [x] **FEED-01**: Any visitor sees a vertical feed of published Promptys with cover image, title, category badge, and a preview of the beginner_prompt
 - [ ] **FEED-02**: Feed shows a "Como funciona" card at the top for new/unauthenticated users ("Promptys são receitas prontas para gerar imagens com IA. Toque em Copiar prompt, cole no Gemini ou outro app, depois volte aqui e conte como ficou.")
 - [ ] **FEED-03**: Any visitor can open a Prompty detail page showing example image, title, beginner_prompt in full, and the "Copiar prompt" button
 - [x] **FEED-04**: User can copy the full beginner_prompt to clipboard with one tap — this is the primary action
@@ -127,7 +127,7 @@
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
 | AUTH-05 | Phase 1 | Pending |
-| FEED-01 | Phase 1 | Pending |
+| FEED-01 | Phase 1 | Complete |
 | FEED-02 | Phase 1 | Pending |
 | FEED-03 | Phase 1 | Pending |
 | FEED-04 | Phase 1 | Complete |
