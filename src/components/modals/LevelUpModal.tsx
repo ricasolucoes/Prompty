@@ -7,8 +7,18 @@ interface Props {
   onDismiss: () => void
 }
 
+// LEVL-03: When user reaches L2 (Curador), the modal lists what's now unlocked.
+// The four bullets mirror the requirement wording: "salvar favoritos, avaliar
+// promptys e enviar imagens geradas" — surfacing both the SOCL-01 save UI (now
+// available via the prompty detail page from Plan 01-10) and the Phase 2
+// curator features (CUR-01 image upload, CUR-02 ratings).
 const UNLOCKS: Partial<Record<Level['id'], string[]>> = {
-  L2: ['Buscar Promptys por estilo', 'Salvar favoritos na sua biblioteca', 'Seguir criadores'],
+  L2: [
+    'Buscar Promptys por estilo',
+    'Salvar favoritos na sua biblioteca',
+    'Avaliar Promptys e enviar imagens geradas',
+    'Seguir criadores',
+  ],
   L3: ['Criar e publicar Promptys', 'Ver estatísticas dos seus Promptys', 'Variações simples'],
 }
 
