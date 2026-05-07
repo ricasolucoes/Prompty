@@ -122,8 +122,8 @@ O banner pós-cópia é calmo e não-intrusivo. Não bloqueia o feed.
 
 - Signup: email + password. **Sem OAuth no MVP**
 - Trigger Supabase cria automaticamente o `profiles` row no signup
-- Middleware Next.js: `updateSession()` em todas as rotas
-- Session: rolling 7 dias via `@supabase/ssr`
+- Sessão gerenciada pelo `@supabase/supabase-js` client-side via Zustand/Context — sem middleware SSR
+- Session: rolling 7 dias via `supabase.auth.onAuthStateChange` listener registrado no app root
 - Onboarding L1 (apenas 1 slide, exibido uma vez):
   > "Promptys são receitas prontas para gerar imagens com IA. Toque numa, copie, cole no Gemini. Pronto."
   > `[Começar]` → feed
@@ -266,9 +266,10 @@ Estes precisam ter `template` preenchido com o texto do prompt original do prot�
 - `docs/screens/navigation.md` — Estrutura de telas por nível, tab bar, onboarding, modais
 
 ### Planning Context
-- `.planning/PROJECT.md` — Visão, princípios, modelo de progressão L1/L2/L3
+- `.planning/PROJECT.md` — Visão, princípios, modelo de progressão L1/L2/L3, stack Tauri + React
 - `.planning/REQUIREMENTS.md` — Requirements IDs: AUTH-01–05, FEED-01–05, SOCL-01–03, PROF-01–03, LEVL-01–07, INFR-01–05
 - `.planning/ROADMAP.md` — Fase 1 goal e success criteria
+- `.planning/phases/01-foundation/01-UI-SPEC.md` — **Design contract aprovado**: tokens CSS, tipografia (4 roles, 2 pesos), espaçamento, copywriting, componentes, interações, animações
 
 </canonical_refs>
 
@@ -276,7 +277,7 @@ Estes precisam ter `template` preenchido com o texto do prompt original do prot�
 ## Existing Code Insights
 
 ### Reusable Assets
-- `docs/planning/prototypes/ui.jsx` — Componentes React completos (Icon, Avatar, Chip, Button, ProgressBar) para portar para Tailwind/shadcn. Usar como spec visual, não copiar código diretamente (são React inline sem TypeScript)
+- `docs/planning/prototypes/ui.jsx` — Componentes React completos (Icon, Avatar, Chip, Button, ProgressBar) para portar para Tailwind v4 + CSS custom properties. Usar como spec visual e lógica de componente; portar para TypeScript + Tailwind
 - `docs/planning/prototypes/components/image-slot.js` — Web component para upload de imagem (drag-drop + tap). Pode ser usado como referência para o componente de upload de resultado
 - CSS animations e tokens já definidos nos HTML protótipos — portar para globals.css e tailwind.config
 
@@ -284,15 +285,19 @@ Estes precisam ter `template` preenchido com o texto do prompt original do prot�
 
 Os padrões abaixo ainda não existem em código — esta fase os estabelece. Fases subsequentes os herdam.
 
-- **Supabase client split:** `src/lib/supabase/server.ts` (createServerClient por request) + `src/lib/supabase/browser.ts` (createBrowserClient singleton). NUNCA usar `@supabase/auth-helpers-nextjs` — está depreciado
+- **Supabase client único:** `src/lib/supabase.ts` — `createClient(url, anonKey)` singleton client-side. Sem split server/browser (Tauri é SPA puro, sem SSR). Usar `@supabase/supabase-js` direto
+- **State management:** Zustand para auth state, user level, feed state
+- **Routing:** React Router v6+ (não Next.js App Router). Protected routes via `<PrivateRoute>` component que verifica Zustand auth store
+- **Build:** Vite + React; Tauri como wrapper nativo para Android/iOS
+- **Variables de ambiente:** `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` (não `NEXT_PUBLIC_*`)
 - **Level resolver:** `src/lib/constants/levels.ts` com array `LEVELS` e função `levelOf(points)`
 - **Prompt resolver:** `src/lib/prompty/template.ts` com `resolveBeginner()` para L1
 - **Image compression:** `src/lib/images/compress.ts` antes de qualquer upload
-- **CSS variables:** definidas em `src/app/globals.css`, aplicadas via classe `dark` no `<html>`
+- **CSS variables:** definidas em `src/index.css` ou `src/globals.css`, aplicadas via classe `theme-dark` / `theme-light` no `<html>` (ver UI-SPEC)
 
 ### Integration Points
 
-- Middleware Next.js → `@supabase/ssr` `updateSession()` em todas as rotas
+- Auth state → `supabase.auth.onAuthStateChange` no app root → Zustand store → React Router protected routes
 - Trigger Supabase → cria `profiles` automaticamente no signup (`auth.users → profiles`)
 - SQL triggers → `prompty_tests` INSERT → `point_events` INSERT → `profiles.points` UPDATE
 - Tab bar → lê `profile.level` do Supabase Auth session para decidir quais abas renderizar

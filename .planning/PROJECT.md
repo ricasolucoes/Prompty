@@ -146,8 +146,9 @@ Objetivo: criar, publicar e melhorar promptys.
 ## Context
 
 - **Origem:** Grupo de compartilhamento de prompts; missão é dar uma casa técnica para esses prompts com experiência progressiva
-- **Stack:** Next.js 15 + Supabase (Auth, Postgres, Storage, Realtime, RLS) + Tailwind CSS 4 + shadcn/ui + Vercel
-- **Mobile-first:** PWA responsivo, navegação inferior (Feed / Perfil), cards grandes
+- **Stack:** Tauri 2.0 + Vite + React + React Router + Zustand + Supabase (Auth, Postgres, Storage, Realtime, RLS) + Tailwind CSS 4 + custom components (sem shadcn)
+- **Deploy:** app nativo via Tauri para Android/iOS/desktop; frontend React compila via Vite
+- **Mobile-first:** app nativo mobile-first, navegação inferior (Feed / Perfil), cards grandes
 - **Visual:** Midnight Ink #090A14, Electric Violet #7C3AED, Prompt Cyan #22D3EE — mas interface L1 é limpa, quase fórum visual
 - **Identidade:** Gratuito, calmo, limpo, confiável — sem anúncios, banners ou elementos agressivos
 - **RLS obrigatório** em todas as tabelas desde o início
@@ -155,7 +156,7 @@ Objetivo: criar, publicar e melhorar promptys.
 
 ## Constraints
 
-- **Tech Stack:** Next.js 15 + Supabase — sem backend próprio no MVP
+- **Tech Stack:** Tauri 2.0 + Vite + React + Supabase — sem backend próprio no MVP; app nativo para Android/iOS
 - **Custo:** Supabase free tier no MVP; monitorar limites
 - **UX L1:** Zero gamificação visível; botão principal = "Copiar prompt"
 - **Progressão:** Desbloqueios aparecem como mensagens discretas, não como jogo competitivo
@@ -169,7 +170,7 @@ Objetivo: criar, publicar e melhorar promptys.
 | Gamificação invisível no L1 | Usuário L1 só quer copiar e colar; exibir pontos/badges cria distração e complexidade desnecessária | — Pending |
 | `beginner_prompt` separado de `advanced_template` | Permite exibir prompt simples para L1 sem expor a sintaxe `{{variável}}` | — Pending |
 | Ranking apenas em área separada para L3 | Home inicial nunca mostra ranking; experiência L1 não é competitiva | — Pending |
-| Next.js como frontend (não Flutter/Rust no MVP) | Rust/Flutter para processamento futuro; Next.js melhor para MVP web social com SEO | — Pending |
+| Tauri 2.0 + React como frontend (não Next.js/Flutter) | App nativo mobile com React; Supabase direto do cliente; Rust (Tauri core) disponível para features nativas futuras | ✓ Confirmado |
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | — Pending |
 
 ---
