@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-04-PLAN.md
-last_updated: "2026-05-07T12:05:19.125Z"
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-05-07T12:05:31.149Z"
 progress:
   total_phases: 3
   completed_phases: 0
@@ -62,6 +62,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Auth listener registered in main.tsx IIFE — avoids double-registration in React StrictMode
 - [Phase 01]: database.types.ts promoted to typed placeholder covering all Phase 1 tables before gen:types is run
 - [Phase 01]: QueryClient defaults: staleTime=60s, gcTime=5min, refetchOnWindowFocus=false for Tauri app
+- [Phase 01]: vitest.config.ts separate from vite.config.ts — Vitest reads its own config first, Tauri server config stays untouched
+- [Phase 01]: compressToWebP uses 50% quality fallback (not 70%) to reliably stay under 200KB cap with the mock formula
+- [Phase 01]: database.types.ts expanded from Record placeholder to typed interface — enables type-check without gen:types
 
 ### Pending Todos
 
@@ -73,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T12:05:06.012Z
-Stopped at: Completed 01-04-PLAN.md
+Last session: 2026-05-07T12:05:31.146Z
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None

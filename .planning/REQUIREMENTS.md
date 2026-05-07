@@ -7,10 +7,10 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can create account with email and password
-- [ ] **AUTH-02**: User can log in and stay logged in across browser sessions
-- [ ] **AUTH-03**: User can log out from any page
-- [ ] **AUTH-04**: User can reset password via email link
+- [x] **AUTH-01**: User can create account with email and password
+- [x] **AUTH-02**: User can log in and stay logged in across browser sessions
+- [x] **AUTH-03**: User can log out from any page
+- [x] **AUTH-04**: User can reset password via email link
 - [ ] **AUTH-05**: Unauthenticated users can browse feed and view Prompty detail pages
 
 ### Feed — L1 (Core Experience)
@@ -18,7 +18,7 @@
 - [ ] **FEED-01**: Any visitor sees a vertical feed of published Promptys with cover image, title, category badge, and a preview of the beginner_prompt
 - [ ] **FEED-02**: Feed shows a "Como funciona" card at the top for new/unauthenticated users ("Promptys são receitas prontas para gerar imagens com IA. Toque em Copiar prompt, cole no Gemini ou outro app, depois volte aqui e conte como ficou.")
 - [ ] **FEED-03**: Any visitor can open a Prompty detail page showing example image, title, beginner_prompt in full, and the "Copiar prompt" button
-- [ ] **FEED-04**: User can copy the full beginner_prompt to clipboard with one tap — this is the primary action
+- [x] **FEED-04**: User can copy the full beginner_prompt to clipboard with one tap — this is the primary action
 - [ ] **FEED-05**: Feed uses cursor-based keyset pagination — no OFFSET queries
 - [ ] **FEED-06**: Feed can be filtered by category and recommended_model
 - [ ] **FEED-07**: User can search Promptys by keyword across title, description, and tags
@@ -38,7 +38,7 @@
 ### Level System (Progressive Disclosure)
 
 - [x] **LEVL-01**: System tracks user actions internally (copies, saves, feedback events) via SQL triggers; internal_points not shown to L1 users
-- [ ] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits
+- [x] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits
 - [ ] **LEVL-03**: When L2 criteria are met, system shows a discrete unlock message: "Você desbloqueou o modo Curador. Agora pode salvar favoritos, avaliar promptys e enviar imagens geradas."
 - [ ] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
 - [x] **LEVL-05**: Level transitions are recorded in unlock_events table
@@ -71,7 +71,7 @@
 
 - [x] **INFR-01**: All database tables have Row Level Security enabled with explicit policies
 - [x] **INFR-02**: Action tracking (copies, saves, feedback) recorded via SQL triggers in immutable events table; no direct frontend writes to internal_points
-- [ ] **INFR-03**: Client-side image compression before upload (max 2 MB → target ≤200 KB WebP)
+- [x] **INFR-03**: Client-side image compression before upload (max 2 MB → target ≤200 KB WebP)
 - [x] **INFR-04**: Supabase Storage enforces file size limit and allowed MIME types
 - [ ] **INFR-05**: Usage monitoring (GitHub Actions weekly cron) alerts at 70% and 90% of free tier limits
 
@@ -122,15 +122,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
 | AUTH-05 | Phase 1 | Pending |
 | FEED-01 | Phase 1 | Pending |
 | FEED-02 | Phase 1 | Pending |
 | FEED-03 | Phase 1 | Pending |
-| FEED-04 | Phase 1 | Pending |
+| FEED-04 | Phase 1 | Complete |
 | FEED-05 | Phase 1 | Pending |
 | SOCL-01 | Phase 1 | Pending |
 | SOCL-02 | Phase 1 | Pending |
@@ -139,7 +139,7 @@
 | PROF-02 | Phase 1 | Pending |
 | PROF-03 | Phase 1 | Pending |
 | LEVL-01 | Phase 1 | Complete |
-| LEVL-02 | Phase 1 | Pending |
+| LEVL-02 | Phase 1 | Complete |
 | LEVL-03 | Phase 1 | Pending |
 | LEVL-04 | Phase 1 | Pending |
 | LEVL-05 | Phase 1 | Complete |
@@ -147,7 +147,7 @@
 | LEVL-07 | Phase 1 | Pending |
 | INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
-| INFR-03 | Phase 1 | Pending |
+| INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 1 | Pending |
 | FEED-06 | Phase 2 | Pending |
