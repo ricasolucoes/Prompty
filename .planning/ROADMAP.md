@@ -12,7 +12,7 @@ Promptys é construído seguindo a progressão natural do usuário: primeiro con
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: L1 Iniciante — Feed e Copiar** - Schema/auth/RLS/tracking interno + feed público + copiar prompt + feedback básico + desbloqueio de nível (gap closure in progress 2026-05-07)
+- [x] **Phase 1: L1 Iniciante — Feed e Copiar** - Schema/auth/RLS/tracking interno + feed público + copiar prompt + feedback básico + desbloqueio de nível (gap closure in progress 2026-05-07) (completed 2026-05-07)
 - [ ] **Phase 2: L2 Curador + Descoberta** - Upload de resultado + avaliação + histórico + denúncia + filtros de feed + busca
 - [ ] **Phase 3: L3 Criador** - Criar/publicar promptys + variações + estatísticas + modo avançado opcional
 
@@ -70,6 +70,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. L1 Iniciante — Feed e Copiar | 10/11 | In Progress|  |
+| 1. L1 Iniciante — Feed e Copiar | 11/11 | Complete   | 2026-05-07 |
 | 2. L2 Curador + Descoberta | 0/TBD | Not started | - |
 | 3. L3 Criador | 0/TBD | Not started | - |

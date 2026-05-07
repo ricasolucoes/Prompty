@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-11-PLAN.md
-last_updated: "2026-05-07T20:09:48.427Z"
+stopped_at: Completed 01-10-PLAN.md
+last_updated: "2026-05-07T20:10:49.482Z"
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -56,6 +56,7 @@ Plan: 1 of 11
 | Phase 01-foundation P07 | 20min | 3 tasks | 4 files |
 | Phase 01 P09 | 88min | 3 tasks | 5 files |
 | Phase 01 P11 | 8min | 2 tasks | 6 files |
+| Phase 01 P10 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [Phase 01]: profiles.last_active_at is passive timestamp only — no points awarded, not in point_events trigger chain; provides DB surface for return-visit tracking (LEVL-02 approximation)
 - [Phase 01]: touchLastActive is fire-and-forget (void + try/catch swallowed) — transient network errors never block auth flow or UI rendering
 - [Phase 01]: SQL COMMENT ON FUNCTION/COLUMN used for LEVL-02 design documentation — survives schema dumps, visible in Supabase Studio
+- [Phase 01]: Save button placed on PromptyDetailPage, not FeedCard, to preserve LEVL-06 test (FeedCard asserts no save/bookmark button)
+- [Phase 01]: Plain <button> used for Save action on detail page because SecondaryButton does not accept aria-label — stateful aria-label required for accessibility
+- [Phase 01]: FeedCard.test.tsx wrapped in MemoryRouter after Link addition — required whenever FeedCard renders Link children
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T20:09:48.424Z
-Stopped at: Completed 01-11-PLAN.md
+Last session: 2026-05-07T20:10:49.479Z
+Stopped at: Completed 01-10-PLAN.md
 Resume file: None
