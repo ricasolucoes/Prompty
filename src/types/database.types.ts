@@ -55,6 +55,7 @@ export type Database = {
           bio: string | null
           created_at: string
           id: string
+          last_active_at: string | null
           level: string
           name: string | null
           points: number
@@ -67,6 +68,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           id: string
+          last_active_at?: string | null
           level?: string
           name?: string | null
           points?: number
@@ -79,6 +81,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           id?: string
+          last_active_at?: string | null
           level?: string
           name?: string | null
           points?: number

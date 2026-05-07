@@ -38,7 +38,7 @@
 ### Level System (Progressive Disclosure)
 
 - [x] **LEVL-01**: System tracks user actions internally (copies, saves, feedback events) via SQL triggers; internal_points not shown to L1 users
-- [x] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits
+- [x] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits — _approximated by aggregate point accumulation (50p threshold) per Phase 1 CONTEXT.md decision; per-criteria gating deferred to Phase 2. Return visits tracked passively via `profiles.last_active_at` (Plan 01-11)._
 - [x] **LEVL-03**: When L2 criteria are met, system shows a discrete unlock message: "Você desbloqueou o modo Curador. Agora pode salvar favoritos, avaliar promptys e enviar imagens geradas."
 - [x] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
 - [x] **LEVL-05**: Level transitions are recorded in unlock_events table

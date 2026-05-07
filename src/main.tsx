@@ -17,6 +17,17 @@ const queryClient = new QueryClient({
 document.documentElement.classList.add('theme-light')
 
 // Single auth listener registered once at module load
+async function touchLastActive(userId: string) {
+  // Best-effort: update profiles.last_active_at to now. Swallow errors so a
+  // transient network issue never blocks UI. RLS allows users to UPDATE their
+  // own profile (auth.uid() = id), so this works without elevated privileges.
+  try {
+    await supabase.from('profiles').update({ last_active_at: new Date().toISOString() }).eq('id', userId)
+  } catch {
+    // ignore
+  }
+}
+
 void (async () => {
   const { data } = await supabase.auth.getSession()
   const initialUser = data.session?.user ?? null
@@ -29,6 +40,7 @@ void (async () => {
       .eq('id', initialUser.id)
       .maybeSingle()
     useAuthStore.getState().setProfile(profile ?? null)
+    void touchLastActive(initialUser.id)
   }
   useAuthStore.getState().setLoading(false)
 
@@ -42,6 +54,7 @@ void (async () => {
         .eq('id', u.id)
         .maybeSingle()
       useAuthStore.getState().setProfile(profile ?? null)
+      void touchLastActive(u.id)
     } else {
       useAuthStore.getState().setProfile(null)
     }
