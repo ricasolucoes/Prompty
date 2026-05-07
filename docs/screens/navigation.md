@@ -66,6 +66,12 @@ Tab bar L3: 5 itens, completa.
 
 ---
 
+## Proteção de Rotas
+
+A proteção de rotas autenticadas é feita via React Router + estado de autenticação Zustand/Context. Rotas privadas verificam o estado de sessão do Supabase Auth no store antes de renderizar; usuários não autenticados são redirecionados para a tela de login pelo próprio React Router.
+
+---
+
 ## Perfil — Abas (L2+)
 
 | Aba | Conteúdo |

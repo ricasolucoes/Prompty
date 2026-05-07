@@ -4,107 +4,240 @@ Cada command tem intenção, execução e sinais de sucesso/falha para o Claude 
 commands:
 
 name: install
-description: Instala dependências do projeto.
-run: "npm install"
+description: Instala dependências do projeto com pnpm.
+run: "pnpm install"
 success_patterns:
-  - "added"
-  - "audited"
+  - "Done"
+  - "node_modules"
 fail_patterns:
   - "ERR!"
   - "ELIFECYCLE"
 
 name: dev
-description: Sobe o app em modo desenvolvimento (Next.js).
-run: "npm run dev"
+description: Sobe o app Tauri em modo desenvolvimento (Vite + Tauri desktop).
+run: "pnpm dev:tauri"
 success_patterns:
-  - "ready"
+  - "Dev server running"
+  - "tauri: Running dev"
+  - "Finished"
+fail_patterns:
+  - "error:"
+  - "EADDRINUSE"
+  - "failed to compile"
+
+name: dev:web
+description: Sobe apenas o frontend Vite (sem Tauri, útil para UI rápida).
+run: "pnpm dev"
+success_patterns:
   - "Local:"
-  - "started server"
+  - "ready in"
 fail_patterns:
   - "error:"
   - "EADDRINUSE"
 
-name: build
-description: Build de produção do Next.js.
-run: "npm run build"
+name: dev:android
+description: Sobe o app em dispositivo/emulador Android.
+run: "pnpm dev:tauri:android"
 success_patterns:
-  - "Route"
-  - "compiled"
-  - "Generating static pages"
+  - "Finished"
+  - "Running on"
 fail_patterns:
-  - "Build error"
-  - "Failed to compile"
+  - "error:"
+  - "BUILD FAILED"
+
+name: dev:ios
+description: Sobe o app no simulador iOS.
+run: "pnpm dev:tauri:ios"
+success_patterns:
+  - "Finished"
+  - "Running on"
+fail_patterns:
+  - "error:"
+  - "BUILD FAILED"
+
+name: build:web
+description: Build apenas do frontend (Vite — gera dist/).
+run: "pnpm build"
+success_patterns:
+  - "built in"
+  - "dist"
+fail_patterns:
+  - "Build failed"
+  - "error TS"
+
+name: build:desktop
+description: Build completo Tauri para desktop (.dmg / .exe / .AppImage).
+run: "pnpm build:tauri"
+success_patterns:
+  - "Finished"
+  - ".dmg"
+  - ".exe"
+fail_patterns:
+  - "failed to bundle"
+  - "codesign failed"
+
+name: build:android
+description: Build APK/AAB para Android.
+run: "pnpm build:android"
+success_patterns:
+  - "Finished"
+  - ".apk"
+  - ".aab"
+fail_patterns:
+  - "BUILD FAILED"
+  - "error:"
+
+name: build:ios
+description: Build IPA para iOS (requer macOS + Xcode).
+run: "pnpm build:ios"
+success_patterns:
+  - "Finished"
+  - ".ipa"
+fail_patterns:
+  - "BUILD FAILED"
+  - "error:"
 
 name: lint
-description: Lint do código com ESLint.
-run: "npm run lint"
+description: ESLint com zero tolerância a warnings.
+run: "pnpm lint"
 success_patterns:
-  - "No ESLint warnings or errors"
   - "problems"
+  - "No problems found"
 fail_patterns:
   - "Parsing error"
   - "error"
 
+name: lint:fix
+description: ESLint com auto-fix.
+run: "pnpm lint:fix"
+success_patterns:
+  - "Fixed"
+  - "problems"
+fail_patterns:
+  - "Parsing error"
+
+name: format
+description: Formata código com Prettier + Tailwind class sort.
+run: "pnpm format"
+success_patterns:
+  - "ms"
+fail_patterns:
+  - "Error"
+
+name: format:check
+description: Verifica formatação sem alterar arquivos.
+run: "pnpm format:check"
+success_patterns:
+  - "All matched files"
+fail_patterns:
+  - "Code style issues"
+
 name: type-check
-description: Checagem de tipos TypeScript.
-run: "npx tsc --noEmit"
+description: Verificação de tipos TypeScript (strict).
+run: "pnpm type-check"
 success_patterns:
   - ""
 fail_patterns:
   - "error TS"
 
 name: test
-description: Roda todos os testes.
-run: "npm run test"
+description: Roda testes em watch mode.
+run: "pnpm test"
 success_patterns:
   - "passed"
-  - "Tests"
+  - "watching"
+fail_patterns:
+  - "FAIL"
+  - "failed"
+
+name: test:run
+description: Roda testes uma vez (CI mode).
+run: "pnpm test:run"
+success_patterns:
+  - "passed"
 fail_patterns:
   - "FAIL"
   - "failed"
 
 name: test:coverage
-description: Cobertura total do projeto.
-run: "npm run test:coverage"
+description: Cobertura total de testes.
+run: "pnpm test:coverage"
 success_patterns:
   - "Coverage"
   - "Statements"
 fail_patterns:
   - "Error"
 
-name: db:generate
-description: Gera tipos TypeScript a partir do schema Supabase.
-run: "npx supabase gen types typescript --local > src/types/database.types.ts"
+name: cpd
+description: Detecta código duplicado em TypeScript/TSX.
+run: "pnpm cpd"
+success_patterns:
+  - "Found"
+  - "No duplicates"
+fail_patterns:
+  - "Error"
+
+name: cpd:rust
+description: Detecta código duplicado em Rust.
+run: "pnpm cpd:rust"
+success_patterns:
+  - "Found"
+  - "No duplicates"
+fail_patterns:
+  - "Error"
+
+name: quality
+description: Roda todos os checks de qualidade (format + lint + types + cpd + circular deps).
+run: "pnpm quality:check"
+success_patterns:
+  - "No problems found"
+  - "No duplicates"
+fail_patterns:
+  - "error"
+  - "failed"
+
+name: quality:fix
+description: Auto-corrige lint, format e clippy Rust.
+run: "pnpm quality:fix"
+success_patterns:
+  - "Fixed"
+fail_patterns:
+  - "error"
+
+name: quality:rust
+description: Roda fmt + clippy + test + audit do Rust.
+run: "pnpm quality:rust"
+success_patterns:
+  - "test result"
+  - "Finished"
+fail_patterns:
+  - "error"
+  - "FAILED"
+
+name: gen:types
+description: Gera tipos TypeScript a partir do schema Supabase local.
+run: "pnpm gen:types"
 success_patterns:
   - ""
 fail_patterns:
   - "error"
   - "Error"
 
-name: db:migrate
-description: Roda migrations Supabase localmente.
-run: "npx supabase db push"
-success_patterns:
-  - "Finished"
-  - "migration"
-fail_patterns:
-  - "ERROR"
-  - "failed"
-
 name: repo:map
-description: Gera mapa do repositório para navegação do Claude.
-run: "ls -la && echo '--- SRC ---' && tree -L 3 src || true"
+description: Mapa da estrutura do repositório para navegação do Claude.
+run: "ls -la && echo '--- SRC ---' && tree -L 3 src 2>/dev/null || find src -maxdepth 3 -type f | head -60 && echo '--- TAURI ---' && tree -L 3 src-tauri/src 2>/dev/null || find src-tauri/src -maxdepth 3 -type f | head -40"
 success_patterns:
   - "SRC"
+  - "TAURI"
 fail_patterns:
   - "command not found"
 
 name: release:prepare
-description: Pré-release (lint, type-check, test, build).
-run: "npm run lint && npx tsc --noEmit && npm run test -- --run && npm run build"
+description: Validação completa pré-release (quality + tests + build).
+run: "pnpm quality:all && pnpm build"
 success_patterns:
-  - "compiled"
+  - "built in"
   - "passed"
 fail_patterns:
   - "failed"
-  - "Build error"
+  - "Build failed"

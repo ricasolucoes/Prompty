@@ -1,0 +1,121 @@
+{
+  "name": "promptys",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:tauri": "tauri dev",
+    "dev:tauri:android": "tauri android dev",
+    "dev:tauri:ios": "tauri ios dev",
+    "build": "tsc && vite build",
+    "build:tauri": "tauri build",
+    "build:android": "tauri android build",
+    "build:ios": "tauri ios build",
+    "preview": "vite preview",
+
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" --log-level error",
+
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+
+    "type-check": "tsc --noEmit",
+
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:run": "vitest run --reporter=verbose",
+
+    "cpd": "jscpd src --config .jscpd.json",
+    "cpd:rust": "jscpd src-tauri/src --config .jscpd.rust.json",
+    "cpd:all": "pnpm run cpd && pnpm run cpd:rust",
+
+    "deps:circular": "madge --extensions ts,tsx --ts-config tsconfig.json --circular src",
+    "deps:orphans": "madge --extensions ts,tsx --ts-config tsconfig.json --orphans src",
+
+    "rust:check": "cd src-tauri && cargo check --all-targets",
+    "rust:clippy": "cd src-tauri && cargo clippy --all-targets -- -D warnings -W clippy::all -W clippy::pedantic",
+    "rust:fmt": "cd src-tauri && cargo fmt --all -- --check",
+    "rust:fmt:fix": "cd src-tauri && cargo fmt --all",
+    "rust:test": "cd src-tauri && cargo test",
+    "rust:audit": "cd src-tauri && cargo audit",
+    "rust:clippy:fix": "cd src-tauri && cargo clippy --fix --allow-dirty --allow-staged --all-targets -- -D warnings",
+
+    "gen:types": "npx supabase gen types typescript --local > src/types/database.types.ts && prettier --write src/types/database.types.ts",
+
+    "quality:check": "pnpm run format:check && pnpm run lint && pnpm run type-check && pnpm run cpd && pnpm run deps:circular",
+    "quality:fix": "pnpm run lint:fix && pnpm run format && pnpm run rust:fmt:fix && pnpm run rust:clippy:fix",
+    "quality:rust": "pnpm run rust:fmt && pnpm run rust:clippy && pnpm run rust:test && pnpm run rust:audit",
+    "quality:all": "pnpm run quality:check && pnpm run quality:rust && pnpm run test:run",
+
+    "ci": "pnpm run quality:all && pnpm run build",
+
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
+    "@tauri-apps/api": "^2.5.0",
+    "@tauri-apps/plugin-deep-link": "^2.3.0",
+    "@tauri-apps/plugin-dialog": "^2.3.0",
+    "@tauri-apps/plugin-fs": "^2.3.0",
+    "@tauri-apps/plugin-notification": "^2.3.0",
+    "@tauri-apps/plugin-share": "^2.0.0",
+    "@tauri-apps/plugin-store": "^2.2.0",
+    "@tanstack/react-query": "^5.80.0",
+    "@tanstack/react-query-devtools": "^5.80.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.511.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0",
+    "tailwind-merge": "^3.3.0",
+    "zod": "^3.24.0",
+    "zustand": "^5.0.5"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.5.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.32.0",
+    "@typescript-eslint/parser": "^8.32.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "@vitest/coverage-v8": "^3.1.0",
+    "@vitest/ui": "^3.1.0",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-typescript": "^4.4.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-no-only-tests": "^3.3.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-sonarjs": "^3.0.2",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "jscpd": "^4.0.5",
+    "lint-staged": "^16.0.0",
+    "madge": "^8.0.0",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "supabase": "^2.23.0",
+    "tailwindcss": "^4.1.6",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.0"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ],
+    "src/**/*.css": [
+      "prettier --write"
+    ]
+  }
+}

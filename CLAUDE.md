@@ -1,19 +1,24 @@
 # Claude Rules — Promptys
 
-## Arquitetura Next.js
+## Arquitetura Vite + React + Tauri 2.0
 
-- `src/app/**` contém rotas e layouts (App Router). Cada pasta de rota exporta `page.tsx` e `layout.tsx` quando necessário.
-- `src/components/**` contém UI por domínio (ex: `feed/`, `prompty/`, `profile/`, `ui/`). Componentes não fazem fetch direto — delegam a hooks ou Server Components.
-- `src/lib/**` centraliza clients (Supabase), helpers e utils reutilizáveis.
-- `src/hooks/**` contém React hooks de domínio; não duplique lógica de estado que já existe num hook.
-- `src/types/**` centraliza tipos TypeScript; nunca defina tipos inline em componentes quando pertencerem ao domínio.
+- `src/` — frontend Vite + React (SPA, sem SSR).
+- `src/pages/` ou `src/routes/` — telas/rotas gerenciadas pelo React Router.
+- `src/components/` — UI por domínio (`feed/`, `prompty/`, `profile/`, `ui/`). Componentes não fazem fetch direto — delegam a hooks.
+- `src/hooks/` — hooks de domínio e acesso a dados via Supabase JS SDK; não duplique lógica de estado que já existe num hook.
+- `src/lib/supabase.ts` — cliente único do Supabase (client-side only, sem server). Único ponto de importação do client.
+- `src/lib/prompty/template.ts` — parser de template `{{variavel}}`; fonte única da lógica de parse/render.
+- `src/store/` — estado global via Zustand.
+- `src/types/` — tipos TypeScript de domínio + `database.types.ts` gerado pelo Supabase CLI.
+- `src-tauri/src/` — código Rust/Tauri; contém apenas comandos nativos.
+- `src-tauri/src/commands/` — Tauri commands expostos ao frontend (auth seguro, share, storage nativo, notificações, deep links).
 
 ## Supabase
 
-- O client do browser fica em `src/lib/supabase/client.ts`; o server-side em `src/lib/supabase/server.ts`. Nunca importe o client errado (browser em Server Components ou vice-versa).
+- O cliente Supabase é client-side only: `src/lib/supabase.ts`. Não existe client server-side neste projeto.
 - RLS está habilitado em todas as tabelas — nunca contorne com `service_role` no frontend.
 - Operações que mudam pontos de gamificação só acontecem via triggers SQL e a tabela `point_events` — nunca via insert/update direto do frontend.
-- Mutations que requerem autenticação devem ser feitas em Server Actions ou Route Handlers, não em client components.
+- Mutations do frontend vão direto via `supabase-js` (com RLS protegendo os dados).
 
 ## Templates de Prompty
 
@@ -28,7 +33,9 @@
 
 ## Regras Gerais
 
-- Server Components por padrão; `"use client"` só quando necessário (interatividade, hooks do browser).
+- Sem SSR, sem Server Components, sem Server Actions — este é um SPA puro.
+- Acesso a APIs nativas (share, notificações, keychain, deep links) deve usar `tauri invoke` — Tauri commands são a única forma de acessar funcionalidades nativas do dispositivo.
+- Sem `window.fetch` direto para APIs externas — use o supabase client ou Tauri invoke.
 - Sem backend próprio no MVP — Supabase é a única infraestrutura de backend.
 - Moderação e conteúdo: nunca exponha dados de denúncias ou status de moderação para usuários não-admin.
 - Quando estas regras mudarem, atualize `AGENTS.md` e `CLAUDE.md` no mesmo commit.

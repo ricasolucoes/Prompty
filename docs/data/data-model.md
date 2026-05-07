@@ -174,3 +174,5 @@ Promptys mockados (6 exemplos):
 | prompty_saves | próprio | autenticado | — | autor |
 | prompty_remixes | todos | autenticado (L3) | — | — |
 | point_events | próprio | **apenas triggers** | — | — |
+
+Mutations do frontend vão direto via `supabase-js` (com RLS protegendo); features nativas (share, notificações, keychain) via Tauri commands.

@@ -23,10 +23,12 @@ Este documento mapeia os protótipos (`Promptys.html` e `Promptys v2.html`) para
 
 Antes de qualquer fase de produto:
 
-- [ ] Projeto Next.js (App Router) criado
+- [ ] Projeto Tauri 2.0 com Vite + React criado
+- [ ] Rust toolchain instalado com targets Android e iOS
+- [ ] Android SDK + NDK configurados
+- [ ] Xcode instalado (para iOS build)
 - [ ] Supabase project configurado (Auth, Postgres, Storage)
-- [ ] Variáveis de ambiente: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- [ ] Deploy na Vercel conectado ao repositório
+- [ ] Variáveis de ambiente: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - [ ] RLS habilitado em todas as tabelas desde o início
 
 ---
@@ -35,14 +37,16 @@ Antes de qualquer fase de produto:
 
 **Objetivo:** base técnica e visual antes de qualquer tela.
 
-- [ ] Tailwind configurado com design tokens do protótipo V2
+- [ ] Tailwind v4 via PostCSS configurado com design tokens do protótipo V2
   - Cores: Midnight Ink, Electric Violet, Prompt Cyan, Solar Coral, Mint Signal
   - Fontes: Space Grotesk, Inter, JetBrains Mono (Google Fonts)
 - [ ] CSS variables light/dark (tokens do V2)
 - [ ] Dark mode toggle funcional
 - [ ] Componentes primitivos: Icon, Avatar, Chip, Button, ProgressBar
 - [ ] Animações CSS: fadeIn, slideUp, pop, screenFade
-- [ ] Client Supabase: `src/lib/supabase/client.ts` + `src/lib/supabase/server.ts`
+- [ ] Client Supabase client-side: `src/lib/supabase.ts`
+- [ ] React Router Dom para navegação SPA
+- [ ] Zustand para state management
 
 **Referência:** `ui.jsx`, tokens CSS de `Promptys v2.html`
 
@@ -56,7 +60,7 @@ Antes de qualquer fase de produto:
 - [ ] Login
 - [ ] Logout
 - [ ] Criação automática de `profile` via trigger no signup
-- [ ] Proteção de rotas autenticadas (middleware Next.js)
+- [ ] Proteção de rotas autenticadas via React Router + estado de autenticação Zustand/Context
 - [ ] Página de onboarding L1 (1 slide, 1 botão)
 
 **Sem:** OAuth social (pós-MVP), cadastro de interesses.
@@ -149,7 +153,7 @@ Antes de qualquer fase de produto:
 - [ ] Aba Testes: galeria de testes da comunidade
 - [ ] Aba Avaliações: médias por dimensão + lista
 - [ ] `assembleFinalPrompt()`: `src/lib/prompty/template.ts`
-- [ ] Compartilhar (Web Share API)
+- [ ] Compartilhar via Tauri command (share nativo por plataforma)
 
 ---
 
@@ -189,7 +193,7 @@ Antes de qualquer fase de produto:
 - [ ] Missões diárias e semanais com reset automático
 - [ ] Grid de badges no perfil
 - [ ] Trigger para cada badge (verificar `point_events` ou contadores)
-- [ ] Notificação in-app ao desbloquear badge
+- [ ] Notificação in-app ao desbloquear badge (Tauri notification command em mobile/desktop)
 
 ---
 
@@ -198,9 +202,14 @@ Antes de qualquer fase de produto:
 | Decisão | Escolha | Motivo |
 |---------|---------|--------|
 | Componentes primitivos | Tailwind + React | Consistência com design system do protótipo |
-| State management | Zustand ou Context | Sem servidor de estado no MVP |
+| State management | Zustand | Sem servidor de estado no MVP |
 | Upload de imagens | Supabase Storage | Integrado, sem custo extra no free tier |
 | Realtime | Supabase Realtime | Para contadores de like em tempo real (pós-MVP) |
 | Template parser | `replaceAll` simples | Sem dependência extra; handlebars-like |
 | Dark mode | CSS variables | Mudança de classe no `<html>` |
 | Fonts | Google Fonts CDN | Sem custo, carregamento rápido |
+| Compartilhar | Tauri share command | Usa share sheet nativo por plataforma |
+
+---
+
+> **Deploy:** macOS/Windows/Linux via Tauri bundles (.dmg, .exe, .AppImage) + Android APK/AAB + iOS IPA. Sem deploy Vercel.

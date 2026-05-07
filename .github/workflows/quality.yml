@@ -1,17 +1,15 @@
 name: Quality Gates
 
 # ============================================
-# REGRAS DE EXECUÇÃO
-# ============================================
-# - Roda em push/PR para main e develop
-# - NUNCA em tags (tags processadas por release.yml)
+# Roda em push/PR para main e develop
+# NUNCA em tags — tags são processadas por build-release.yml
 # ============================================
 on:
   push:
-    branches: [main, develop]
+    branches: [main, master, develop]
     tags-ignore: ['**']
   pull_request:
-    branches: [main, develop]
+    branches: [main, master, develop]
 
 concurrency:
   group: quality-${{ github.ref }}
@@ -26,26 +24,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
 
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm lint
 
       - name: Type check
-        run: npx tsc --noEmit
+        run: pnpm type-check
 
   # ==========================================
-  # Job 2: Testes Unitários
+  # Job 2: Testes
   # ==========================================
   test:
     name: Unit Tests
@@ -53,65 +56,198 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: npm run test -- --run --reporter=verbose
+        run: pnpm test:run
 
       - name: Generate coverage
-        run: npm run test:coverage
+        run: pnpm test:coverage
         continue-on-error: true
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: false
 
   # ==========================================
-  # Job 3: Build
+  # Job 3: Duplicate Code Detection
   # ==========================================
-  build:
-    name: Build Check
+  cpd:
+    name: Code Duplication
     runs-on: ubuntu-latest
-    env:
-      # Variáveis mínimas para o build não falhar sem Supabase real
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Next.js
-        run: npm run build
+      - name: Check TS/TSX duplication
+        run: pnpm cpd
+        continue-on-error: true
+
+      - name: Check Rust duplication
+        run: pnpm cpd:rust
+        continue-on-error: true
+
+      - name: Upload CPD reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cpd-reports
+          path: reports/jscpd*/
+          retention-days: 7
 
   # ==========================================
-  # Status Check (Requer todos os jobs)
+  # Job 4: Build Frontend
+  # ==========================================
+  build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'placeholder' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend (Vite)
+        run: pnpm build
+
+  # ==========================================
+  # Job 5: Rust (Tauri Backend)
+  # ==========================================
+  # IMPORTANTE: Tauri generate_context!() requer ../dist em compile time.
+  # Build do frontend deve acontecer antes do cargo check.
+  rust:
+    name: Rust Checks
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'placeholder' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies (Tauri 2 / Ubuntu)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config \
+            libglib2.0-dev \
+            libsoup-3.0-dev \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend (Tauri requer dist/)
+        run: pnpm build
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Rust format check
+        run: cd src-tauri && cargo fmt -- --check
+
+      - name: Rust clippy
+        run: cd src-tauri && cargo clippy --all-targets -- -D warnings
+
+      - name: Rust build check
+        run: cd src-tauri && cargo check --all-targets
+
+      - name: Rust tests
+        run: cd src-tauri && cargo test
+
+  # ==========================================
+  # Job 6: Security Audit
+  # ==========================================
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: pnpm audit
+        run: pnpm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --quiet
+
+      - name: Rust security audit
+        run: cd src-tauri && cargo audit
+        continue-on-error: true
+
+  # ==========================================
+  # Quality Gate (requer todos)
   # ==========================================
   quality-gate:
     name: Quality Gate
     runs-on: ubuntu-latest
-    needs: [lint, test, build]
+    needs: [lint, test, build, rust]
 
     steps:
       - name: All checks passed
-        run: echo "✅ All quality gates passed!"
+        run: echo "All quality gates passed!"

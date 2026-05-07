@@ -38,5 +38,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Tauri
+src-tauri/target/
+src-tauri/gen/android/
+src-tauri/gen/apple/
+
+# Relatórios de qualidade (gerados localmente)
+reports/
+
 # Protótipo — zip original (arquivos extraídos estão em docs/planning/prototypes/)
 Promptys.zip

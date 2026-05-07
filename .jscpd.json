@@ -1,0 +1,31 @@
+{
+  "threshold": 5,
+  "reporters": ["console", "json"],
+  "ignore": [
+    "**/__tests__/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/*.config.*",
+    "**/vite-env.d.ts",
+    "src/types/database.types.ts"
+  ],
+  "format": ["typescript", "tsx"],
+  "minLines": 5,
+  "minTokens": 50,
+  "maxLines": 500,
+  "maxSize": "100kb",
+  "output": "./reports/jscpd",
+  "formatsExts": {
+    "typescript": ["ts"],
+    "tsx": ["tsx"]
+  },
+  "absolute": true,
+  "skipLocal": false,
+  "blame": false,
+  "silent": false,
+  "verbose": false
+}

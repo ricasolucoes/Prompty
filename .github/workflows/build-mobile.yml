@@ -1,0 +1,176 @@
+name: Mobile Builds
+
+# ============================================
+# Builds Android e iOS — roda em tags ou dispatch manual.
+# Nunca em push/PR comum (builds são lentos e custosos).
+# ============================================
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Plataforma'
+        required: true
+        default: 'both'
+        type: choice
+        options: [android, ios, both]
+      profile:
+        description: 'Perfil de build'
+        required: true
+        default: 'release'
+        type: choice
+        options: [debug, release]
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  # ==========================================
+  # Android Build
+  # ==========================================
+  android:
+    name: Android Build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      inputs.platform == 'android' ||
+      inputs.platform == 'both'
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: |
+            aarch64-linux-android
+            armv7-linux-androideabi
+            x86_64-linux-android
+            i686-linux-android
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Initialize Android project
+        run: pnpm tauri android init
+
+      - name: Build Android APK (debug)
+        if: inputs.profile == 'debug' || github.event_name == 'workflow_dispatch'
+        run: pnpm tauri android build --debug
+
+      - name: Build Android AAB (release)
+        if: inputs.profile == 'release' || github.event_name == 'push'
+        run: pnpm tauri android build
+        env:
+          TAURI_SIGNING_ANDROID_KEYSTORE: ${{ secrets.TAURI_SIGNING_ANDROID_KEYSTORE }}
+          TAURI_SIGNING_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.TAURI_SIGNING_ANDROID_KEYSTORE_PASSWORD }}
+          TAURI_SIGNING_ANDROID_KEY_ALIAS: ${{ secrets.TAURI_SIGNING_ANDROID_KEY_ALIAS }}
+          TAURI_SIGNING_ANDROID_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_ANDROID_KEY_PASSWORD }}
+
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ github.ref_name }}
+          path: |
+            src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+            src-tauri/gen/android/app/build/outputs/bundle/**/*.aab
+          retention-days: 14
+
+  # ==========================================
+  # iOS Build (requer macOS)
+  # ==========================================
+  ios:
+    name: iOS Build
+    runs-on: macos-15
+    if: |
+      github.event_name == 'push' ||
+      inputs.platform == 'ios' ||
+      inputs.platform == 'both'
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: |
+            aarch64-apple-ios
+            aarch64-apple-ios-sim
+            x86_64-apple-ios
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Initialize iOS project
+        run: pnpm tauri ios init
+
+      - name: Import certificates
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.IOS_P12_BASE64 }}
+          p12-password: ${{ secrets.IOS_P12_PASSWORD }}
+
+      - name: Download provisioning profiles
+        uses: apple-actions/download-provisioning-profiles@v3
+        with:
+          bundle-id: 'com.ricasolucoes.promptys'
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: Build iOS (release)
+        run: pnpm tauri ios build
+
+      - name: Upload iOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-${{ github.ref_name }}
+          path: |
+            src-tauri/gen/apple/build/arm64/**/*.ipa
+          retention-days: 14

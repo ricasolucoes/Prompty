@@ -7,8 +7,8 @@ Mantido em sincronia com `CLAUDE.md` — atualize os dois no mesmo commit.
 
 **Promptys** é uma rede social colaborativa para criar, compartilhar, remixar e avaliar prompts de geração de imagens.
 
-- **Stack:** Next.js (App Router) + Supabase (Auth, Postgres, Storage, Realtime, RLS)
-- **Deploy:** Vercel (frontend) + Supabase Cloud (backend)
+- **Stack:** Vite + React (SPA) + Tauri 2.0 (desktop + Android + iOS) + Supabase (Auth, Postgres, Storage, Realtime, RLS)
+- **Deploy:** Tauri bundles nativos (.dmg, .exe, .AppImage, APK/AAB, IPA). Sem Vercel.
 - **MVP:** Sem backend próprio, sem geração de imagens inline
 
 ---
@@ -17,20 +17,20 @@ Mantido em sincronia com `CLAUDE.md` — atualize os dois no mesmo commit.
 
 | Camada | Onde | Responsabilidade |
 |--------|------|-----------------|
-| Rotas/Páginas | `src/app/**` | Composição de layout, fetch de dados em Server Components |
-| Componentes | `src/components/**` | UI por domínio; não fazem fetch direto |
-| Hooks | `src/hooks/**` | Estado e efeitos do cliente; um hook por domínio |
-| Lib / Utils | `src/lib/**` | Supabase clients, helpers, template parser |
-| Tipos | `src/types/**` | Tipos TypeScript de domínio + `database.types.ts` gerado |
-| Server Actions | `src/actions/**` | Mutations autenticadas e lógica server-side |
+| Rotas/Páginas | `src/pages/` ou `src/routes/` | Telas do SPA gerenciadas pelo React Router |
+| Componentes | `src/components/` | UI por domínio; não fazem fetch direto |
+| Hooks | `src/hooks/` | Estado e efeitos; acesso a dados via Supabase JS SDK |
+| Store | `src/store/` | Estado global via Zustand |
+| Lib / Utils | `src/lib/` | Supabase client único, helpers, template parser |
+| Tipos | `src/types/` | Tipos TypeScript de domínio + `database.types.ts` gerado |
+| Tauri Commands | `src-tauri/src/commands/` | Funcionalidades nativas expostas ao frontend via invoke |
 
 ---
 
 ## Regras Críticas
 
 ### Supabase
-- Client do browser: `src/lib/supabase/client.ts` — use em Client Components e hooks.
-- Client server-side: `src/lib/supabase/server.ts` — use em Server Components, Actions e Route Handlers.
+- Cliente único, client-side: `src/lib/supabase.ts` — use em todos os hooks e componentes.
 - **Nunca** use `service_role` key no frontend.
 - **Nunca** modifique `point_events` diretamente — pontos são gerenciados por triggers SQL.
 - RLS está ativo em todas as tabelas; testes devem respeitar isso.
@@ -39,10 +39,12 @@ Mantido em sincronia com `CLAUDE.md` — atualize os dois no mesmo commit.
 - Parse e render de `{{variavel}}` têm fonte única em `src/lib/prompty/template.ts`.
 - `inputs_schema` define os tipos de variável: `text | image | enum | number | boolean | color | ratio | seed`.
 
-### Server vs. Client Components
-- Padrão: Server Component.
-- `"use client"` apenas quando houver interatividade, hooks do browser, ou estado local necessário.
-- Data fetching em Server Components; mutações em Server Actions ou Route Handlers.
+### Tauri Commands
+- Commands são a única forma de acessar APIs nativas: share, secure storage (keychain), notificações push, deep links, acesso ao sistema de arquivos.
+- **Nunca** use Tauri commands para lógica que o Supabase JS SDK já resolve (queries, auth, storage de arquivos de usuário).
+- Todos os commands ficam em `src-tauri/src/commands/`; cada domínio em seu próprio módulo.
+- Tipos gerados via `ts-rs` ficam em `src/types/generated/` — nunca edite esses arquivos manualmente.
+- No frontend, acione commands com `invoke('command_name', { args })` — sem `window.fetch` direto para APIs externas.
 
 ### Moderação
 - Dados de denúncias e status de moderação nunca expostos para usuários não-admin.
@@ -53,8 +55,10 @@ Mantido em sincronia com `CLAUDE.md` — atualize os dois no mesmo commit.
 ## Comandos Principais
 
 ```bash
-npm run dev          # Servidor de desenvolvimento
-npm run build        # Build de produção
+npm run dev          # Servidor de desenvolvimento (Vite)
+npm run tauri dev    # App Tauri em modo desenvolvimento
+npm run build        # Build Vite
+npm run tauri build  # Build Tauri para plataforma atual
 npm run lint         # ESLint
 npx tsc --noEmit     # Type check
 npm run test         # Testes
