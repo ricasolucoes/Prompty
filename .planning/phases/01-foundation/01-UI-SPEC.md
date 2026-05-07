@@ -24,8 +24,8 @@ created: 2026-05-07
 | Preset | not applicable |
 | Component library | custom hand-rolled (ported from prototype ui.jsx) |
 | Icon library | Custom SVG inline (24px stroke, monoline, strokeWidth 1.8) — see icon catalog below |
-| Font — UI | Inter (400, 500, 600, 700, 800) via Google Fonts |
-| Font — Headings/Logo | Space Grotesk (500, 600, 700, 800) via Google Fonts |
+| Font — UI | Inter (400, 600, 700) via Google Fonts |
+| Font — Headings/Logo | Space Grotesk (600, 700) via Google Fonts |
 | Font — Prompt text | JetBrains Mono (400) via Google Fonts |
 | Styling approach | Tailwind v4 utility classes + CSS custom properties in globals.css |
 | Theme switching | Class on `<html>` element: `theme-light` / `theme-dark`. Dark from day 1. |
@@ -123,42 +123,39 @@ Declared values (multiples of 4 only):
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| xs    | 4px   | Icon-to-label gaps, inline badge padding |
-| sm    | 8px   | Card inner padding small, chip vertical pad |
-| md    | 16px  | Standard card horizontal padding, section gaps |
-| lg    | 24px  | Card-to-card vertical gap (feed list gap: 10px exception — see below) |
-| xl    | 32px  | Profile top padding, onboarding padding-top |
+| xs    | 4px   | Icon-to-label gaps, inline badge padding, prompt label margin-bottom |
+| sm    | 8px   | Card inner padding small, chip vertical pad, avatar-to-name gap, card gap, badge padding, confirmation padding, tab pill padding, star gap |
+| md    | 16px  | Standard card horizontal padding, section gaps, header padding, banner padding, action row margin |
+| lg    | 24px  | Card-to-card vertical gap, profile top padding |
+| xl    | 32px  | Profile top padding, onboarding padding-top, drag handle size, RateSheet drag handle margin |
 | 2xl   | 48px  | Feed bottom safe area padding |
 | 3xl   | 64px  | Onboarding title padding-top |
 
 Exceptions:
-- Feed card gap: 10px (not 8px, not 16px) — matches prototype FeedCard `marginBottom: 10`
-- Tab bar bottom safe area: 28px bottom padding — iOS home indicator clearance
-- Avatar-to-name gap in card header: 10px — matches prototype FeedCard header gap
-- Prompt section top label (uppercase "Prompt" label): 4px margin-bottom
-- Card content horizontal padding: 16px (matches `padding: '14px 16px 10px'`)
-- Post-copy banner internal padding: 14px all sides
+- Tab bar bottom safe area: `env(safe-area-inset-bottom, 32px)` — OS-controlled safe-area value, exempt from 4px grid
+- Toast bottom offset: 112px — compositional positioning value (tab bar height + sm gap)
+- Modal confetti offset: -48px — negative compositional offset
+- Tab button gap: 4px (xs token)
 
 > Source: Promptys v2.html FeedCard measurements, ProfileScreen padding values.
+> All spacing values mapped to nearest multiple of 4. OS safe-area exception documented above.
 
 ---
 
 ## Typography
 
-Exactly 4 sizes declared. Exactly 2 weights in regular use (400 + 700), with 600 for labels.
+Exactly 4 size roles. Exactly 3 weights: 400 (regular), 600 (labels/medium), 700 (headings/bold).
 
 | Role | Size | Weight | Font | Line Height | Usage |
 |------|------|--------|------|-------------|-------|
-| Body | 13.5px | 400 | Inter | 1.5 | Prompt preview text in feed card, body copy |
-| Label | 12px | 600 | Inter | 1.2 | Author name subline (time), chip labels, section uppercase labels |
+| Body | 13.5px | 400 | Inter | 1.5 | Prompt preview text in feed card, body copy, post-copy banner body, toast text, author subline |
+| Label | 12px | 600 | Inter | 1.2 | Author name subline (time), chip labels, section uppercase labels, reaction count, copies count, like count |
 | Heading | 19px | 700 | Space Grotesk | 1.25 | Feed card title (`<h2>`), letter-spacing: -0.4px |
 | Display | 22px | 700 | Space Grotesk | 1.1 | Profile name, header logo text, letter-spacing: -0.5px |
 
-Supporting sizes (not new roles, just mapped sub-uses):
-- 11px / 700 / Inter — uppercase section labels (letter-spacing: 0.6px, textTransform: uppercase)
-- 14.5px / 700 / Inter — author full name in card header
-- 13.5px / 600 / Inter — action button labels (Curtir, Copiar prompt)
-- 13px / 400 / Inter — post-copy banner body, toast text
+Variants within roles (not new roles):
+- **Body-Bold** — 13.5px / weight 700 / Inter: action button labels (Curtir, Copiar prompt), author full name in card header, post-copy banner headline, "Ver mais" inline button
+- **Label-Caps** — 12px / weight 600 / Inter / uppercase / letter-spacing 0.6px: section labels ("PROMPT", "SEUS ÚLTIMOS USADOS", "COMO FUNCIONA"), header level badge text (letter-spacing 0.4px)
 
 Prompt text (special role):
 - 13.5px / 400 / Inter (NOT JetBrains Mono in L1 feed card) — the body text display
@@ -166,6 +163,14 @@ Prompt text (special role):
 
 > Source: Promptys v2.html FeedCard inline styles; docs/design/design-system.md § Tipografia.
 > Note: prototype uses 13.5px for prompt body, not 13px. Use exact value.
+> Weights 500 and 800 are NOT declared — removed. Where 500 was used: use 600. Where 800
+> was used (Onboarding title, LevelUp level name, "NOVO NÍVEL" label): use 700.
+
+---
+
+## Visual Hierarchy
+
+**Primary focal point — Feed screen:** the FeedCard as a unit, anchored visually by the "Copiar prompt" primary CTA button (gradient violet, full-width, at card bottom). Every other element in the card exists to establish enough context for the user to tap that button with confidence.
 
 ---
 
@@ -202,12 +207,6 @@ Prompt text (special role):
 
 ---
 
-## Spacing Scale
-
-> See above — declared once with exceptions.
-
----
-
 ## Component Inventory (Phase 1 scope)
 
 Each component maps to a prototype source. Port to TypeScript + Tailwind, do NOT copy inline
@@ -228,59 +227,59 @@ style objects directly — translate to Tailwind utility classes.
 ### FeedCard (L1 — primary component)
 Full structure, top to bottom:
 
-1. **Card container** — `background: var(--surface)`, `border-top: 1px solid var(--line)`, `border-bottom: 1px solid var(--line)`, `margin-bottom: 10px`
+1. **Card container** — `background: var(--surface)`, `border-top: 1px solid var(--line)`, `border-bottom: 1px solid var(--line)`, `margin-bottom: 8px`
    - No border-radius — full-bleed Facebook-style card
    - No box-shadow on card itself (unlike v1 FeedCard)
 
-2. **Author header** — padding `14px 16px 10px`, flex row, gap 10px
+2. **Author header** — padding `16px 16px 8px`, flex row, gap 8px
    - Avatar 42px
-   - Name: 14.5px / weight 700 / `var(--text-1)`
-   - Subline: "compartilhou um Prompty · agora" — 12px / `var(--text-3)`
+   - Name: Body-Bold variant (13.5px / weight 700) / `var(--text-1)`
+   - Subline: "compartilhou um Prompty · agora" — Label role (12px / weight 600) / `var(--text-3)`
 
 3. **Title** — `h2`, padding `0 16px 8px`, Space Grotesk 700 19px, letter-spacing -0.4px, `var(--text-1)`, line-height 1.25
 
 4. **Prompt section** — padding `0 16px 12px`
-   - Label: "PROMPT" — 11px / weight 600 / `var(--text-3)` / uppercase / letter-spacing 0.6px / margin-bottom 4px
-   - Prompt text: 13.5px / weight 400 / `var(--text-2)` / line-height 1.5 / `white-space: pre-wrap`
+   - Label: "PROMPT" — Label-Caps variant (12px / weight 600 / uppercase / letter-spacing 0.6px) / `var(--text-3)` / margin-bottom 4px
+   - Prompt text: Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.5 / `white-space: pre-wrap`
    - **3-line clamp** via `-webkit-line-clamp: 3` when not expanded
-   - "Ver mais" inline button: `color: var(--text-1)` / weight 700 / no underline — expands inline (not modal)
+   - "Ver mais" inline button: `color: var(--text-1)` / Body-Bold variant (weight 700) / no underline — expands inline (not modal)
    - When expanded: full text shown, no collapse button
 
 5. **Cover image** — full-width, `aspect-ratio: 4/5`, `background: {gradient}` as fallback
    - Accepts uploaded image via `<image-slot>` web component (or `<img>` in React implementation)
    - No border-radius — edge to edge
 
-6. **Reaction count row** — padding `10px 16px 6px`, flex row
+6. **Reaction count row** — padding `8px 16px 8px`, flex row
    - Heart bubble: 18×18px circle, `background: var(--like)`, Icon `heartFill` size 11 white
-   - Like count: 12.5px / weight 500 / `var(--text-2)`
-   - Copies count: right-aligned, 12px / `var(--text-3)` — "{N} pessoas usaram"
+   - Like count: Label role (12px / weight 600) / `var(--text-2)`
+   - Copies count: right-aligned, Label role (12px / weight 600) / `var(--text-3)` — "{N} pessoas usaram"
 
 7. **Action row** — `margin: 0 16px`, `padding: 4px 0`, grid 2 columns, gap 4px
    - `border-top: 1px solid var(--line)`, `border-bottom: 1px solid var(--line)`
    - Left cell: **Curtir button** — Icon `heart`/`heartFill`, label "Curtir", color `var(--like)` when active
    - Right cell: **Copiar / Copiado button** — Icon `copy`/`check`, label "Copiar prompt" / "Copiado!"
-   - ActionBtn style: full-width, `padding: 11px 8px`, flex center, gap 8px, 13.5px / weight 600, `border-radius: 8px`
+   - ActionBtn style: full-width, `padding: 12px 8px`, flex center, gap 8px, Body-Bold variant (13.5px / weight 700), `border-radius: 8px`
    - Copiar state colors: default `var(--text-2)` → copied state `#34D399` (success green)
 
 8. **Post-copy banner** — appears inline inside the card after copy action
-   - Margin: `12px 16px 14px`, padding 14px, border-radius 14px
+   - Margin: `12px 16px 16px`, padding 16px, border-radius 14px
    - Background: `linear-gradient(135deg, rgba(124,58,237,0.12), rgba(34,211,238,0.06))`
    - Border: `1px solid var(--line)`
    - Animation: `fadeIn .25s`
-   - Row 1: Icon `sparkle` 16px `var(--primary)` + text "Cole no Gemini, ChatGPT ou Midjourney" — 13.5px / weight 700 / `var(--text-1)`
-   - Row 2 (margin-bottom 12px): "Quando voltar com a imagem pronta, conte para a comunidade como ficou." — 12.5px / `var(--text-2)` / line-height 1.4
+   - Row 1: Icon `sparkle` 16px `var(--primary)` + text "Cole no Gemini, ChatGPT ou Midjourney" — Body-Bold variant (13.5px / weight 700) / `var(--text-1)`
+   - Row 2 (margin-bottom 12px): "Quando voltar com a imagem pronta, conte para a comunidade como ficou." — Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.4
    - CTA button: PrimaryButton full-width, icon `star`, "Avaliar este prompt (+5p)", `color: var(--primary)`
 
 9. **Post-rate confirmation** (replaces banner if already rated) —
-   - Margin `12px 16px 14px`, padding `10px 12px`, border-radius 12px
+   - Margin `12px 16px 16px`, padding `8px 12px`, border-radius 12px
    - Background: `rgba(52,211,153,0.10)`, border: `1px solid rgba(52,211,153,0.25)`
-   - Icon `check` 16px `#34D399` + "Você já avaliou este Prompty. Obrigada!" — 12.5px / `var(--text-1)`
+   - Icon `check` 16px `#34D399` + "Você já avaliou este Prompty. Obrigada!" — Body role (13.5px / weight 400) / `var(--text-1)`
 
 > Source: Promptys v2.html FeedCard component (lines 267–423).
 
 ### Header (AppHeader L1)
 - Position sticky, top 0, z-index 30
-- Padding: `54px 18px 12px` (top padding accounts for iOS status bar)
+- Padding: `54px 16px 12px` (top padding accounts for iOS status bar)
 - Background: `var(--header-bg)` with `backdrop-filter: blur(14px)`
 - Border-bottom: `1px solid var(--line)`
 - Layout: flex row, space-between
@@ -290,8 +289,8 @@ Left side:
 - "Promptys" text: Space Grotesk 700 20px, letter-spacing -0.5px, `var(--text-1)`
 
 Right side:
-- Level badge: `padding: 4px 10px`, border-radius 999, `background: var(--primary-soft)`, `color: var(--primary)`
-- Badge text: 11px / weight 700 / letter-spacing 0.4px
+- Level badge: `padding: 4px 8px`, border-radius 999, `background: var(--primary-soft)`, `color: var(--primary)`
+- Badge text: Label-Caps variant (12px / weight 600 / letter-spacing 0.4px)
 - L1 text: "EXPLORADOR" (all-caps, not the cyan chip — that's the resolved data from LEVELS constant)
 
 > Note: L1 header does NOT have: search bar, PointsPill, "Criar Prompty" button, trophy/bell icons.
@@ -299,21 +298,21 @@ Right side:
 
 ### TabBar (L1 — 2 tabs)
 - Position: fixed, bottom 0, full-width, z-index 50
-- Outer wrapper: padding `8px 14px 28px` (28px for iOS safe area), `background: linear-gradient(180deg, transparent, var(--bg) 35%)`
-- Inner pill: flex space-around, `padding: 8px 6px`, `background: var(--surface)`, `border: 1px solid var(--line)`, `border-radius: 22px`, `box-shadow: 0 12px 40px rgba(0,0,0,0.10)`, `backdrop-filter: blur(20px)`
+- Outer wrapper: padding `8px 16px env(safe-area-inset-bottom, 32px)` — safe area is OS-controlled, exempt from 4px grid
+- Inner pill: flex space-around, `padding: 8px 8px`, `background: var(--surface)`, `border: 1px solid var(--line)`, `border-radius: 22px`, `box-shadow: 0 12px 40px rgba(0,0,0,0.10)`, `backdrop-filter: blur(20px)`
 - L1 tabs: [Feed (icon: `home`), Perfil (icon: `user`)]
 - Active tab: `color: var(--primary)`, `strokeWidth: 2.2`
 - Inactive tab: `color: var(--text-3)`, `strokeWidth: 1.8`
-- Tab button: flex column, center, gap 3px, 8px padding
-- Tab label: 10.5px / weight 600 below icon
+- Tab button: flex column, center, gap 4px, 8px padding
+- Tab label: Label role (12px / weight 600) below icon
 
 > Source: Promptys v2.html TabBar component (lines 724–784).
 
 ### PrimaryButton
 - Background: `color` prop (default `var(--primary)`)
 - For primary copy CTA: gradient `linear-gradient(180deg, #8B4DF5, #7C3AED)` — or flat `var(--primary)` per context
-- Padding: `14px 18px`, border-radius 14px
-- Font: 15px / weight 700 / letter-spacing -0.1px
+- Padding: `16px 16px`, border-radius 14px
+- Font: 16px / weight 700 / letter-spacing -0.1px
 - Color: white (`#fff`) or `fg` prop
 - Full-width via `full` prop: `width: 100%`, `box-sizing: border-box`
 - With icon: Icon left, gap 8px
@@ -323,27 +322,27 @@ Right side:
 
 ### SecondaryButton
 - Background: `var(--surface-2)`, border: `1px solid var(--line)`, color: `var(--text-1)`
-- Padding: `12px 16px`, border-radius 14px, font: 14px / weight 600
+- Padding: `12px 16px`, border-radius 14px, font: 13.5px / weight 600
 
 ### Stars (rating input — RateSheet only)
-- 5 star buttons in a row, gap 6px, center-aligned
+- 5 star buttons in a row, gap 8px, center-aligned
 - Filled: Icon `starFill` color `#FFB020`; empty: Icon `star` color `var(--line-strong)`
 - Size: 36px in RateSheet, 26px default
 - `animation: pop .25s` on selected star
 
 ### Progress (bar)
-- Height: 8px in profile, 5px in missions, 3px in small contexts
+- Height: 8px in profile, 4px in missions, 4px in small contexts
 - Background track: `var(--surface-2)` (dark) or `rgba(0,0,0,0.08)` (light)
 - Fill: `linear-gradient(90deg, #7C3AED, #22D3EE)` — or level color when per-level
 - `border-radius: height/2`, `transition: width .4s ease`
 
 ### RateSheet (bottom sheet)
 - Overlay: `background: rgba(0,0,0,0.5)`, `animation: fadeIn .2s`
-- Sheet: `width: 100%`, `background: var(--surface)`, `border-radius: 24px 24px 0 0`, `padding: 20px 20px 36px`
+- Sheet: `width: 100%`, `background: var(--surface)`, `border-radius: 24px 24px 0 0`, `padding: 20px 20px 32px`
 - `animation: slideUp .25s cubic-bezier(.2, .8, .2, 1)`
-- Drag handle: 36×4px rect, `background: var(--line-strong)`, centered, `margin: 0 auto 18px`
-- Title "Como ficou?" — Space Grotesk 700 21px, centered, letter-spacing -0.4px
-- Subtitle: prompty title — 13.5px / `var(--text-2)` / centered / margin-bottom 24px
+- Drag handle: 32×4px rect, `background: var(--line-strong)`, centered, `margin: 0 auto 16px`
+- Title "Como ficou?" — Space Grotesk 700 19px, centered, letter-spacing -0.4px
+- Subtitle: prompty title — Body role (13.5px / weight 400) / `var(--text-2)` / centered / margin-bottom 24px
 - Stars: 36px size, centered
 - Image slot: optional upload area, height 140px, `border-radius: 12px`, label "Anexar imagem (opcional)"
 - Action row: SecondaryButton "Depois" + PrimaryButton "Enviar (+5p)" (disabled until rating > 0)
@@ -351,11 +350,11 @@ Right side:
 > Source: Promptys v2.html RateSheet component (lines 630–694).
 
 ### Toast
-- Position: `absolute`, `left: 50%`, `transform: translateX(-50%)`, `bottom: 110px`, z-index 90
+- Position: `absolute`, `left: 50%`, `transform: translateX(-50%)`, `bottom: 112px`, z-index 90
 - Background: `rgba(20, 20, 30, 0.94)`, white text, border-radius 999px
-- Padding: `10px 16px`, flex row, gap 8px, font 13px / weight 600
+- Padding: `8px 16px`, flex row, gap 8px, Body-Bold variant (13.5px / weight 700)
 - Auto-dismiss: 2400ms
-- Points badge inline: `background: rgba(124,58,237,0.85)`, 11px / weight 700, padding `2px 8px`, border-radius 999
+- Points badge inline: `background: rgba(124,58,237,0.85)`, Label-Caps variant (12px / weight 600), padding `4px 8px`, border-radius 999
 - `animation: fadeIn .2s`
 
 ### ProfileScreen (L1 — minimal version)
@@ -365,25 +364,25 @@ Right side:
 
 Avatar block:
 - Avatar: 88px centered
-- Name: Space Grotesk 700 22px, letter-spacing -0.4px
-- Handle: 13px / `var(--text-3)` / margin-top 4px
+- Name: Display role (22px / Space Grotesk 700) / letter-spacing -0.4px
+- Handle: Body role (13.5px / weight 400) / `var(--text-3)` / margin-top 4px
 
 Usage count:
-- "Você usou **{N}** Promptys" — 13px / `var(--text-2)`, margin-top 18px
+- "Você usou **{N}** Promptys" — Body role (13.5px / weight 400) / `var(--text-2)`, margin-top 16px
 - Bold count in `var(--text-1)`
 
 Progress card (L1 and L2 only, not L3):
-- max-width 280px, margin 0 auto, padding 14px, border-radius 14px
+- max-width 280px, margin 0 auto, padding 16px, border-radius 14px
 - `background: var(--surface)`, border `1px solid var(--line)`
 - Row: Icon `lock` 14px `var(--text-3)` + "Próximo desbloqueio" label + "{N} para ir" count
 - Progress bar: height 8px, fill gradient `#7C3AED → #22D3EE`
-- Text (L1): "Use mais alguns Promptys para destravar **Buscar** e **Salvos**." — 12.5px / `var(--text-2)` / line-height 1.4
+- Text (L1): "Use mais alguns Promptys para destravar **Buscar** e **Salvos**." — Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.4
 - IMPORTANT: No numeric points shown. Language is feature-unlock, not gamification numbers.
 
 Recents grid:
-- Label: "SEUS ÚLTIMOS USADOS" — 12px / weight 700 / uppercase / `var(--text-3)` / letter-spacing 0.5px
+- Label: "SEUS ÚLTIMOS USADOS" — Label-Caps variant (12px / weight 600 / uppercase / letter-spacing 0.5px) / `var(--text-3)`
 - Grid: 3 columns, gap 8px, aspect-ratio 4/5 thumbnails, border-radius 12px
-- Each thumbnail: cover gradient bg, dark gradient overlay at bottom, title text 11px white weight 700
+- Each thumbnail: cover gradient bg, dark gradient overlay at bottom, title text 12px white weight 700
 - Empty state: bordered dashed box — "Você ainda não copiou nenhum Prompty.\nVolte ao feed e experimente um."
 
 > Source: Promptys v2.html ProfileScreen component (lines 482–585).
@@ -392,44 +391,47 @@ Recents grid:
 - Full screen, `padding: 80px 28px 28px`, `background: var(--bg)`
 - Logo mark: 64×64px, border-radius 18px, gradient `#7C3AED → #22D3EE`, Icon `wand` 32px white
 - Box shadow: `0 12px 36px rgba(124,58,237,0.35)`
-- Title: Space Grotesk 800 34px, margin-top 32px, letter-spacing -1.2px, line-height 1.05
+- Title: Space Grotesk 700 34px, margin-top 32px, letter-spacing -1.2px, line-height 1.05
 - Copy: "Receitas prontas\npara criar imagens\ncom IA."
-- Body: 16px / line-height 1.5 / `var(--text-2)` — "Toque em um Prompty, copie o texto, cole no **Gemini** ou outro app de IA, e veja o resultado. Depois volte e conte como ficou."
+- Body: 16px / weight 400 / line-height 1.5 / `var(--text-2)` — "Toque em um Prompty, copie o texto, cole no **Gemini** ou outro app de IA, e veja o resultado. Depois volte e conte como ficou."
 - Spacer: `flex: 1` pushes button to bottom
 - CTA button: PrimaryButton full, icon `sparkle`, "Começar a explorar"
-- Footnote: "Sem cadastro, sem cartão. Entre direto no feed." — 12px / `var(--text-3)` / centered / margin-top 14px
+- Footnote: "Sem cadastro, sem cartão. Entre direto no feed." — Label role (12px / weight 600) / `var(--text-3)` / centered / margin-top 16px
 
 > Source: Promptys v2.html Onboarding component (lines 588–627).
+> Note: Onboarding title uses 34px (outside the 4 declared roles — this is a one-off display-hero
+> size for the onboarding screen only, not a new typography role). Weight is 700, not 800.
 
 ### LevelUpModal
 - Overlay: `position: absolute, inset: 0`, z-index 200, `background: rgba(0,0,0,0.75)`
 - `animation: fadeIn .25s`
 - Modal card: `width: calc(100% - 40px)`, max-width 340px, `background: var(--surface)`, border-radius 24px, padding `32px 24px 24px`, centered
 - `animation: pop .35s cubic-bezier(.2, 1.4, .4, 1)` — bouncy spring entrance
-- Confetti burst: absolute `top: -50px, left/right: -50px`, height 200px, radial-gradient using level color
-- "NOVO NÍVEL" label: 12px / weight 800 / letter-spacing 1.4px / level.color
+- Confetti burst: absolute `top: -48px, left/right: -48px`, height 200px, radial-gradient using level color
+- "NOVO NÍVEL" label: Label-Caps variant (12px / weight 600 / letter-spacing 1.4px) / level.color
 - Emoji: 64px, centered
-- Level name: Space Grotesk 800 30px, letter-spacing -0.8px, `var(--text-1)`
-- Description: 13.5px / `var(--text-2)` / line-height 1.45 / margin-top 10px
+- Level name: Space Grotesk 700 28px, letter-spacing -0.8px, `var(--text-1)`
+- Description: Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.45 / margin-top 8px
 - Unlocked list box: padding 12px, border-radius 12px, `background: var(--surface-2)`, border `1px solid var(--line)`
-- List: `<ul>`, 13px / `var(--text-2)` / line-height 1.55
+- List: `<ul>`, Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.55
 - For L2 unlock (Phase 1 trigger): "Buscar Promptys por estilo", "Salvar favoritos na sua biblioteca", "Seguir criadores"
 - CTA: PrimaryButton full, icon `sparkle`, "Continuar explorando", color = `level.color`
 - Shown once per threshold crossing; dismissible by button tap or backdrop tap
 
 > Source: gamification.jsx LevelUpModal (lines 929–998).
+> Note: Level name uses 28px / weight 700 (not 800). "NOVO NÍVEL" label uses Label-Caps at 12px (not 12px/800).
 
 ### WelcomeStrip ("Como funciona")
 - Shown only in L1, first session (new/unauth users)
-- Margin `12px 16px 8px`, padding 14px, border-radius 16px
+- Margin `12px 16px 8px`, padding 16px, border-radius 16px
 - Background: `linear-gradient(135deg, rgba(124,58,237,0.10), rgba(34,211,238,0.06))`
 - Border: `1px solid var(--line)`
-- Label: "COMO FUNCIONA" — 11px / weight 700 / `var(--primary)` / uppercase / letter-spacing 0.5px / margin-bottom 4px
-- Body: 13.5px / `var(--text-1)` / line-height 1.45 — "Promptys são **receitas prontas** para gerar imagens com IA. Toque em **Copiar prompt**, cole no Gemini ou outro app, depois volte aqui e conte como ficou."
+- Label: "COMO FUNCIONA" — Label-Caps variant (12px / weight 600 / uppercase / letter-spacing 0.5px) / `var(--primary)` / margin-bottom 4px
+- Body: Body role (13.5px / weight 400) / `var(--text-1)` / line-height 1.45 — "Promptys são **receitas prontas** para gerar imagens com IA. Toque em **Copiar prompt**, cole no Gemini ou outro app, depois volte aqui e conte como ficou."
 
 ### L1 End-of-Feed Nudge
 - Position: after last card, `margin: 20px 16px 0`, padding 16px, border-radius 16px
-- `border: 1px dashed var(--line-strong)`, `text-align: center`, `color: var(--text-3)`, 13px, line-height 1.45
+- `border: 1px dashed var(--line-strong)`, `text-align: center`, `color: var(--text-3)`, Body role (13.5px / weight 400), line-height 1.45
 - Text: "Conforme você usar mais Promptys, novas funções vão aparecer aqui."
 
 ### SkeletonCard (Claude's Discretion — loading state)
@@ -447,24 +449,6 @@ Recents grid:
 - Default: `{ dark: false, level: "L1" }`
 - Render condition: `import.meta.env.DEV === true` — NEVER in production build
 - Source: `docs/planning/prototypes/components/tweaks-panel.jsx` (port as-is or use TweaksPanel directly)
-
----
-
-## Spacing Scale
-
-> Already declared above. Summary: 4/8/16/24/32/48/64px scale. Exceptions noted per component.
-
----
-
-## Typography
-
-> Already declared above. Summary: 4 declared sizes (13.5/12/19/22px), weights 400/600/700.
-
----
-
-## Color
-
-> Already declared above. Full token table with light/dark values and reserved-for list.
 
 ---
 
@@ -509,7 +493,7 @@ All copy is in Brazilian Portuguese. L1 avoids jargon ("prompt" → "receita de 
 | "Ver mais" inline | "Ver mais" |
 | Empty feed | "Nada por aqui ainda. Volte mais tarde." (fallback) |
 | Feed loading error | "Não conseguimos carregar o feed. Toque para tentar de novo." |
-| Auth error — generic | "Algo deu errado. Tente novamente." |
+| Auth error — generic | "Algo deu errado. Verifique sua conexão e tente novamente." |
 | Auth error — email taken | "Este e-mail já está em uso. Tente entrar ou recuperar a senha." |
 | Auth error — wrong password | "E-mail ou senha incorretos." |
 
@@ -530,9 +514,9 @@ All copy is in Brazilian Portuguese. L1 avoids jargon ("prompt" → "receita de 
 
 ### Copy Flow (primary loop)
 ```
-Feed card: [📋 Copiar prompt]
+Feed card: [Copiar prompt]
   → navigator.clipboard.writeText(resolvedPrompt)
-  → Button text becomes "Copiado!" + icon changes to ✓ (color: #34D399)
+  → Button text becomes "Copiado!" + icon changes to check (color: #34D399)
   → Post-copy banner appears inside the card (fadeIn .25s)
   → Toast: "Prompt copiado" (icon: copy, color: #34D399) — auto-dismiss 2400ms
   → User taps "Avaliar este prompt (+5p)"
