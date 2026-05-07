@@ -27,7 +27,7 @@
 
 - [x] **SOCL-01**: Authenticated user can save (bookmark) a Prompty
 - [x] **SOCL-02**: Authenticated user can view their saved Promptys
-- [ ] **SOCL-03**: Authenticated user can mark feedback: "Funcionou" or "Não ficou bom" on a Prompty
+- [x] **SOCL-03**: Authenticated user can mark feedback: "Funcionou" or "Não ficou bom" on a Prompty
 
 ### Profiles
 
@@ -134,7 +134,7 @@
 | FEED-05 | Phase 1 | Complete |
 | SOCL-01 | Phase 1 | Complete |
 | SOCL-02 | Phase 1 | Complete |
-| SOCL-03 | Phase 1 | Pending |
+| SOCL-03 | Phase 1 | Complete |
 | PROF-01 | Phase 1 | Complete |
 | PROF-02 | Phase 1 | Complete |
 | PROF-03 | Phase 1 | Complete |
