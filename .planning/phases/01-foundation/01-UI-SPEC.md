@@ -24,8 +24,8 @@ created: 2026-05-07
 | Preset | not applicable |
 | Component library | custom hand-rolled (ported from prototype ui.jsx) |
 | Icon library | Custom SVG inline (24px stroke, monoline, strokeWidth 1.8) — see icon catalog below |
-| Font — UI | Inter (400, 600, 700) via Google Fonts |
-| Font — Headings/Logo | Space Grotesk (600, 700) via Google Fonts |
+| Font — UI | Inter (400, 700) via Google Fonts |
+| Font — Headings/Logo | Space Grotesk (700) via Google Fonts |
 | Font — Prompt text | JetBrains Mono (400) via Google Fonts |
 | Styling approach | Tailwind v4 utility classes + CSS custom properties in globals.css |
 | Theme switching | Class on `<html>` element: `theme-light` / `theme-dark`. Dark from day 1. |
@@ -132,6 +132,7 @@ Declared values (multiples of 4 only):
 | 3xl   | 64px  | Onboarding title padding-top |
 
 Exceptions:
+- **Header top padding:** 54px — iOS status bar safe zone (44px status bar + 10px buffer); OS-controlled inset, exempt from 4px grid.
 - Tab bar bottom safe area: `env(safe-area-inset-bottom, 32px)` — OS-controlled safe-area value, exempt from 4px grid
 - Toast bottom offset: 112px — compositional positioning value (tab bar height + sm gap)
 - Modal confetti offset: -48px — negative compositional offset
@@ -144,26 +145,36 @@ Exceptions:
 
 ## Typography
 
-Exactly 4 size roles. Exactly 3 weights: 400 (regular), 600 (labels/medium), 700 (headings/bold).
+Exactly 4 size roles. Exactly 2 weights: 400 (regular), 700 (bold).
 
 | Role | Size | Weight | Font | Line Height | Usage |
 |------|------|--------|------|-------------|-------|
 | Body | 13.5px | 400 | Inter | 1.5 | Prompt preview text in feed card, body copy, post-copy banner body, toast text, author subline |
-| Label | 12px | 600 | Inter | 1.2 | Author name subline (time), chip labels, section uppercase labels, reaction count, copies count, like count |
+| Label | 12px | 700 | Inter | 1.2 | Author name subline (time), chip labels, section uppercase labels, reaction count, copies count, like count |
 | Heading | 19px | 700 | Space Grotesk | 1.25 | Feed card title (`<h2>`), letter-spacing: -0.4px |
 | Display | 22px | 700 | Space Grotesk | 1.1 | Profile name, header logo text, letter-spacing: -0.5px |
 
 Variants within roles (not new roles):
 - **Body-Bold** — 13.5px / weight 700 / Inter: action button labels (Curtir, Copiar prompt), author full name in card header, post-copy banner headline, "Ver mais" inline button
-- **Label-Caps** — 12px / weight 600 / Inter / uppercase / letter-spacing 0.6px: section labels ("PROMPT", "SEUS ÚLTIMOS USADOS", "COMO FUNCIONA"), header level badge text (letter-spacing 0.4px)
+- **Label-Caps** — 12px / weight 700 / Inter / uppercase / letter-spacing 0.6px: section labels ("PROMPT", "SEUS ÚLTIMOS USADOS", "COMO FUNCIONA"), header level badge text (letter-spacing 0.4px)
 
 Prompt text (special role):
 - 13.5px / 400 / Inter (NOT JetBrains Mono in L1 feed card) — the body text display
 - JetBrains Mono reserved for: code blocks, version numbers, monospace counters (not shown in L1)
 
+### Exceptions (one-off sizes outside the 4 declared roles)
+
+These sizes appear in exactly one component each and are not general typography roles.
+
+| Size | Weight | Component | Purpose |
+|------|--------|-----------|---------|
+| 16px | 700 | PrimaryButton label only | One-off actionable button size; not a role |
+| 28px | 700 | LevelUpModal level name only | One-off celebratory display; not a role |
+| 34px | 700 | Onboarding hero title only | One-off display-hero size for onboarding screen only; not a role |
+
 > Source: Promptys v2.html FeedCard inline styles; docs/design/design-system.md § Tipografia.
 > Note: prototype uses 13.5px for prompt body, not 13px. Use exact value.
-> Weights 500 and 800 are NOT declared — removed. Where 500 was used: use 600. Where 800
+> Weights 500 and 800 are NOT declared — removed. Where 500 was used: use 700. Where 800
 > was used (Onboarding title, LevelUp level name, "NOVO NÍVEL" label): use 700.
 
 ---
@@ -234,12 +245,12 @@ Full structure, top to bottom:
 2. **Author header** — padding `16px 16px 8px`, flex row, gap 8px
    - Avatar 42px
    - Name: Body-Bold variant (13.5px / weight 700) / `var(--text-1)`
-   - Subline: "compartilhou um Prompty · agora" — Label role (12px / weight 600) / `var(--text-3)`
+   - Subline: "compartilhou um Prompty · agora" — Label role (12px / weight 700) / `var(--text-3)`
 
 3. **Title** — `h2`, padding `0 16px 8px`, Space Grotesk 700 19px, letter-spacing -0.4px, `var(--text-1)`, line-height 1.25
 
 4. **Prompt section** — padding `0 16px 12px`
-   - Label: "PROMPT" — Label-Caps variant (12px / weight 600 / uppercase / letter-spacing 0.6px) / `var(--text-3)` / margin-bottom 4px
+   - Label: "PROMPT" — Label-Caps variant (12px / weight 700 / uppercase / letter-spacing 0.6px) / `var(--text-3)` / margin-bottom 4px
    - Prompt text: Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.5 / `white-space: pre-wrap`
    - **3-line clamp** via `-webkit-line-clamp: 3` when not expanded
    - "Ver mais" inline button: `color: var(--text-1)` / Body-Bold variant (weight 700) / no underline — expands inline (not modal)
@@ -251,8 +262,8 @@ Full structure, top to bottom:
 
 6. **Reaction count row** — padding `8px 16px 8px`, flex row
    - Heart bubble: 18×18px circle, `background: var(--like)`, Icon `heartFill` size 11 white
-   - Like count: Label role (12px / weight 600) / `var(--text-2)`
-   - Copies count: right-aligned, Label role (12px / weight 600) / `var(--text-3)` — "{N} pessoas usaram"
+   - Like count: Label role (12px / weight 700) / `var(--text-2)`
+   - Copies count: right-aligned, Label role (12px / weight 700) / `var(--text-3)` — "{N} pessoas usaram"
 
 7. **Action row** — `margin: 0 16px`, `padding: 4px 0`, grid 2 columns, gap 4px
    - `border-top: 1px solid var(--line)`, `border-bottom: 1px solid var(--line)`
@@ -290,7 +301,7 @@ Left side:
 
 Right side:
 - Level badge: `padding: 4px 8px`, border-radius 999, `background: var(--primary-soft)`, `color: var(--primary)`
-- Badge text: Label-Caps variant (12px / weight 600 / letter-spacing 0.4px)
+- Badge text: Label-Caps variant (12px / weight 700 / letter-spacing 0.4px)
 - L1 text: "EXPLORADOR" (all-caps, not the cyan chip — that's the resolved data from LEVELS constant)
 
 > Note: L1 header does NOT have: search bar, PointsPill, "Criar Prompty" button, trophy/bell icons.
@@ -304,7 +315,7 @@ Right side:
 - Active tab: `color: var(--primary)`, `strokeWidth: 2.2`
 - Inactive tab: `color: var(--text-3)`, `strokeWidth: 1.8`
 - Tab button: flex column, center, gap 4px, 8px padding
-- Tab label: Label role (12px / weight 600) below icon
+- Tab label: Label role (12px / weight 700) below icon
 
 > Source: Promptys v2.html TabBar component (lines 724–784).
 
@@ -322,7 +333,7 @@ Right side:
 
 ### SecondaryButton
 - Background: `var(--surface-2)`, border: `1px solid var(--line)`, color: `var(--text-1)`
-- Padding: `12px 16px`, border-radius 14px, font: 13.5px / weight 600
+- Padding: `12px 16px`, border-radius 14px, font: 13.5px / weight 700
 
 ### Stars (rating input — RateSheet only)
 - 5 star buttons in a row, gap 8px, center-aligned
@@ -354,7 +365,7 @@ Right side:
 - Background: `rgba(20, 20, 30, 0.94)`, white text, border-radius 999px
 - Padding: `8px 16px`, flex row, gap 8px, Body-Bold variant (13.5px / weight 700)
 - Auto-dismiss: 2400ms
-- Points badge inline: `background: rgba(124,58,237,0.85)`, Label-Caps variant (12px / weight 600), padding `4px 8px`, border-radius 999
+- Points badge inline: `background: rgba(124,58,237,0.85)`, Label-Caps variant (12px / weight 700), padding `4px 8px`, border-radius 999
 - `animation: fadeIn .2s`
 
 ### ProfileScreen (L1 — minimal version)
@@ -380,7 +391,7 @@ Progress card (L1 and L2 only, not L3):
 - IMPORTANT: No numeric points shown. Language is feature-unlock, not gamification numbers.
 
 Recents grid:
-- Label: "SEUS ÚLTIMOS USADOS" — Label-Caps variant (12px / weight 600 / uppercase / letter-spacing 0.5px) / `var(--text-3)`
+- Label: "SEUS ÚLTIMOS USADOS" — Label-Caps variant (12px / weight 700 / uppercase / letter-spacing 0.5px) / `var(--text-3)`
 - Grid: 3 columns, gap 8px, aspect-ratio 4/5 thumbnails, border-radius 12px
 - Each thumbnail: cover gradient bg, dark gradient overlay at bottom, title text 12px white weight 700
 - Empty state: bordered dashed box — "Você ainda não copiou nenhum Prompty.\nVolte ao feed e experimente um."
@@ -396,11 +407,11 @@ Recents grid:
 - Body: 16px / weight 400 / line-height 1.5 / `var(--text-2)` — "Toque em um Prompty, copie o texto, cole no **Gemini** ou outro app de IA, e veja o resultado. Depois volte e conte como ficou."
 - Spacer: `flex: 1` pushes button to bottom
 - CTA button: PrimaryButton full, icon `sparkle`, "Começar a explorar"
-- Footnote: "Sem cadastro, sem cartão. Entre direto no feed." — Label role (12px / weight 600) / `var(--text-3)` / centered / margin-top 16px
+- Footnote: "Sem cadastro, sem cartão. Entre direto no feed." — Label role (12px / weight 700) / `var(--text-3)` / centered / margin-top 16px
 
 > Source: Promptys v2.html Onboarding component (lines 588–627).
-> Note: Onboarding title uses 34px (outside the 4 declared roles — this is a one-off display-hero
-> size for the onboarding screen only, not a new typography role). Weight is 700, not 800.
+> Note: Onboarding title uses 34px (outside the 4 declared roles — documented in Typography §
+> Exceptions as a one-off display-hero size for the onboarding screen only, not a new role). Weight is 700, not 800.
 
 ### LevelUpModal
 - Overlay: `position: absolute, inset: 0`, z-index 200, `background: rgba(0,0,0,0.75)`
@@ -408,7 +419,7 @@ Recents grid:
 - Modal card: `width: calc(100% - 40px)`, max-width 340px, `background: var(--surface)`, border-radius 24px, padding `32px 24px 24px`, centered
 - `animation: pop .35s cubic-bezier(.2, 1.4, .4, 1)` — bouncy spring entrance
 - Confetti burst: absolute `top: -48px, left/right: -48px`, height 200px, radial-gradient using level color
-- "NOVO NÍVEL" label: Label-Caps variant (12px / weight 600 / letter-spacing 1.4px) / level.color
+- "NOVO NÍVEL" label: Label-Caps variant (12px / weight 700 / letter-spacing 1.4px) / level.color
 - Emoji: 64px, centered
 - Level name: Space Grotesk 700 28px, letter-spacing -0.8px, `var(--text-1)`
 - Description: Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.45 / margin-top 8px
@@ -419,14 +430,14 @@ Recents grid:
 - Shown once per threshold crossing; dismissible by button tap or backdrop tap
 
 > Source: gamification.jsx LevelUpModal (lines 929–998).
-> Note: Level name uses 28px / weight 700 (not 800). "NOVO NÍVEL" label uses Label-Caps at 12px (not 12px/800).
+> Note: Level name uses 28px / weight 700 (documented in Typography § Exceptions). "NOVO NÍVEL" label uses Label-Caps at 12px / weight 700.
 
 ### WelcomeStrip ("Como funciona")
 - Shown only in L1, first session (new/unauth users)
 - Margin `12px 16px 8px`, padding 16px, border-radius 16px
 - Background: `linear-gradient(135deg, rgba(124,58,237,0.10), rgba(34,211,238,0.06))`
 - Border: `1px solid var(--line)`
-- Label: "COMO FUNCIONA" — Label-Caps variant (12px / weight 600 / uppercase / letter-spacing 0.5px) / `var(--primary)` / margin-bottom 4px
+- Label: "COMO FUNCIONA" — Label-Caps variant (12px / weight 700 / uppercase / letter-spacing 0.5px) / `var(--primary)` / margin-bottom 4px
 - Body: Body role (13.5px / weight 400) / `var(--text-1)` / line-height 1.45 — "Promptys são **receitas prontas** para gerar imagens com IA. Toque em **Copiar prompt**, cole no Gemini ou outro app, depois volte aqui e conte como ficou."
 
 ### L1 End-of-Feed Nudge
