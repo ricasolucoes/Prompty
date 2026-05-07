@@ -372,11 +372,17 @@ VALUES (
 )
 ON CONFLICT (id) DO NOTHING;
 
--- The on_auth_user_created trigger will populate profiles. Ensure name/username are set.
-UPDATE profiles
-   SET name = 'Promptys Demo',
-       username = 'promptys'
- WHERE id = '${SEED_AUTHOR_ID}';
+-- Ensure profiles row exists (trigger may not fire on re-runs when auth.users row already exists).
+-- Safe to insert directly as postgres superuser during seeding; ON CONFLICT handles idempotency.
+INSERT INTO profiles (id, name, username)
+VALUES (
+  '${SEED_AUTHOR_ID}',
+  'Promptys Demo',
+  'promptys'
+)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  username = EXCLUDED.username;
 
 -- Step 2: insert promptys (idempotent on slug)
 `
