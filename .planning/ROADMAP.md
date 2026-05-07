@@ -29,7 +29,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can set their display name, avatar, and bio, and view their own and other users' public profiles
   4. Every database table has RLS enabled with explicit policies; the `point_events` table rejects all client-side writes — only SQL triggers can insert rows
   5. Publishing a Prompty, submitting a test result, receiving a like, leaving a rating, and posting a helpful comment each trigger exactly one point event entry; duplicate actions produce no duplicate rows
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+- [ ] 01-foundation/01-01-PLAN.md — Test scaffold (Vitest config + failing test stubs + SQL role/trigger test scripts)
+- [ ] 01-foundation/01-02-PLAN.md — Supabase schema + RLS + triggers + views + generated TS types
+- [ ] 01-foundation/01-03-PLAN.md — Next.js 15 + Tailwind 4 + shadcn + @supabase/ssr clients + middleware + level constants + image compression
+- [ ] 01-foundation/01-04-PLAN.md — Auth pages and Server Actions (signup/login/logout/reset/callback/setup-profile)
+- [ ] 01-foundation/01-05-PLAN.md — Profile pages (public SSR + dashboard + settings) + avatar upload
+- [ ] 01-foundation/01-06-PLAN.md — Weekly Supabase free-tier usage monitor (GitHub Actions)
 
 ### Phase 2: Prompty Creation and Testing
 **Goal**: Users can create a fully-featured Prompty with typed variables and version history, and any visitor can view, interact with, and test that Prompty
