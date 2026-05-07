@@ -132,7 +132,7 @@ Declared values (multiples of 4 only):
 | 3xl   | 64px  | Onboarding title padding-top |
 
 Exceptions:
-- **Header top padding:** 54px — iOS status bar safe zone (44px status bar + 10px buffer); OS-controlled inset, exempt from 4px grid.
+- **Header top padding:** 52px — iOS status bar safe zone (44px status bar + 8px buffer); aligned to 4px grid.
 - Tab bar bottom safe area: `env(safe-area-inset-bottom, 32px)` — OS-controlled safe-area value, exempt from 4px grid
 - Toast bottom offset: 112px — compositional positioning value (tab bar height + sm gap)
 - Modal confetti offset: -48px — negative compositional offset
@@ -162,20 +162,10 @@ Prompt text (special role):
 - 13.5px / 400 / Inter (NOT JetBrains Mono in L1 feed card) — the body text display
 - JetBrains Mono reserved for: code blocks, version numbers, monospace counters (not shown in L1)
 
-### Exceptions (one-off sizes outside the 4 declared roles)
-
-These sizes appear in exactly one component each and are not general typography roles.
-
-| Size | Weight | Component | Purpose |
-|------|--------|-----------|---------|
-| 16px | 700 | PrimaryButton label only | One-off actionable button size; not a role |
-| 28px | 700 | LevelUpModal level name only | One-off celebratory display; not a role |
-| 34px | 700 | Onboarding hero title only | One-off display-hero size for onboarding screen only; not a role |
-
 > Source: Promptys v2.html FeedCard inline styles; docs/design/design-system.md § Tipografia.
 > Note: prototype uses 13.5px for prompt body, not 13px. Use exact value.
-> Weights 500 and 800 are NOT declared — removed. Where 500 was used: use 700. Where 800
-> was used (Onboarding title, LevelUp level name, "NOVO NÍVEL" label): use 700.
+> Weights 500 and 800 are NOT declared. PrimaryButton, LevelUpModal level name, and Onboarding
+> title use Display role (22px / 700) — visual hierarchy over pixel-perfect prototype fidelity.
 
 ---
 
@@ -290,7 +280,7 @@ Full structure, top to bottom:
 
 ### Header (AppHeader L1)
 - Position sticky, top 0, z-index 30
-- Padding: `54px 16px 12px` (top padding accounts for iOS status bar)
+- Padding: `52px 16px 12px` (top padding accounts for iOS status bar)
 - Background: `var(--header-bg)` with `backdrop-filter: blur(14px)`
 - Border-bottom: `1px solid var(--line)`
 - Layout: flex row, space-between
@@ -323,7 +313,7 @@ Right side:
 - Background: `color` prop (default `var(--primary)`)
 - For primary copy CTA: gradient `linear-gradient(180deg, #8B4DF5, #7C3AED)` — or flat `var(--primary)` per context
 - Padding: `16px 16px`, border-radius 14px
-- Font: 16px / weight 700 / letter-spacing -0.1px
+- Font: Display role (22px / weight 700) / letter-spacing -0.1px
 - Color: white (`#fff`) or `fg` prop
 - Full-width via `full` prop: `width: 100%`, `box-sizing: border-box`
 - With icon: Icon left, gap 8px
@@ -356,7 +346,7 @@ Right side:
 - Subtitle: prompty title — Body role (13.5px / weight 400) / `var(--text-2)` / centered / margin-bottom 24px
 - Stars: 36px size, centered
 - Image slot: optional upload area, height 140px, `border-radius: 12px`, label "Anexar imagem (opcional)"
-- Action row: SecondaryButton "Depois" + PrimaryButton "Enviar (+5p)" (disabled until rating > 0)
+- Action row: SecondaryButton "Avaliar depois" + PrimaryButton "Enviar (+5p)" (disabled until rating > 0)
 
 > Source: Promptys v2.html RateSheet component (lines 630–694).
 
@@ -402,16 +392,15 @@ Recents grid:
 - Full screen, `padding: 80px 28px 28px`, `background: var(--bg)`
 - Logo mark: 64×64px, border-radius 18px, gradient `#7C3AED → #22D3EE`, Icon `wand` 32px white
 - Box shadow: `0 12px 36px rgba(124,58,237,0.35)`
-- Title: Space Grotesk 700 34px, margin-top 32px, letter-spacing -1.2px, line-height 1.05
+- Title: Display role (22px / Space Grotesk / weight 700), margin-top 32px, letter-spacing -1.2px, line-height 1.05
 - Copy: "Receitas prontas\npara criar imagens\ncom IA."
-- Body: 16px / weight 400 / line-height 1.5 / `var(--text-2)` — "Toque em um Prompty, copie o texto, cole no **Gemini** ou outro app de IA, e veja o resultado. Depois volte e conte como ficou."
+- Body: Body role (13.5px / weight 400 / line-height 1.5) / `var(--text-2)` — "Toque em um Prompty, copie o texto, cole no **Gemini** ou outro app de IA, e veja o resultado. Depois volte e conte como ficou."
 - Spacer: `flex: 1` pushes button to bottom
 - CTA button: PrimaryButton full, icon `sparkle`, "Começar a explorar"
 - Footnote: "Sem cadastro, sem cartão. Entre direto no feed." — Label role (12px / weight 700) / `var(--text-3)` / centered / margin-top 16px
 
 > Source: Promptys v2.html Onboarding component (lines 588–627).
-> Note: Onboarding title uses 34px (outside the 4 declared roles — documented in Typography §
-> Exceptions as a one-off display-hero size for the onboarding screen only, not a new role). Weight is 700, not 800.
+> Note: Onboarding title uses Display role (22px / weight 700 / Space Grotesk). Weight is 700, not 800.
 
 ### LevelUpModal
 - Overlay: `position: absolute, inset: 0`, z-index 200, `background: rgba(0,0,0,0.75)`
@@ -421,7 +410,7 @@ Recents grid:
 - Confetti burst: absolute `top: -48px, left/right: -48px`, height 200px, radial-gradient using level color
 - "NOVO NÍVEL" label: Label-Caps variant (12px / weight 700 / letter-spacing 1.4px) / level.color
 - Emoji: 64px, centered
-- Level name: Space Grotesk 700 28px, letter-spacing -0.8px, `var(--text-1)`
+- Level name: Display role (22px / Space Grotesk / weight 700), letter-spacing -0.8px, `var(--text-1)`
 - Description: Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.45 / margin-top 8px
 - Unlocked list box: padding 12px, border-radius 12px, `background: var(--surface-2)`, border `1px solid var(--line)`
 - List: `<ul>`, Body role (13.5px / weight 400) / `var(--text-2)` / line-height 1.55
@@ -430,7 +419,7 @@ Recents grid:
 - Shown once per threshold crossing; dismissible by button tap or backdrop tap
 
 > Source: gamification.jsx LevelUpModal (lines 929–998).
-> Note: Level name uses 28px / weight 700 (documented in Typography § Exceptions). "NOVO NÍVEL" label uses Label-Caps at 12px / weight 700.
+> Note: Level name uses Display role (22px / weight 700). "NOVO NÍVEL" label uses Label-Caps at 12px / weight 700.
 
 ### WelcomeStrip ("Como funciona")
 - Shown only in L1, first session (new/unauth users)
@@ -482,7 +471,7 @@ All copy is in Brazilian Portuguese. L1 avoids jargon ("prompt" → "receita de 
 | RateSheet subtitle | {prompty.title} |
 | RateSheet image label | "Anexar imagem (opcional)" |
 | RateSheet — submit | "Enviar (+5p)" |
-| RateSheet — dismiss | "Depois" |
+| RateSheet — dismiss | "Avaliar depois" |
 | Onboarding title | "Receitas prontas para criar imagens com IA." |
 | Onboarding body | "Toque em um Prompty, copie o texto, cole no Gemini ou outro app de IA, e veja o resultado. Depois volte e conte como ficou." |
 | Onboarding CTA | "Começar a explorar" |
