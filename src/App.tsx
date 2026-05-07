@@ -1,22 +1,60 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { LoginPage } from '@/pages/LoginPage'
+import { SignupPage } from '@/pages/SignupPage'
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
+import { OnboardingPage, hasOnboarded } from '@/pages/OnboardingPage'
+import { AppHeader } from '@/components/layout/AppHeader'
+import { TabBar } from '@/components/layout/TabBar'
 
 /**
- * App shell. Routes are intentionally minimal here.
- * Plans 01-05 (layout) and 01-06 (feed) will replace this with real routes.
+ * App routing shell. The Feed and Profile contents are added in plans 06 and 08.
+ * For now, the shell renders the chrome (header + tab bar) and a placeholder body.
  */
 export default function App() {
+  const location = useLocation()
+  // Send first-time visitors to onboarding before showing the feed
+  if (location.pathname === '/' && !hasOnboarded()) {
+    return <Navigate to="/onboarding" replace />
+  }
+
   return (
     <Routes>
-      <Route path="*" element={<PlaceholderHome />} />
+      <Route path="/onboarding" element={<OnboardingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="*" element={<ChromeShell />} />
     </Routes>
   )
 }
 
-function PlaceholderHome() {
+function ChromeShell() {
   return (
-    <main style={{ padding: 24, fontFamily: 'var(--font-sans, sans-serif)' }}>
-      <h1 style={{ fontFamily: 'var(--font-display, sans-serif)' }}>Promptys</h1>
-      <p>Auth scaffolding ready. Feed and routes are wired in subsequent plans.</p>
-    </main>
+    <>
+      <AppHeader />
+      <main style={{ paddingBottom: 96 }}>
+        <Routes>
+          <Route path="/" element={<FeedPlaceholder />} />
+          <Route path="/profile" element={<ProfilePlaceholder />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      <TabBar />
+    </>
+  )
+}
+
+function FeedPlaceholder() {
+  return (
+    <section className="screen" style={{ padding: 16 }}>
+      <p style={{ color: 'var(--text-2)' }}>O feed entra no plano 01-06.</p>
+    </section>
+  )
+}
+function ProfilePlaceholder() {
+  return (
+    <section className="screen" style={{ padding: 16 }}>
+      <p style={{ color: 'var(--text-2)' }}>O perfil entra no plano 01-08.</p>
+    </section>
   )
 }
