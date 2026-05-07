@@ -4,6 +4,8 @@ import { SignupPage } from '@/pages/SignupPage'
 import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 import { OnboardingPage, hasOnboarded } from '@/pages/OnboardingPage'
 import { FeedPage } from '@/pages/FeedPage'
+import { ProfilePage } from '@/pages/ProfilePage'
+import { PublicProfilePage } from '@/pages/PublicProfilePage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
 
@@ -36,19 +38,12 @@ function ChromeShell() {
       <main style={{ paddingBottom: 96 }}>
         <Routes>
           <Route path="/" element={<FeedPage />} />
-          <Route path="/profile" element={<ProfilePlaceholder />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/u/:username" element={<PublicProfilePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       <TabBar />
     </>
-  )
-}
-
-function ProfilePlaceholder() {
-  return (
-    <section className="screen" style={{ padding: 16 }}>
-      <p style={{ color: 'var(--text-2)' }}>O perfil entra no plano 01-08.</p>
-    </section>
   )
 }
