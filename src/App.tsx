@@ -8,6 +8,7 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { PublicProfilePage } from '@/pages/PublicProfilePage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
+import { TweaksPanel } from '@/components/dev/TweaksPanel'
 
 /**
  * App routing shell. The Feed and Profile contents are added in plans 06 and 08.
@@ -21,13 +22,16 @@ export default function App() {
   }
 
   return (
-    <Routes>
-      <Route path="/onboarding" element={<OnboardingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="*" element={<ChromeShell />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="*" element={<ChromeShell />} />
+      </Routes>
+      {import.meta.env.DEV && <TweaksPanel />}
+    </>
   )
 }
 
