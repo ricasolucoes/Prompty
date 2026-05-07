@@ -68,6 +68,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. L1 Iniciante — Feed e Copiar | 0/9 | Not started | - |
+| 1. L1 Iniciante — Feed e Copiar | 1/9 | In Progress|  |
 | 2. L2 Curador + Descoberta | 0/TBD | Not started | - |
 | 3. L3 Criador | 0/TBD | Not started | - |

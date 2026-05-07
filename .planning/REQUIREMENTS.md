@@ -37,11 +37,11 @@
 
 ### Level System (Progressive Disclosure)
 
-- [ ] **LEVL-01**: System tracks user actions internally (copies, saves, feedback events) via SQL triggers; internal_points not shown to L1 users
+- [x] **LEVL-01**: System tracks user actions internally (copies, saves, feedback events) via SQL triggers; internal_points not shown to L1 users
 - [ ] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits
 - [ ] **LEVL-03**: When L2 criteria are met, system shows a discrete unlock message: "Você desbloqueou o modo Curador. Agora pode salvar favoritos, avaliar promptys e enviar imagens geradas."
 - [ ] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
-- [ ] **LEVL-05**: Level transitions are recorded in unlock_events table
+- [x] **LEVL-05**: Level transitions are recorded in unlock_events table
 - [ ] **LEVL-06**: L1 interface never shows ranking, points, badges, comments, remix, variables, or advanced editor
 - [ ] **LEVL-07**: Advanced features appear progressively — never as disabled/grayed-out buttons
 
@@ -69,10 +69,10 @@
 
 ### Infrastructure and Security
 
-- [ ] **INFR-01**: All database tables have Row Level Security enabled with explicit policies
-- [ ] **INFR-02**: Action tracking (copies, saves, feedback) recorded via SQL triggers in immutable events table; no direct frontend writes to internal_points
+- [x] **INFR-01**: All database tables have Row Level Security enabled with explicit policies
+- [x] **INFR-02**: Action tracking (copies, saves, feedback) recorded via SQL triggers in immutable events table; no direct frontend writes to internal_points
 - [ ] **INFR-03**: Client-side image compression before upload (max 2 MB → target ≤200 KB WebP)
-- [ ] **INFR-04**: Supabase Storage enforces file size limit and allowed MIME types
+- [x] **INFR-04**: Supabase Storage enforces file size limit and allowed MIME types
 - [ ] **INFR-05**: Usage monitoring (GitHub Actions weekly cron) alerts at 70% and 90% of free tier limits
 
 ## v2 Requirements
@@ -138,17 +138,17 @@
 | PROF-01 | Phase 1 | Pending |
 | PROF-02 | Phase 1 | Pending |
 | PROF-03 | Phase 1 | Pending |
-| LEVL-01 | Phase 1 | Pending |
+| LEVL-01 | Phase 1 | Complete |
 | LEVL-02 | Phase 1 | Pending |
 | LEVL-03 | Phase 1 | Pending |
 | LEVL-04 | Phase 1 | Pending |
-| LEVL-05 | Phase 1 | Pending |
+| LEVL-05 | Phase 1 | Complete |
 | LEVL-06 | Phase 1 | Pending |
 | LEVL-07 | Phase 1 | Pending |
-| INFR-01 | Phase 1 | Pending |
-| INFR-02 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
+| INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Pending |
-| INFR-04 | Phase 1 | Pending |
+| INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 1 | Pending |
 | FEED-06 | Phase 2 | Pending |
 | FEED-07 | Phase 2 | Pending |

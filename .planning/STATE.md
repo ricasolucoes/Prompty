@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-05-07T04:08:23.159Z"
-last_activity: 2026-05-06 — Roadmap created; 4 phases derived from 47 v1 requirements
+status: unknown
+stopped_at: "01-02 paused at Task 2 checkpoint:human-action — supabase link required"
+last_updated: "2026-05-07T12:02:33.374Z"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 9
+  completed_plans: 1
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-06)
 
 **Core value:** Um Prompty é mais que texto — é um template versionado com variáveis, testes reais e ranking comunitário que prova quais prompts funcionam em diferentes modelos de IA.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 01 — foundation
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-05-06 — Roadmap created; 4 phases derived from 47 v1 requirements
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 01 (foundation) — EXECUTING
+Plan: 1 of 9
 
 ## Performance Metrics
 
@@ -62,6 +56,7 @@ Recent decisions affecting current work:
 
 - Phase 1: Gamification `point_events` table + SQL triggers MUST be in Phase 1 — retroactive migration is painful and this table is append-only by design
 - Phase 1: RLS on all tables from day one — no permissive defaults to fix later
+- [Phase 01]: Storage bucket SQL added to migration 004 (not migration 005) — simpler, atomic, avoids unnecessary 5th file
 
 ### Pending Todos
 
@@ -73,6 +68,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T04:08:23.153Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-foundation/01-UI-SPEC.md
+Last session: 2026-05-07T12:02:28.424Z
+Stopped at: 01-02 paused at Task 2 checkpoint:human-action — supabase link required
+Resume file: None
