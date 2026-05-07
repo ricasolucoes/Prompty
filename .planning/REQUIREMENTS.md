@@ -11,12 +11,12 @@
 - [x] **AUTH-02**: User can log in and stay logged in across browser sessions
 - [x] **AUTH-03**: User can log out from any page
 - [x] **AUTH-04**: User can reset password via email link
-- [ ] **AUTH-05**: Unauthenticated users can browse feed and view Prompty detail pages
+- [x] **AUTH-05**: Unauthenticated users can browse feed and view Prompty detail pages
 
 ### Feed — L1 (Core Experience)
 
 - [x] **FEED-01**: Any visitor sees a vertical feed of published Promptys with cover image, title, category badge, and a preview of the beginner_prompt
-- [ ] **FEED-02**: Feed shows a "Como funciona" card at the top for new/unauthenticated users ("Promptys são receitas prontas para gerar imagens com IA. Toque em Copiar prompt, cole no Gemini ou outro app, depois volte aqui e conte como ficou.")
+- [x] **FEED-02**: Feed shows a "Como funciona" card at the top for new/unauthenticated users ("Promptys são receitas prontas para gerar imagens com IA. Toque em Copiar prompt, cole no Gemini ou outro app, depois volte aqui e conte como ficou.")
 - [ ] **FEED-03**: Any visitor can open a Prompty detail page showing example image, title, beginner_prompt in full, and the "Copiar prompt" button
 - [x] **FEED-04**: User can copy the full beginner_prompt to clipboard with one tap — this is the primary action
 - [ ] **FEED-05**: Feed uses cursor-based keyset pagination — no OFFSET queries
@@ -43,7 +43,7 @@
 - [ ] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
 - [x] **LEVL-05**: Level transitions are recorded in unlock_events table
 - [ ] **LEVL-06**: L1 interface never shows ranking, points, badges, comments, remix, variables, or advanced editor
-- [ ] **LEVL-07**: Advanced features appear progressively — never as disabled/grayed-out buttons
+- [x] **LEVL-07**: Advanced features appear progressively — never as disabled/grayed-out buttons
 
 ### Curadoria — L2
 
@@ -126,9 +126,9 @@
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
-| AUTH-05 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Complete |
 | FEED-01 | Phase 1 | Complete |
-| FEED-02 | Phase 1 | Pending |
+| FEED-02 | Phase 1 | Complete |
 | FEED-03 | Phase 1 | Pending |
 | FEED-04 | Phase 1 | Complete |
 | FEED-05 | Phase 1 | Pending |
@@ -144,7 +144,7 @@
 | LEVL-04 | Phase 1 | Pending |
 | LEVL-05 | Phase 1 | Complete |
 | LEVL-06 | Phase 1 | Pending |
-| LEVL-07 | Phase 1 | Pending |
+| LEVL-07 | Phase 1 | Complete |
 | INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |

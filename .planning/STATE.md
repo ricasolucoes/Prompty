@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-05-07T12:34:23.005Z"
+stopped_at: Completed 01-05-PLAN.md
+last_updated: "2026-05-07T14:42:26.838Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -50,6 +50,7 @@ Plan: 1 of 9
 | Phase 01 P01 | 5 | 3 tasks | 13 files |
 | Phase 01-foundation P03 | 7min | 2 tasks | 5 files |
 | Phase 01-foundation P02 | 20min | 3 tasks | 2 files |
+| Phase 01 P05 | 125min | 3 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,10 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Seed applied via psql + DATABASE_URL (not supabase db execute) — CLI access token unavailable; psql is more reliable for CI scenarios
 - [Phase 01-foundation]: verify-seed.ts kept permanently as reusable smoke check, not deleted after first run
 - [Phase 01-foundation]: Migration repair used (supabase migration repair --status applied) to reconcile CLI history when psql-applied migrations bypass CLI tracking
+- [Phase 01]: Icon PATHS uses React.ReactElement (not JSX.Element) to avoid namespace error with Vite JSX transform
+- [Phase 01]: TabBar uses LEVEL_ORDER index comparison — locked tabs are absent from DOM (not greyed/disabled), enforcing LEVL-07
+- [Phase 01]: theme.store default is light — matches index.css theme-light class applied on html element
+- [Phase 01]: App.tsx redirects / to /onboarding inline via hasOnboarded() check before Routes render
 
 ### Pending Todos
 
@@ -82,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T12:34:22.994Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-05-07T14:42:26.835Z
+Stopped at: Completed 01-05-PLAN.md
 Resume file: None
