@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { FeedItem } from '@/hooks/useFeed'
 import { Avatar } from '@/components/ui/Avatar'
 import { Icon } from '@/components/ui/Icon'
@@ -67,7 +68,7 @@ export function FeedCard({
         </div>
       </header>
 
-      {/* Title */}
+      {/* Title — clickable to /p/:slug for detail view (FEED-03) */}
       <h2
         style={{
           margin: 0,
@@ -80,7 +81,12 @@ export function FeedCard({
           color: 'var(--text-1)',
         }}
       >
-        {prompty.title}
+        <Link
+          to={`/p/${prompty.slug}`}
+          style={{ color: 'inherit', textDecoration: 'none' }}
+        >
+          {prompty.title}
+        </Link>
       </h2>
 
       {/* Prompt section */}

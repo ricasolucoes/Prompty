@@ -1,7 +1,13 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { FeedCard } from './FeedCard'
 import type { FeedItem } from '@/hooks/useFeed'
+
+function renderCard(ui: React.ReactElement) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>)
+}
 
 function fakeItem(overrides: Partial<FeedItem> = {}): FeedItem {
   return {
@@ -30,7 +36,7 @@ function fakeItem(overrides: Partial<FeedItem> = {}): FeedItem {
 
 describe('FeedCard L1', () => {
   it('renders title, author, and prompt with substituted variables', () => {
-    render(<FeedCard prompty={fakeItem()} />)
+    renderCard(<FeedCard prompty={fakeItem()} />)
     expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument()
     expect(screen.getByText(/Mira Velasco/)).toBeInTheDocument()
     const prompt = screen.getByTestId('prompt-text')
@@ -40,13 +46,13 @@ describe('FeedCard L1', () => {
   })
 
   it('action row has exactly 2 buttons: Curtir and Copiar prompt', () => {
-    render(<FeedCard prompty={fakeItem()} />)
+    renderCard(<FeedCard prompty={fakeItem()} />)
     expect(screen.getByLabelText('Curtir')).toBeInTheDocument()
     expect(screen.getByLabelText('Copiar prompt')).toBeInTheDocument()
   })
 
   it('LEVL-06: does NOT render save, remix, or share buttons', () => {
-    render(<FeedCard prompty={fakeItem()} />)
+    renderCard(<FeedCard prompty={fakeItem()} />)
     expect(screen.queryByLabelText(/salvar/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/bookmark/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/remix/i)).not.toBeInTheDocument()
@@ -55,7 +61,7 @@ describe('FeedCard L1', () => {
   })
 
   it('LEVL-06: does NOT render model chips, difficulty, or version number', () => {
-    render(<FeedCard prompty={fakeItem()} />)
+    renderCard(<FeedCard prompty={fakeItem()} />)
     expect(screen.queryByText(/Midjourney/)).not.toBeInTheDocument()
     expect(screen.queryByText(/Flux/)).not.toBeInTheDocument()
     expect(screen.queryByText(/beginner|intermediate|advanced/i)).not.toBeInTheDocument()
@@ -63,30 +69,30 @@ describe('FeedCard L1', () => {
   })
 
   it('LEVL-06: does NOT render visible star ratings (e.g. "4.7")', () => {
-    render(<FeedCard prompty={fakeItem()} />)
+    renderCard(<FeedCard prompty={fakeItem()} />)
     expect(screen.queryByText(/\d+\.\d+\s*★/)).not.toBeInTheDocument()
   })
 
   it('"Ver mais" expands the prompt text inline', () => {
-    render(<FeedCard prompty={fakeItem()} />)
+    renderCard(<FeedCard prompty={fakeItem()} />)
     const more = screen.getByRole('button', { name: 'Ver mais' })
     fireEvent.click(more)
     expect(screen.queryByRole('button', { name: 'Ver mais' })).not.toBeInTheDocument()
   })
 
   it('shows "Copiado!" label when copied=true', () => {
-    render(<FeedCard prompty={fakeItem()} copied />)
+    renderCard(<FeedCard prompty={fakeItem()} copied />)
     expect(screen.getByLabelText('Copiado')).toBeInTheDocument()
   })
 
   it('shows post-copy banner when copied and not rated', () => {
-    render(<FeedCard prompty={fakeItem()} copied />)
+    renderCard(<FeedCard prompty={fakeItem()} copied />)
     expect(screen.getByLabelText('Avaliar prompty')).toBeInTheDocument()
     expect(screen.getByText(/Avaliar este prompt/)).toBeInTheDocument()
   })
 
   it('shows rate confirmation when rated=true', () => {
-    render(<FeedCard prompty={fakeItem()} copied rated />)
+    renderCard(<FeedCard prompty={fakeItem()} copied rated />)
     expect(screen.getByText(/Você já avaliou este Prompty/)).toBeInTheDocument()
   })
 })

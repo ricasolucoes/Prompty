@@ -6,6 +6,7 @@ import { OnboardingPage, hasOnboarded } from '@/pages/OnboardingPage'
 import { FeedPage } from '@/pages/FeedPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { PublicProfilePage } from '@/pages/PublicProfilePage'
+import { PromptyDetailPage } from '@/pages/PromptyDetailPage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
 import { TweaksPanel } from '@/components/dev/TweaksPanel'
@@ -44,6 +45,7 @@ function ChromeShell() {
           <Route path="/" element={<FeedPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/u/:username" element={<PublicProfilePage />} />
+          <Route path="/p/:slug" element={<PromptyDetailPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
