@@ -2,11 +2,60 @@
 
 ## What This Is
 
-Promptys é uma rede social colaborativa, gratuita e gamificada para criar, compartilhar, testar, remixar e avaliar prompts avançados de geração de imagens. A unidade central é o **Prompty**: um template parametrizável com variáveis, imagens de referência, negative prompts, configurações de modelo, exemplos de saída, histórico de versões, testes reais e avaliações da comunidade. O produto posiciona-se como "a rede social dos prompts visuais que realmente funcionam."
+Promptys é uma biblioteca visual e gratuita de prompts prontos para geração de imagens com IA. A experiência inicial é extremamente simples: o usuário vê uma imagem de exemplo, lê um prompt pronto, copia e cola no Gemini ou outro app de geração. A complexidade — gamificação, criação, remix, variáveis avançadas — fica escondida e é desbloqueada progressivamente conforme o engajamento real do usuário.
 
 ## Core Value
 
-Um Prompty é mais que texto — é um template versionado com variáveis, testes reais e ranking comunitário que prova quais prompts funcionam em diferentes modelos de IA.
+O usuário copia um prompt pronto, gera uma imagem no Gemini, e volta para contar como ficou — essa é a única coisa que precisa funcionar no começo.
+
+## Modelo de Progressão (3 Níveis)
+
+### L1 Iniciante — Consumir
+
+Objetivo: copiar prompt pronto e usar no Gemini.
+
+**Mostra:**
+- Imagem de exemplo
+- Título do prompty
+- Prompt pronto em texto simples (campo `beginner_prompt`)
+- Botão "Copiar prompt" (ação principal)
+- Instrução curta: "Copie e cole no Gemini ou outro app"
+- Botão "Funcionou / Não ficou bom" (opcional)
+- Botão "Salvar" se logado (opcional)
+- Categorias básicas
+
+**Esconde (invisível, não botão morto):**
+- Ranking, pontos, badges, comentários, remix, variáveis, JSON/schema, editor avançado, prompt negativo, métricas, histórico de versões, testes avançados, número de avaliações
+
+**Critério de desbloqueio para L2:** copiar ≥5 promptys + salvar ≥3 + marcar feedback algumas vezes + retornar ao app mais de uma vez
+
+### L2 Curador — Validar
+
+Objetivo: ajudar a organizar, validar e melhorar a biblioteca.
+
+**Libera adicionalmente:**
+- Favoritos e histórico de promptys copiados
+- Feedback estruturado (Funcionou / Não funcionou)
+- Envio de imagem gerada pelo usuário
+- Avaliação simples de qualidade
+- Sugestões de categoria
+- Denúncia de conteúdo ruim
+- Ver variações simples do mesmo prompt
+
+**Ainda esconde:** ranking global, editor avançado, pontuação competitiva, remix técnico
+
+**Critério de desbloqueio para L3:** enviar imagens geradas válidas + avaliar promptys + receber aprovação em contribuições + comportamento confiável
+
+### L3 Criador — Publicar
+
+Objetivo: criar, publicar e melhorar promptys.
+
+**Libera adicionalmente:**
+- Criar novo prompty (título, descrição, imagem exemplo, prompt)
+- Adicionar tags e modelo recomendado
+- Criar variações e ver estatísticas básicas do próprio conteúdo
+- Modo avançado opcional (templates com variáveis, imagens de referência, prompt negativo, presets, versões, remix, testes comparativos)
+- Ranking e reputação — apenas em área separada, nunca na home inicial
 
 ## Requirements
 
@@ -16,54 +65,112 @@ Um Prompty é mais que texto — é um template versionado com variáveis, teste
 
 ### Active
 
+**Fase 1 — L1 Iniciante funcional:**
+- [ ] Usuário pode navegar o feed de promptys sem login
+- [ ] Cada card mostra imagem, título e prompt pronto visível
+- [ ] Usuário pode copiar o prompt com um toque (clipboard)
 - [ ] Usuário pode criar conta e autenticar via Supabase Auth
-- [ ] Usuário pode criar, publicar e editar Promptys com template parametrizável
-- [ ] Usuário pode navegar um feed social de Promptys com múltiplas ordenações
-- [ ] Usuário pode testar um Prompty preenchendo variáveis e subindo imagem resultado
-- [ ] Usuário pode curtir, salvar e remixar Promptys
-- [ ] Usuário pode avaliar Promptys em múltiplas dimensões
-- [ ] Usuário pode comentar em Promptys
-- [ ] Usuário acumula pontos por contribuições e sobe de nível
-- [ ] Sistema de moderação básica com status e denúncias
-- [ ] Busca por título, tags, modelo e dificuldade
+- [ ] Card "Como funciona" aparece no topo do feed para novos usuários
+- [ ] Usuário pode salvar promptys (se logado)
+- [ ] Usuário pode marcar "Funcionou / Não ficou bom"
+- [ ] Sistema registra cópias internamente (sem mostrar contador para L1)
+
+**Fase 2 — L2 Curador:**
+- [ ] Sistema detecta critérios de L2 e exibe mensagem de desbloqueio discreta
+- [ ] Usuário pode enviar imagem gerada como resultado
+- [ ] Usuário pode avaliar qualidade do prompty
+- [ ] Usuário tem histórico de promptys copiados e salvos
+- [ ] Usuário pode denunciar conteúdo impróprio
+
+**Fase 3 — Feed e descoberta:**
+- [ ] Feed com ordenação por Novos e Em Alta
+- [ ] Filtro por categoria, modelo recomendado e complexidade
+- [ ] Busca por palavra-chave
+- [ ] Paginação cursor-based (sem OFFSET)
+
+**Fase 4 — L3 Criador:**
+- [ ] Usuário L3 pode criar e publicar promptys
+- [ ] Editor com título, descrição, imagem exemplo, prompt beginner e modelo recomendado
+- [ ] Usuário pode criar variações simples
+- [ ] Estatísticas básicas: cópias, saves, feedbacks
+- [ ] Modo avançado opcional: template com variáveis, prompt negativo, versões
 
 ### Out of Scope
 
-- Geração de imagens diretamente no app (MVP) — requer Edge Functions + APIs pagas; fica para MVP 3
-- Importação automática de grupos do Facebook — risco legal; apenas curadoria manual permitida
-- Backend próprio — Supabase elimina necessidade no MVP
-- App mobile nativo — web-first, mobile via PWA/responsivo
-- OAuth social (Google/GitHub) no MVP — email/password suficiente para validar
-- Embeddings e recomendação por similaridade — pós-MVP
+- Ranking na home inicial — polui a experiência L1; apenas em área separada para L3
+- Gamificação visível (pontos/badges) no início — calculado internamente, exibido apenas quando relevante
+- Editor avançado para L1 e L2 — desbloqueado progressivamente
+- Anúncios de qualquer tipo — produto 100% gratuito e limpo
+- Backend próprio no MVP — Supabase elimina a necessidade
+- OAuth (Google/GitHub) no MVP — email/password suficiente para validar
+- Monetização no MVP — decisão futura que não pode comprometer a biblioteca gratuita
+- Importação automática de conteúdo externo — risco legal; curadoria manual apenas
+
+## Modelo de Dados
+
+### profiles
+- id, username, avatar_url
+- user_level: "l1_beginner" | "l2_curator" | "l3_creator"
+- internal_points (calculado internamente, não exibido no L1)
+- created_at
+
+### promptys
+- id, author_id, title, description
+- beginner_prompt (texto plano, copiável)
+- advanced_template (com {{variáveis}}, apenas para L3)
+- example_image_url
+- category, tags, recommended_model
+- complexity_level: "simple" | "guided" | "advanced"
+- status: draft | published | flagged | archived
+- created_at, updated_at
+
+### prompty_feedback
+- id, prompty_id, user_id
+- worked: boolean
+- comment (opcional)
+- created_at
+
+### prompty_saves
+- prompty_id, user_id, created_at
+
+### prompty_results (L2+)
+- id, prompty_id, user_id
+- generated_image_url, notes
+- approved, created_at
+
+### unlock_events
+- id, user_id, event_type
+- previous_level, new_level
+- created_at
 
 ## Context
 
-- **Origem:** Projeto inspirado em grupos de compartilhamento de prompts no Facebook; missão é dar uma casa técnica e colaborativa para esses prompts
-- **Stack definida:** Next.js (frontend) + Supabase (Auth, Postgres, Storage, Realtime, RLS) + Vercel/Netlify deploy
-- **Edge Functions:** Apenas para APIs de IA, webhooks de pagamento e lógica privada
-- **Gamificação anti-spam:** Pontos devem ser concedidos via triggers SQL e tabela `point_events` imutável — nunca pelo frontend
-- **Identidade visual definida:** Midnight Ink #090A14, Electric Violet #7C3AED, Prompt Cyan #22D3EE, Solar Coral #FF6B4A, Mint Signal #34D399; tipografia Space Grotesk (logo), Inter (UI), JetBrains Mono (blocos de prompt)
-- **Sintaxe de template:** `{{variavel}}` com inputs_schema JSONB definindo tipos (text, image, enum, number, boolean, color, ratio, seed)
-- **Modelo de dados:** 10 tabelas principais já especificadas (profiles, promptys, prompty_versions, prompty_tests, prompty_ratings, prompty_likes, prompty_saves, prompty_remixes, point_events)
-- **RLS obrigatório:** Todas as tabelas com Row Level Security habilitado desde o início
+- **Origem:** Grupo de compartilhamento de prompts; missão é dar uma casa técnica para esses prompts com experiência progressiva
+- **Stack:** Next.js 15 + Supabase (Auth, Postgres, Storage, Realtime, RLS) + Tailwind CSS 4 + shadcn/ui + Vercel
+- **Mobile-first:** PWA responsivo, navegação inferior (Feed / Perfil), cards grandes
+- **Visual:** Midnight Ink #090A14, Electric Violet #7C3AED, Prompt Cyan #22D3EE — mas interface L1 é limpa, quase fórum visual
+- **Identidade:** Gratuito, calmo, limpo, confiável — sem anúncios, banners ou elementos agressivos
+- **RLS obrigatório** em todas as tabelas desde o início
+- **Pontos calculados internamente** via triggers SQL — nunca exibidos para L1, exibidos para L3 apenas em área separada
 
 ## Constraints
 
-- **Tech Stack:** Next.js + Supabase — decisão final, sem backend próprio no MVP
-- **Custo:** Supabase free tier para MVP; monitorar limites antes de escalar
-- **Jurídico:** Nenhuma importação automática de conteúdo; crédito obrigatório para prompts importados
-- **Moderação:** Conteúdo adulto explícito, deepfakes enganosos e prompts para conteúdo ilegal são proibidos desde o MVP
-- **Monetização futura:** Não pode bloquear a biblioteca comunitária gratuita
+- **Tech Stack:** Next.js 15 + Supabase — sem backend próprio no MVP
+- **Custo:** Supabase free tier no MVP; monitorar limites
+- **UX L1:** Zero gamificação visível; botão principal = "Copiar prompt"
+- **Progressão:** Desbloqueios aparecem como mensagens discretas, não como jogo competitivo
+- **Moderação:** Conteúdo adulto explícito, deepfakes e exploração são proibidos desde o início
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market; Auth + Storage + Realtime + RLS integrados | — Pending |
-| Pontos via triggers SQL e `point_events` imutável | Previne manipulação via frontend; auditabilidade completa | — Pending |
-| Template syntax `{{variavel}}` | Simples, familiar (handlebars-like), parseável no frontend sem dependência extra | — Pending |
-| Next.js como frontend | SSR para SEO do feed público; ecossistema maduro; deploy trivial na Vercel | — Pending |
-| Sem OAuth no MVP | Reduz escopo; email/password valida o produto antes de adicionar complexidade | — Pending |
+| 3 níveis (L1/L2/L3) em vez de 7 | Mais simples de entender e implementar; "3 níveis são suficientes, mais vira imposto de renda gamificado" | — Pending |
+| Gamificação invisível no L1 | Usuário L1 só quer copiar e colar; exibir pontos/badges cria distração e complexidade desnecessária | — Pending |
+| `beginner_prompt` separado de `advanced_template` | Permite exibir prompt simples para L1 sem expor a sintaxe `{{variável}}` | — Pending |
+| Ranking apenas em área separada para L3 | Home inicial nunca mostra ranking; experiência L1 não é competitiva | — Pending |
+| Next.js como frontend (não Flutter/Rust no MVP) | Rust/Flutter para processamento futuro; Next.js melhor para MVP web social com SEO | — Pending |
+| Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | — Pending |
 
 ---
-*Last updated: 2026-05-06 after initialization*
+*Last updated: 2026-05-07 after product pivot — progressive disclosure model with 3 levels*

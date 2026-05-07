@@ -1,7 +1,7 @@
 # Requirements: Promptys
 
-**Defined:** 2026-05-06
-**Core Value:** Um Prompty é mais que texto — é um template versionado com variáveis, testes reais e ranking comunitário que prova quais prompts funcionam em diferentes modelos de IA.
+**Defined:** 2026-05-07 (pivoted from complex social network to progressive disclosure model)
+**Core Value:** O usuário copia um prompt pronto, gera uma imagem no Gemini, e volta para contar como ficou.
 
 ## v1 Requirements
 
@@ -13,123 +13,110 @@
 - [ ] **AUTH-04**: User can reset password via email link
 - [ ] **AUTH-05**: Unauthenticated users can browse feed and view Prompty detail pages
 
+### Feed — L1 (Core Experience)
+
+- [ ] **FEED-01**: Any visitor sees a vertical feed of published Promptys with cover image, title, category badge, and a preview of the beginner_prompt
+- [ ] **FEED-02**: Feed shows a "Como funciona" card at the top for new/unauthenticated users ("Promptys são receitas prontas para gerar imagens com IA. Toque em Copiar prompt, cole no Gemini ou outro app, depois volte aqui e conte como ficou.")
+- [ ] **FEED-03**: Any visitor can open a Prompty detail page showing example image, title, beginner_prompt in full, and the "Copiar prompt" button
+- [ ] **FEED-04**: User can copy the full beginner_prompt to clipboard with one tap — this is the primary action
+- [ ] **FEED-05**: Feed uses cursor-based keyset pagination — no OFFSET queries
+- [ ] **FEED-06**: Feed can be filtered by category and recommended_model
+- [ ] **FEED-07**: User can search Promptys by keyword across title, description, and tags
+
+### Social Actions — L1
+
+- [ ] **SOCL-01**: Authenticated user can save (bookmark) a Prompty
+- [ ] **SOCL-02**: Authenticated user can view their saved Promptys
+- [ ] **SOCL-03**: Authenticated user can mark feedback: "Funcionou" or "Não ficou bom" on a Prompty
+
 ### Profiles
 
-- [ ] **PROF-01**: User can set display name, avatar, and bio on their profile
-- [ ] **PROF-02**: User can view their own published Promptys on their profile page
-- [ ] **PROF-03**: User can view other users' public profiles and their published Promptys
-- [ ] **PROF-04**: User profile shows total points and current level
+- [ ] **PROF-01**: User can set username, avatar, and bio on their profile
+- [ ] **PROF-02**: User profile displays their user_level badge (L1/L2/L3) and published Promptys (for L3)
+- [ ] **PROF-03**: Any visitor can view a user's public profile
 
-### Prompty Creation
+### Level System (Progressive Disclosure)
 
-- [ ] **CREAT-01**: User can create a Prompty with title, description, template text using `{{variable}}` syntax, and negative prompt
-- [ ] **CREAT-02**: User can define typed input variables for a Prompty (types: text, textarea, enum, number, boolean, image, color, ratio, seed) via `inputs_schema`
-- [ ] **CREAT-03**: User can set model targets (Midjourney, Flux, Stable Diffusion, DALL-E, etc.) and difficulty level (beginner/intermediate/advanced) on a Prompty
-- [ ] **CREAT-04**: User can add style tags to a Prompty
-- [ ] **CREAT-05**: User can upload a cover image for a Prompty
-- [ ] **CREAT-06**: User can edit their own Promptys; each save auto-creates a version entry
-- [ ] **CREAT-07**: User can set Prompty visibility to Published (public + remixable) or Unlisted (link-only)
-- [ ] **CREAT-08**: User can view full version history of their own Prompty
+- [ ] **LEVL-01**: System tracks user actions internally (copies, saves, feedback events) via SQL triggers; internal_points not shown to L1 users
+- [ ] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits
+- [ ] **LEVL-03**: When L2 criteria are met, system shows a discrete unlock message: "Você desbloqueou o modo Curador. Agora pode salvar favoritos, avaliar promptys e enviar imagens geradas."
+- [ ] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
+- [ ] **LEVL-05**: Level transitions are recorded in unlock_events table
+- [ ] **LEVL-06**: L1 interface never shows ranking, points, badges, comments, remix, variables, or advanced editor
+- [ ] **LEVL-07**: Advanced features appear progressively — never as disabled/grayed-out buttons
 
-### Prompty Detail and Testing
+### Curadoria — L2
 
-- [ ] **TEST-01**: Any visitor can view a Prompty detail page showing template, variables, negative prompt, model targets, examples, and ratings
-- [ ] **TEST-02**: Authenticated user can fill in Prompty variables via an interactive form and see the resolved final prompt in real time
-- [ ] **TEST-03**: Authenticated user can upload a result image (compressed client-side) and submit it as a test result with rating and notes
-- [ ] **TEST-04**: Any visitor can browse submitted test results for a Prompty
-- [ ] **TEST-05**: User can copy the resolved prompt to clipboard with one click
+- [ ] **CUR-01**: L2 user can upload a generated image as a Prompty result (with notes)
+- [ ] **CUR-02**: L2 user can rate a Prompty quality (simple 1-5 or thumbs)
+- [ ] **CUR-03**: L2 user has a history of copied and saved Promptys
+- [ ] **CUR-04**: L2 user can suggest a category correction
+- [ ] **CUR-05**: L2 user can report inappropriate content
 
-### Social Feed
+### Criação — L3
 
-- [ ] **FEED-01**: Any visitor can browse the public feed ordered by Latest (newest first)
-- [ ] **FEED-02**: Any visitor can browse the public feed ordered by Top (most likes)
-- [ ] **FEED-03**: Feed cards display cover image, title, author, model tags, difficulty, like count, test count, and average rating
-- [ ] **FEED-04**: User can filter feed by model, difficulty, and style tags
-- [ ] **FEED-05**: Feed uses keyset (cursor-based) pagination — no OFFSET
-- [ ] **FEED-06**: User can search Promptys by keyword across title, description, and tags
-
-### Social Interactions
-
-- [ ] **SOCL-01**: Authenticated user can like a Prompty
-- [ ] **SOCL-02**: Authenticated user can save (bookmark) a Prompty to their collection
-- [ ] **SOCL-03**: Authenticated user can view their saved Promptys
-- [ ] **SOCL-04**: Authenticated user can comment on a Prompty
-- [ ] **SOCL-05**: Authenticated user can delete their own comments
-
-### Gamification
-
-- [ ] **GAME-01**: System awards points via SQL triggers for: publishing a Prompty (+50), submitting a test result (+15), receiving a like on own Prompty (+3), leaving a rating (+10), posting a comment marked helpful (+10)
-- [ ] **GAME-02**: Points are recorded in an immutable `point_events` table — no direct frontend writes
-- [ ] **GAME-03**: User's total points and level are displayed on their profile and in the feed card author section
-- [ ] **GAME-04**: System automatically assigns level based on total points (7 levels: Curioso Visual → Hall of Promptys)
-- [ ] **GAME-05**: Point events are idempotent — duplicate actions do not award duplicate points
+- [ ] **CREAT-01**: L3 user can create and publish a Prompty with: title, description, beginner_prompt, example_image_url, category, tags, recommended_model
+- [ ] **CREAT-02**: L3 user can set complexity_level (simple/guided/advanced)
+- [ ] **CREAT-03**: L3 user can view basic stats for their own Promptys: copy count, save count, feedback count
+- [ ] **CREAT-04**: L3 user can create simple variations of an existing Prompty
+- [ ] **CREAT-05**: L3 user can optionally access advanced mode: advanced_template with {{variable}} syntax, negative_prompt, versions
 
 ### Moderation
 
-- [ ] **MODR-01**: Authenticated user can report a Prompty or comment for review
+- [ ] **MODR-01**: Authenticated user can report a Prompty or result
 - [ ] **MODR-02**: Admin can change Prompty status (published → flagged → hidden → removed)
-- [ ] **MODR-03**: Flagged or removed Promptys are not visible in public feed or via direct URL for non-admins
-- [ ] **MODR-04**: Content with prohibited material (real person without consent, deepfake, exploitation prompts) is blocked
+- [ ] **MODR-03**: Flagged or removed Promptys are not visible in feed or via direct URL for non-admins
 
 ### Infrastructure and Security
 
 - [ ] **INFR-01**: All database tables have Row Level Security enabled with explicit policies
-- [ ] **INFR-02**: `point_events` table has no INSERT/UPDATE/DELETE policies for client roles — only triggers write to it
-- [ ] **INFR-03**: Client-side image compression applied before upload (max 2 MB input → target ≤200 KB WebP output)
-- [ ] **INFR-04**: Supabase Storage enforces file size limit (2 MB) and allowed MIME types
-- [ ] **INFR-05**: Usage monitoring cron runs weekly; alerts at 70% and 90% of free tier limits (storage, bandwidth, connections)
+- [ ] **INFR-02**: Action tracking (copies, saves, feedback) recorded via SQL triggers in immutable events table; no direct frontend writes to internal_points
+- [ ] **INFR-03**: Client-side image compression before upload (max 2 MB → target ≤200 KB WebP)
+- [ ] **INFR-04**: Supabase Storage enforces file size limit and allowed MIME types
+- [ ] **INFR-05**: Usage monitoring (GitHub Actions weekly cron) alerts at 70% and 90% of free tier limits
 
 ## v2 Requirements
 
-### Remix
+### Advanced Prompty Features (L3 expansion)
 
-- **REMIX-01**: Authenticated user can remix a Prompty, creating a new attributed copy with original credit preserved
-- **REMIX-02**: Prompty detail page shows remix lineage (parent and children Promptys)
-- **REMIX-03**: Original author earns points (+25) when their Prompty is remixed
-
-### Multi-Dimensional Ratings
-
-- **RATE-01**: Authenticated user can rate a Prompty across dimensions: visual quality, prompt accuracy, reproducibility, originality
-- **RATE-02**: Prompty detail page shows aggregated dimensional rating profile
-- **RATE-03**: Feed supports ordering by multi-dimensional Bayesian average score
+- **ADV-01**: Advanced template system with {{variable}} syntax and typed inputs_schema
+- **ADV-02**: Prompty versioning — each save creates a version entry
+- **ADV-03**: Remix with attribution chain (GitHub-style fork lineage)
+- **ADV-04**: Multi-dimensional ratings (visual quality, prompt accuracy, reproducibility, originality)
 
 ### Social Graph
 
-- **SOC2-01**: Authenticated user can follow other users
-- **SOC2-02**: Feed includes a "Following" tab showing only Promptys from followed users
-- **SOC2-03**: User profile shows follower and following counts
+- **SOC2-01**: Follow system — user can follow other creators
+- **SOC2-02**: Followed-only feed tab
+- **SOC2-03**: Realtime notifications for saves, results, and feedback on own Promptys
 
-### Realtime Notifications
+### Gamification Display (L3 only, in separate area)
 
-- **NOTF-01**: Authenticated user receives real-time notifications for likes, comments, and test results on their Promptys
-- **NOTF-02**: Notification badge in navigation updates without page refresh
-- **NOTF-03**: User can view notification history
+- **GAME2-01**: Points leaderboard (separate area, not on home feed)
+- **GAME2-02**: Badges displayed on L3 profile: Prompt Crafter, Visual Tester, Sharp Reviewer, etc.
+- **GAME2-03**: Weekly ranking for top contributors
 
-### Gamification Display
+### Discovery Improvements
 
-- **GAME2-01**: User profile displays earned badges (Prompt Crafter, Visual Tester, Sharp Reviewer, Remix Alchemist, Style Architect, Community Spark, Model Whisperer, Hall of Promptys)
-- **GAME2-02**: Weekly leaderboard shows top contributors by points
-
-### Trending Feed
-
-- **FEED2-01**: Feed includes a "Trending" tab using hot-score algorithm (decay-weighted with newcomer boost)
-- **FEED2-02**: Hot score pre-computed via materialized view refreshed every 5 minutes
+- **DISC-01**: Trending feed (hot score algorithm with newcomer boost)
+- **DISC-02**: Collections / curated prompt packs
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| In-app image generation (MVP) | Paid API cost unpredictable; massive scope increase; deferred to v3 with credits system |
-| OAuth (Google/GitHub) login | Email/password sufficient to validate product; reduces v1 scope |
-| Automatic Facebook group import | Copyright risk; platform ToS violation; manual import with attribution only |
-| Real-time collaborative editing | OT/CRDT complexity not justified; remix + comments serve async collaboration needs |
-| AI-powered prompt improvement | LLM API cost per request; creates vendor dependency; devalues community expertise |
-| DM / private messaging | High moderation burden; harassment vector; not core platform value |
-| NFT minting | Market collapsed; legally grey; alienates mainstream users |
-| Paid prompt sales (PromptBase model) | Paywalls fragment community; free library must remain intact |
-| Mobile native app | Web-first; responsive design + PWA serves mobile in v1 |
-| pgvector semantic search | Requires vector extension + embedding pipeline; v3 scope |
-| Public API | After platform stability is proven; v3 scope |
+| Ranking on home feed | Ruins L1 experience; only in separate L3 area |
+| Visible points/badges for L1 | Calculated internally; shown only when relevant to L3 |
+| In-app image generation (MVP) | Paid API cost; scope explosion; deferred to future with credits |
+| OAuth (Google/GitHub) login | Email/password sufficient; reduces v1 scope |
+| Automatic content import | Copyright risk; platform ToS violation |
+| Real-time collaborative editing | OT/CRDT complexity not justified |
+| AI-powered prompt improvement | LLM API cost; creates vendor dependency |
+| DM / private messaging | Moderation burden; not core value |
+| NFT minting | Market collapsed; legally grey; alienates users |
+| Paid prompt sales | Paywalls fragment community; free library must stay intact |
+| Mobile native app | Web-first; responsive + PWA serves mobile in v1 |
+| Advertisements | Product is 100% free and clean — no ads ever |
 
 ## Traceability
 
@@ -140,54 +127,50 @@
 | AUTH-03 | Phase 1 | Pending |
 | AUTH-04 | Phase 1 | Pending |
 | AUTH-05 | Phase 1 | Pending |
+| FEED-01 | Phase 1 | Pending |
+| FEED-02 | Phase 1 | Pending |
+| FEED-03 | Phase 1 | Pending |
+| FEED-04 | Phase 1 | Pending |
+| FEED-05 | Phase 1 | Pending |
+| SOCL-01 | Phase 1 | Pending |
+| SOCL-02 | Phase 1 | Pending |
+| SOCL-03 | Phase 1 | Pending |
 | PROF-01 | Phase 1 | Pending |
 | PROF-02 | Phase 1 | Pending |
 | PROF-03 | Phase 1 | Pending |
-| PROF-04 | Phase 1 | Pending |
+| LEVL-01 | Phase 1 | Pending |
+| LEVL-02 | Phase 1 | Pending |
+| LEVL-03 | Phase 1 | Pending |
+| LEVL-04 | Phase 1 | Pending |
+| LEVL-05 | Phase 1 | Pending |
+| LEVL-06 | Phase 1 | Pending |
+| LEVL-07 | Phase 1 | Pending |
 | INFR-01 | Phase 1 | Pending |
 | INFR-02 | Phase 1 | Pending |
 | INFR-03 | Phase 1 | Pending |
 | INFR-04 | Phase 1 | Pending |
 | INFR-05 | Phase 1 | Pending |
-| GAME-01 | Phase 1 | Pending |
-| GAME-02 | Phase 1 | Pending |
-| GAME-05 | Phase 1 | Pending |
-| CREAT-01 | Phase 2 | Pending |
-| CREAT-02 | Phase 2 | Pending |
-| CREAT-03 | Phase 2 | Pending |
-| CREAT-04 | Phase 2 | Pending |
-| CREAT-05 | Phase 2 | Pending |
-| CREAT-06 | Phase 2 | Pending |
-| CREAT-07 | Phase 2 | Pending |
-| CREAT-08 | Phase 2 | Pending |
-| TEST-01 | Phase 2 | Pending |
-| TEST-02 | Phase 2 | Pending |
-| TEST-03 | Phase 2 | Pending |
-| TEST-04 | Phase 2 | Pending |
-| TEST-05 | Phase 2 | Pending |
-| FEED-01 | Phase 3 | Pending |
-| FEED-02 | Phase 3 | Pending |
-| FEED-03 | Phase 3 | Pending |
-| FEED-04 | Phase 3 | Pending |
-| FEED-05 | Phase 3 | Pending |
-| FEED-06 | Phase 3 | Pending |
-| SOCL-01 | Phase 4 | Pending |
-| SOCL-02 | Phase 4 | Pending |
-| SOCL-03 | Phase 4 | Pending |
-| SOCL-04 | Phase 4 | Pending |
-| SOCL-05 | Phase 4 | Pending |
-| GAME-03 | Phase 4 | Pending |
-| GAME-04 | Phase 4 | Pending |
-| MODR-01 | Phase 4 | Pending |
-| MODR-02 | Phase 4 | Pending |
-| MODR-03 | Phase 4 | Pending |
-| MODR-04 | Phase 4 | Pending |
+| FEED-06 | Phase 2 | Pending |
+| FEED-07 | Phase 2 | Pending |
+| CUR-01 | Phase 2 | Pending |
+| CUR-02 | Phase 2 | Pending |
+| CUR-03 | Phase 2 | Pending |
+| CUR-04 | Phase 2 | Pending |
+| CUR-05 | Phase 2 | Pending |
+| MODR-01 | Phase 2 | Pending |
+| MODR-02 | Phase 2 | Pending |
+| MODR-03 | Phase 2 | Pending |
+| CREAT-01 | Phase 3 | Pending |
+| CREAT-02 | Phase 3 | Pending |
+| CREAT-03 | Phase 3 | Pending |
+| CREAT-04 | Phase 3 | Pending |
+| CREAT-05 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 47 total
-- Mapped to phases: 47
+- v1 requirements: 43 total
+- Mapped to phases: 43
 - Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-05-06*
-*Last updated: 2026-05-06 — traceability confirmed after roadmap creation*
+*Requirements defined: 2026-05-07 — pivoted to progressive disclosure model*
+*Last updated: 2026-05-07*
