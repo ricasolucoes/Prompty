@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --midnight-ink: #090a14;
+  --electric-violet: #7c3aed;
+  --prompt-cyan: #22d3ee;
+  --solar-coral: #ff6b4a;
+  --mint-signal: #34d399;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--midnight-ink);
+  color: #f5f7fa;
+}
