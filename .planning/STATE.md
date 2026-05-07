@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-06-PLAN.md
-last_updated: "2026-05-07T15:05:28.358Z"
+stopped_at: Completed 01-08-PLAN.md
+last_updated: "2026-05-07T15:16:15.346Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -52,6 +52,7 @@ Plan: 1 of 9
 | Phase 01-foundation P02 | 20min | 3 tasks | 2 files |
 | Phase 01 P05 | 125min | 3 tasks | 15 files |
 | Phase 01-foundation P06 | 20min | 3 tasks | 9 files |
+| Phase 01 P08 | 20 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 01]: App.tsx redirects / to /onboarding inline via hasOnboarded() check before Routes render
 - [Phase 01-foundation]: Cursor pagination uses .or(created_at.lt + and(created_at.eq,id.lt)) — no OFFSET (FEED-05)
 - [Phase 01-foundation]: FeedCard action row limited to Curtir + Copiar only — LEVL-06 enforced by 9 RTL tests
+- [Phase 01]: usedCount (Você usou X Promptys) uses recents.length — union of saves+tests deduped by prompty_id, capped at 9; friendly approximation avoiding extra DB query
+- [Phase 01]: FeedCardWithLike wrapper scopes useLike per card — isolates React re-renders to the individual card that changed like state
+- [Phase 01]: LevelUpModal fires on lvl.id change via useLevelStore.hasShown() — persisted to localStorage so modal never re-triggers after dismiss
 
 ### Pending Todos
 
@@ -90,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T15:05:28.354Z
-Stopped at: Completed 01-06-PLAN.md
+Last session: 2026-05-07T15:16:15.344Z
+Stopped at: Completed 01-08-PLAN.md
 Resume file: None

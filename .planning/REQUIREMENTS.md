@@ -25,22 +25,22 @@
 
 ### Social Actions — L1
 
-- [ ] **SOCL-01**: Authenticated user can save (bookmark) a Prompty
-- [ ] **SOCL-02**: Authenticated user can view their saved Promptys
+- [x] **SOCL-01**: Authenticated user can save (bookmark) a Prompty
+- [x] **SOCL-02**: Authenticated user can view their saved Promptys
 - [ ] **SOCL-03**: Authenticated user can mark feedback: "Funcionou" or "Não ficou bom" on a Prompty
 
 ### Profiles
 
-- [ ] **PROF-01**: User can set username, avatar, and bio on their profile
-- [ ] **PROF-02**: User profile displays their user_level badge (L1/L2/L3) and published Promptys (for L3)
-- [ ] **PROF-03**: Any visitor can view a user's public profile
+- [x] **PROF-01**: User can set username, avatar, and bio on their profile
+- [x] **PROF-02**: User profile displays their user_level badge (L1/L2/L3) and published Promptys (for L3)
+- [x] **PROF-03**: Any visitor can view a user's public profile
 
 ### Level System (Progressive Disclosure)
 
 - [x] **LEVL-01**: System tracks user actions internally (copies, saves, feedback events) via SQL triggers; internal_points not shown to L1 users
 - [x] **LEVL-02**: System evaluates L2 unlock criteria: ≥5 copies + ≥3 saves + ≥1 feedback + ≥2 return visits
-- [ ] **LEVL-03**: When L2 criteria are met, system shows a discrete unlock message: "Você desbloqueou o modo Curador. Agora pode salvar favoritos, avaliar promptys e enviar imagens geradas."
-- [ ] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
+- [x] **LEVL-03**: When L2 criteria are met, system shows a discrete unlock message: "Você desbloqueou o modo Curador. Agora pode salvar favoritos, avaliar promptys e enviar imagens geradas."
+- [x] **LEVL-04**: System evaluates L3 unlock criteria: submitted valid result images + rated Promptys + received approval on contributions + trusted behavior
 - [x] **LEVL-05**: Level transitions are recorded in unlock_events table
 - [x] **LEVL-06**: L1 interface never shows ranking, points, badges, comments, remix, variables, or advanced editor
 - [x] **LEVL-07**: Advanced features appear progressively — never as disabled/grayed-out buttons
@@ -132,16 +132,16 @@
 | FEED-03 | Phase 1 | Complete |
 | FEED-04 | Phase 1 | Complete |
 | FEED-05 | Phase 1 | Complete |
-| SOCL-01 | Phase 1 | Pending |
-| SOCL-02 | Phase 1 | Pending |
+| SOCL-01 | Phase 1 | Complete |
+| SOCL-02 | Phase 1 | Complete |
 | SOCL-03 | Phase 1 | Pending |
-| PROF-01 | Phase 1 | Pending |
-| PROF-02 | Phase 1 | Pending |
-| PROF-03 | Phase 1 | Pending |
+| PROF-01 | Phase 1 | Complete |
+| PROF-02 | Phase 1 | Complete |
+| PROF-03 | Phase 1 | Complete |
 | LEVL-01 | Phase 1 | Complete |
 | LEVL-02 | Phase 1 | Complete |
-| LEVL-03 | Phase 1 | Pending |
-| LEVL-04 | Phase 1 | Pending |
+| LEVL-03 | Phase 1 | Complete |
+| LEVL-04 | Phase 1 | Complete |
 | LEVL-05 | Phase 1 | Complete |
 | LEVL-06 | Phase 1 | Complete |
 | LEVL-07 | Phase 1 | Complete |
