@@ -61,19 +61,17 @@ Objetivo: criar, publicar e melhorar promptys.
 
 ### Validated
 
-(None yet — ship to validate)
+**Fase 1 — L1 Iniciante** *(Validated in Phase 1: foundation — 2026-05-07)*
+- [x] Usuário pode navegar o feed de promptys sem login
+- [x] Cada card mostra imagem, título e prompt pronto visível
+- [x] Usuário pode copiar o prompt com um toque (clipboard)
+- [x] Usuário pode criar conta e autenticar via Supabase Auth
+- [x] Card "Como funciona" aparece no topo do feed para novos usuários
+- [x] Usuário pode salvar promptys (se logado) — via PromptyDetailPage
+- [x] Usuário pode marcar "Funcionou / Não ficou bom" — via RateSheet (star rating)
+- [x] Sistema registra cópias internamente (sem mostrar contador para L1)
 
 ### Active
-
-**Fase 1 — L1 Iniciante funcional:**
-- [ ] Usuário pode navegar o feed de promptys sem login
-- [ ] Cada card mostra imagem, título e prompt pronto visível
-- [ ] Usuário pode copiar o prompt com um toque (clipboard)
-- [ ] Usuário pode criar conta e autenticar via Supabase Auth
-- [ ] Card "Como funciona" aparece no topo do feed para novos usuários
-- [ ] Usuário pode salvar promptys (se logado)
-- [ ] Usuário pode marcar "Funcionou / Não ficou bom"
-- [ ] Sistema registra cópias internamente (sem mostrar contador para L1)
 
 **Fase 2 — L2 Curador:**
 - [ ] Sistema detecta critérios de L2 e exibe mensagem de desbloqueio discreta
@@ -174,4 +172,4 @@ Objetivo: criar, publicar e melhorar promptys.
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | — Pending |
 
 ---
-*Last updated: 2026-05-07 after product pivot — progressive disclosure model with 3 levels*
+*Last updated: 2026-05-07 — Phase 1 complete (11 plans, 66 tests, gap closure verified)*
