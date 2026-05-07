@@ -13,27 +13,20 @@
     "build:android": "tauri android build",
     "build:ios": "tauri ios build",
     "preview": "vite preview",
-
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" --log-level error",
-
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
-
     "type-check": "tsc --noEmit",
-
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:run": "vitest run --reporter=verbose",
-
     "cpd": "jscpd src --config .jscpd.json",
     "cpd:rust": "jscpd src-tauri/src --config .jscpd.rust.json",
     "cpd:all": "pnpm run cpd && pnpm run cpd:rust",
-
     "deps:circular": "madge --extensions ts,tsx --ts-config tsconfig.json --circular src",
     "deps:orphans": "madge --extensions ts,tsx --ts-config tsconfig.json --orphans src",
-
     "rust:check": "cd src-tauri && cargo check --all-targets",
     "rust:clippy": "cd src-tauri && cargo clippy --all-targets -- -D warnings -W clippy::all -W clippy::pedantic",
     "rust:fmt": "cd src-tauri && cargo fmt --all -- --check",
@@ -41,28 +34,26 @@
     "rust:test": "cd src-tauri && cargo test",
     "rust:audit": "cd src-tauri && cargo audit",
     "rust:clippy:fix": "cd src-tauri && cargo clippy --fix --allow-dirty --allow-staged --all-targets -- -D warnings",
-
     "gen:types": "npx supabase gen types typescript --local > src/types/database.types.ts && prettier --write src/types/database.types.ts",
-
     "quality:check": "pnpm run format:check && pnpm run lint && pnpm run type-check && pnpm run cpd && pnpm run deps:circular",
     "quality:fix": "pnpm run lint:fix && pnpm run format && pnpm run rust:fmt:fix && pnpm run rust:clippy:fix",
     "quality:rust": "pnpm run rust:fmt && pnpm run rust:clippy && pnpm run rust:test && pnpm run rust:audit",
     "quality:all": "pnpm run quality:check && pnpm run quality:rust && pnpm run test:run",
-
     "ci": "pnpm run quality:all && pnpm run build",
-
+    "seed:gen": "tsx scripts/seed-promptys.ts",
+    "seed:apply": "supabase db reset --linked --no-seed && supabase db push --linked && tsx scripts/seed-promptys.ts && psql \"$SUPABASE_DB_URL\" -f supabase/seed.sql",
     "prepare": "husky"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
+    "@tanstack/react-query": "^5.80.0",
+    "@tanstack/react-query-devtools": "^5.80.0",
     "@tauri-apps/api": "^2.5.0",
     "@tauri-apps/plugin-deep-link": "^2.3.0",
     "@tauri-apps/plugin-dialog": "^2.3.0",
     "@tauri-apps/plugin-fs": "^2.3.0",
     "@tauri-apps/plugin-notification": "^2.3.0",
     "@tauri-apps/plugin-store": "^2.2.0",
-    "@tanstack/react-query": "^5.80.0",
-    "@tanstack/react-query-devtools": "^5.80.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.511.0",
@@ -95,8 +86,8 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-sonarjs": "^3.0.2",
     "husky": "^9.1.7",
-    "jsdom": "^26.1.0",
     "jscpd": "^4.0.5",
+    "jsdom": "^26.1.0",
     "lint-staged": "^16.0.0",
     "madge": "^8.0.0",
     "postcss": "^8.5.3",
@@ -104,6 +95,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "supabase": "^2.23.0",
     "tailwindcss": "^4.1.6",
+    "tsx": "^4.21.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vitest": "^3.1.0"
