@@ -8,7 +8,35 @@ import { EndOfFeedNudge } from '@/components/feed/EndOfFeedNudge'
 import { RateSheet } from '@/components/feed/RateSheet'
 import { Toast } from '@/components/ui/Toast'
 import { useCopy } from '@/hooks/useCopy'
+import { useLike } from '@/hooks/useLike'
 import { resolveBeginner, type InputField } from '@/lib/prompty/template'
+
+function FeedCardWithLike({
+  p,
+  copied,
+  rated,
+  onCopy,
+  onRate,
+}: {
+  p: FeedItem
+  copied: boolean
+  rated: boolean
+  onCopy: () => void
+  onRate: () => void
+}) {
+  const { liked, toggle, isAuthenticated } = useLike(p.id)
+  return (
+    <FeedCard
+      prompty={p}
+      liked={liked}
+      copied={copied}
+      rated={rated}
+      {...(isAuthenticated ? { onLike: toggle } : {})}
+      onCopy={onCopy}
+      onRate={onRate}
+    />
+  )
+}
 
 interface ToastState {
   message: string
@@ -86,9 +114,9 @@ export function FeedPage() {
       )}
 
       {items.map((p) => (
-        <FeedCard
+        <FeedCardWithLike
           key={p.id}
-          prompty={p}
+          p={p}
           copied={copiedIds.has(p.id)}
           rated={ratedIds.has(p.id)}
           onCopy={() => handleCopy(p)}
