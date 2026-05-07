@@ -1,0 +1,110 @@
+Commands ficam disponíveis para todos os agents.
+Cada command tem intenção, execução e sinais de sucesso/falha para o Claude entender contexto.
+
+commands:
+
+name: install
+description: Instala dependências do projeto.
+run: "npm install"
+success_patterns:
+  - "added"
+  - "audited"
+fail_patterns:
+  - "ERR!"
+  - "ELIFECYCLE"
+
+name: dev
+description: Sobe o app em modo desenvolvimento (Next.js).
+run: "npm run dev"
+success_patterns:
+  - "ready"
+  - "Local:"
+  - "started server"
+fail_patterns:
+  - "error:"
+  - "EADDRINUSE"
+
+name: build
+description: Build de produção do Next.js.
+run: "npm run build"
+success_patterns:
+  - "Route"
+  - "compiled"
+  - "Generating static pages"
+fail_patterns:
+  - "Build error"
+  - "Failed to compile"
+
+name: lint
+description: Lint do código com ESLint.
+run: "npm run lint"
+success_patterns:
+  - "No ESLint warnings or errors"
+  - "problems"
+fail_patterns:
+  - "Parsing error"
+  - "error"
+
+name: type-check
+description: Checagem de tipos TypeScript.
+run: "npx tsc --noEmit"
+success_patterns:
+  - ""
+fail_patterns:
+  - "error TS"
+
+name: test
+description: Roda todos os testes.
+run: "npm run test"
+success_patterns:
+  - "passed"
+  - "Tests"
+fail_patterns:
+  - "FAIL"
+  - "failed"
+
+name: test:coverage
+description: Cobertura total do projeto.
+run: "npm run test:coverage"
+success_patterns:
+  - "Coverage"
+  - "Statements"
+fail_patterns:
+  - "Error"
+
+name: db:generate
+description: Gera tipos TypeScript a partir do schema Supabase.
+run: "npx supabase gen types typescript --local > src/types/database.types.ts"
+success_patterns:
+  - ""
+fail_patterns:
+  - "error"
+  - "Error"
+
+name: db:migrate
+description: Roda migrations Supabase localmente.
+run: "npx supabase db push"
+success_patterns:
+  - "Finished"
+  - "migration"
+fail_patterns:
+  - "ERROR"
+  - "failed"
+
+name: repo:map
+description: Gera mapa do repositório para navegação do Claude.
+run: "ls -la && echo '--- SRC ---' && tree -L 3 src || true"
+success_patterns:
+  - "SRC"
+fail_patterns:
+  - "command not found"
+
+name: release:prepare
+description: Pré-release (lint, type-check, test, build).
+run: "npm run lint && npx tsc --noEmit && npm run test -- --run && npm run build"
+success_patterns:
+  - "compiled"
+  - "passed"
+fail_patterns:
+  - "failed"
+  - "Build error"

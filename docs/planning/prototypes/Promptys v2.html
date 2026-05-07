@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Promptys v2 — Modo Iniciante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #ece9e2;
+    color: #1d1d20;
+  }
+
+  .theme-light {
+    --bg: #FAF9F5;
+    --surface: #FFFFFF;
+    --surface-2: #F4F1EA;
+    --header-bg: rgba(250,249,245,0.92);
+    --line: #E7E3DA;
+    --line-strong: #D9D4C8;
+    --text-1: #181818;
+    --text-2: #555;
+    --text-3: #8A8784;
+    --primary: #7C3AED;
+    --primary-soft: rgba(124,58,237,0.10);
+    --like: #FF3B6B;
+  }
+  .theme-dark {
+    --bg: #0E0F18;
+    --surface: #161826;
+    --surface-2: #1C1F30;
+    --header-bg: rgba(14,15,24,0.9);
+    --line: #262A3C;
+    --line-strong: #2F3447;
+    --text-1: #F4F5FA;
+    --text-2: #B0B5C5;
+    --text-3: #6D7388;
+    --primary: #9D6BFA;
+    --primary-soft: rgba(157,107,250,0.16);
+    --like: #FF5C84;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  .screen { animation: fadeIn .25s cubic-bezier(.2,.8,.2,1); }
+
+  .page-bg {
+    min-height: 100vh; width: 100vw;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(124,58,237,0.10), transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(255,180,32,0.08), transparent 55%),
+      linear-gradient(180deg, #efece5 0%, #e0dccf 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 16px;
+  }
+  .page-bg.dark {
+    background:
+      radial-gradient(circle at 15% 20%, rgba(124,58,237,0.18), transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(34,211,238,0.08), transparent 55%),
+      linear-gradient(180deg, #0a0b18 0%, #050610 100%);
+  }
+  .device-caption {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: -38px; font-size: 12px;
+    color: rgba(0,0,0,0.5);
+    font-family: ui-monospace, 'SF Mono', monospace;
+    letter-spacing: 0.4px; white-space: nowrap;
+  }
+  .page-bg.dark .device-caption { color: rgba(255,255,255,0.5); }
+
+  .clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .clamp-1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="components/image-slot.js"></script>
+<script type="text/babel" src="components/ios-frame.jsx"></script>
+<script type="text/babel" src="components/tweaks-panel.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useReducer, useMemo } = React;
+window.useState = useState; window.useEffect = useEffect; window.useMemo = useMemo;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "dark": false,
+  "level": "L3"
+}/*EDITMODE-END*/;
+
+// ─── Minimal data (resolved templates, no variables shown to L1) ─
+const USERS = {
+  u1:  { name: 'Mira Velasco',   handle: 'mira.vfx',     color: '#7C3AED', initials: 'MV' },
+  u2:  { name: 'Caio Tucano',    handle: 'tucano',       color: '#22D3EE', initials: 'CT' },
+  u3:  { name: 'Nova Studio',    handle: 'nova.studio',  color: '#FF6B4A', initials: 'NS' },
+  u4:  { name: 'Ana Sato',       handle: 'ana.pixels',   color: '#34D399', initials: 'AS' },
+  u5:  { name: 'Lia Mota',       handle: 'lia.frames',   color: '#EC4899', initials: 'LM' },
+  ume: { name: 'Você',           handle: 'voce',         color: '#7C3AED', initials: 'V'  },
+};
+
+// L1 sees the prompt as a single resolved string, ready to copy.
+const PROMPTYS = [
+  {
+    id: 'p1', author: 'u1',
+    title: 'Retrato cinematográfico de uma astrônoma',
+    cover: 'linear-gradient(135deg, #2a1454 0%, #6a2bb8 45%, #ff6b4a 100%)',
+    prompt: `Ultra-realistic cinematic portrait of a young astronomer with short dark hair, focused gaze, looking through a telescope at midnight. She is wearing a black technical lab coat, framed in a 3/4 profile. Set in an old observatory with deep blue and copper light tones. Soft neon rim lighting, premium editorial quality, refined color grading, shot on Arri Alexa with 85mm f/1.4 lens, shallow depth of field. Mood: contemplative, elegant. Aspect 4:5. Ultra detailed, no text, no watermark.`,
+    likes: 1840, copies: 412,
+  },
+  {
+    id: 'p2', author: 'u3',
+    title: 'Cartaz editorial Y2K em néon',
+    cover: 'linear-gradient(135deg, #ff3380 0%, #ffcc00 50%, #22d3ee 100%)',
+    prompt: `Y2K-style magazine cover poster, glossy and saturated, large headline "FUTURO AGORA" in bold italic chrome typography, secondary text reading "edição especial 2026". Subject: a confident woman with metallic eye makeup and reflective sunglasses, photographed in close-up, neon pink and yellow background, slight motion blur, retro halftone print texture, scratches and tape marks. Style: early 2000s magazine collage. Composition: subject left, headline overlapping. Aspect 4:5. Sharp focus, bold colors.`,
+    likes: 920, copies: 158,
+  },
+  {
+    id: 'p3', author: 'u2',
+    title: 'Foto fofa com cachorro (estilo Insta)',
+    cover: 'linear-gradient(135deg, #ffb3c1 0%, #f7c4a3 50%, #fde9b8 100%)',
+    prompt: `Ultra-realistic close-up portrait of a playful young woman holding a small shih tzu, framed very tight for an intimate, up-close composition. She is looking at the camera with a fun, cheeky expression, mouth open with her tongue sticking out, but her eyes are relaxed and not opened wide — soft, playful, and effortless. Her head is slightly tipped back, and her white-and-pink baseball cap is tilted back on her head instead of pulled low. She has extra-long pastel nails, gold layered necklaces, soft natural daylight, plain neutral studio background. The dog wears tiny pink bows. Aspect 4:5. Real photograph, no plastic skin.`,
+    likes: 5, copies: 32,
+  },
+  {
+    id: 'p4', author: 'u4',
+    title: 'Mascote 3D estilo Pixar',
+    cover: 'linear-gradient(135deg, #34d399 0%, #fde68a 50%, #f87171 100%)',
+    prompt: `Adorable 3D Pixar-style mascot of a small fox holding a tiny coffee cup, big expressive eyes, fluffy tail, friendly smile. Soft volumetric studio lighting from upper left, gentle pastel cream background, subtle floor reflection. High quality Pixar render, smooth subsurface scattering on fur, cute proportions, oversized head. Centered composition, full body shot. Aspect 1:1. Crisp detail, warm tones, no text.`,
+    likes: 2210, copies: 540,
+  },
+  {
+    id: 'p5', author: 'u5',
+    title: 'Paisagem fantasia com aurora',
+    cover: 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #06b6d4 100%)',
+    prompt: `Wide cinematic landscape of a misty fantasy valley at twilight, ancient stone bridge crossing a glowing river, distant mountains crowned with northern aurora in green and violet. Bioluminescent moss along rocks, two tiny silhouettes of travelers walking the bridge for scale. Painterly digital matte style, deep atmospheric perspective, golden warm foreground against cool blue background. Aspect 16:9. Highly detailed, dramatic, no text.`,
+    likes: 1180, copies: 224,
+  },
+];
+
+// ─── Atomic UI ──────────────────────────────────────────────────
+const Avatar = ({ user, size = 40 }) => (
+  <div style={{
+    width: size, height: size, borderRadius: size / 2,
+    background: user.color, color: '#fff',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: size * 0.38, fontWeight: 700, flexShrink: 0,
+    fontFamily: 'Space Grotesk, sans-serif',
+  }}>{user.initials}</div>
+);
+
+const Icon = ({ name, size = 20, color = 'currentColor', strokeWidth = 1.8 }) => {
+  const p = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth, strokeLinecap: 'round', strokeLinejoin: 'round' };
+  switch (name) {
+    case 'home':       return <svg {...p}><path d="M3 11l9-8 9 8v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2V11z"/></svg>;
+    case 'user':       return <svg {...p}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>;
+    case 'heart':      return <svg {...p}><path d="M12 21s-7-4.5-9.5-9.5C.7 7.6 3.5 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 3.5 0 6.3 3.6 4.5 7.5C19 16.5 12 21 12 21z"/></svg>;
+    case 'heartFill':  return <svg {...p} fill={color} stroke="none"><path d="M12 21s-7-4.5-9.5-9.5C.7 7.6 3.5 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 3.5 0 6.3 3.6 4.5 7.5C19 16.5 12 21 12 21z"/></svg>;
+    case 'copy':       return <svg {...p}><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>;
+    case 'check':      return <svg {...p}><path d="M5 12l4 4L19 6"/></svg>;
+    case 'star':       return <svg {...p}><path d="M12 2l3 7 7 .5-5.5 4.5 2 7L12 17l-6.5 4 2-7L2 9.5 9 9z"/></svg>;
+    case 'starFill':   return <svg {...p} fill={color} stroke="none"><path d="M12 2l3 7 7 .5-5.5 4.5 2 7L12 17l-6.5 4 2-7L2 9.5 9 9z"/></svg>;
+    case 'chevronL':   return <svg {...p}><path d="M15 6l-6 6 6 6"/></svg>;
+    case 'chevronR':   return <svg {...p}><path d="M9 6l6 6-6 6"/></svg>;
+    case 'sparkle':    return <svg {...p}><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l4 4M15 15l4 4M5 19l4-4M15 9l4-4"/></svg>;
+    case 'x':          return <svg {...p}><path d="M6 6l12 12M6 18L18 6"/></svg>;
+    case 'lock':       return <svg {...p}><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>;
+    case 'wand':       return <svg {...p}><path d="M3 21l8-8M14 3l1 3 3 1-3 1-1 3-1-3-3-1 3-1zM18 13l.7 1.5 1.5.5-1.5.5-.7 1.5-.7-1.5-1.5-.5 1.5-.5z"/></svg>;
+    case 'gemini':     return <svg width={size} height={size} viewBox="0 0 24 24"><path d="M12 2 L13.5 9 L20 10.5 L13.5 12 L12 19 L10.5 12 L4 10.5 L10.5 9 Z" fill={color}/></svg>;
+    case 'image':      return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 9"/></svg>;
+    case 'flame':      return <svg {...p}><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-1.5.5-3 1.5-4-.2 1 .5 2 1.5 2 0-2 1-4 1-6zM7 14a5 5 0 0 0 10 0c0 4-3 8-5 8s-5-4-5-8z"/></svg>;
+    case 'search':     return <svg {...p}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>;
+    case 'bookmark':   return <svg {...p}><path d="M6 3h12v18l-6-4-6 4z"/></svg>;
+    default: return null;
+  }
+};
+
+const Stars = ({ value, onChange, size = 26 }) => (
+  <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+    {[1, 2, 3, 4, 5].map(n => (
+      <button key={n} onClick={() => onChange?.(n)} style={{
+        all: 'unset', cursor: onChange ? 'pointer' : 'default', padding: 2,
+        transform: value >= n && onChange ? 'scale(1)' : 'scale(1)',
+        animation: value === n ? 'pop .25s' : 'none',
+      }}>
+        <Icon name={value >= n ? 'starFill' : 'star'} size={size} color={value >= n ? '#FFB020' : 'var(--line-strong)'}/>
+      </button>
+    ))}
+  </div>
+);
+
+const PrimaryButton = ({ children, onClick, icon, full, disabled, color = 'var(--primary)', fg = '#fff' }) => (
+  <button onClick={onClick} disabled={disabled} style={{
+    all: 'unset', cursor: disabled ? 'not-allowed' : 'pointer',
+    background: disabled ? 'var(--line)' : color,
+    color: disabled ? 'var(--text-3)' : fg,
+    padding: '14px 18px', borderRadius: 14,
+    fontWeight: 700, fontSize: 15, letterSpacing: -0.1,
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    width: full ? '100%' : 'auto', boxSizing: 'border-box',
+    transition: 'transform .12s, background .15s',
+  }}>
+    {icon && <Icon name={icon} size={18} color={fg} strokeWidth={2.2}/>}
+    {children}
+  </button>
+);
+
+const SecondaryButton = ({ children, onClick, icon, full }) => (
+  <button onClick={onClick} style={{
+    all: 'unset', cursor: 'pointer',
+    background: 'var(--surface-2)', color: 'var(--text-1)',
+    padding: '12px 16px', borderRadius: 14, fontWeight: 600, fontSize: 14,
+    border: '1px solid var(--line)',
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    width: full ? '100%' : 'auto', boxSizing: 'border-box',
+  }}>
+    {icon && <Icon name={icon} size={16} strokeWidth={2}/>}
+    {children}
+  </button>
+);
+
+// ─── Top header ─────────────────────────────────────────────────
+const Header = ({ level }) => (
+  <div style={{
+    position: 'sticky', top: 0, zIndex: 30,
+    padding: '54px 18px 12px',
+    background: 'var(--header-bg)',
+    backdropFilter: 'blur(14px)',
+    borderBottom: '1px solid var(--line)',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+  }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{
+        width: 30, height: 30, borderRadius: 9,
+        background: 'linear-gradient(135deg,#7C3AED,#22D3EE)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
+      }}>
+        <Icon name="wand" size={17} color="#fff" strokeWidth={2.4}/>
+      </div>
+      <span style={{
+        fontFamily: 'Space Grotesk, sans-serif',
+        fontWeight: 700, fontSize: 20, letterSpacing: -0.5, color: 'var(--text-1)',
+      }}>Promptys</span>
+    </div>
+    <div style={{
+      padding: '4px 10px', borderRadius: 999,
+      background: 'var(--primary-soft)', color: 'var(--primary)',
+      fontSize: 11, fontWeight: 700, letterSpacing: 0.4,
+    }}>{level === 'L1' ? 'EXPLORADOR' : level === 'L2' ? 'CURADOR' : 'CRIADOR'}</div>
+  </div>
+);
+
+// ─── Feed card (Facebook-style, beginner-friendly) ──────────────
+const FeedCard = ({ prompty, liked, onLike, onCopy, onRate, copiedId, ratedIds }) => {
+  const author = USERS[prompty.author];
+  const [expanded, setExpanded] = useState(false);
+  const isCopied = copiedId === prompty.id;
+  const isRated = ratedIds.has(prompty.id);
+
+  return (
+    <article style={{
+      background: 'var(--surface)',
+      borderTop: '1px solid var(--line)',
+      borderBottom: '1px solid var(--line)',
+      marginBottom: 10,
+    }}>
+      {/* Author */}
+      <header style={{ padding: '14px 16px 10px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Avatar user={author} size={42}/>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--text-1)' }}>{author.name}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-3)' }}>compartilhou um Prompty · agora</div>
+        </div>
+      </header>
+
+      {/* Title */}
+      <h2 style={{
+        margin: 0, padding: '0 16px 8px',
+        fontFamily: 'Space Grotesk, sans-serif',
+        fontSize: 19, fontWeight: 700, letterSpacing: -0.4,
+        color: 'var(--text-1)', lineHeight: 1.25,
+      }}>{prompty.title}</h2>
+
+      {/* Prompt — 3 lines + Ver mais */}
+      <div style={{ padding: '0 16px 12px' }}>
+        <div style={{
+          fontSize: 11, fontWeight: 600, color: 'var(--text-3)',
+          textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 4,
+        }}>Prompt</div>
+        <p
+          className={expanded ? '' : 'clamp-3'}
+          style={{
+            margin: 0, fontSize: 13.5, lineHeight: 1.5, color: 'var(--text-2)',
+            whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+          }}
+        >{prompty.prompt}{!expanded && '... '}
+          {!expanded && (
+            <button onClick={() => setExpanded(true)} style={{
+              all: 'unset', cursor: 'pointer', color: 'var(--text-1)', fontWeight: 700,
+            }}>Ver mais</button>
+          )}
+        </p>
+      </div>
+
+      {/* Image */}
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '4/5', background: prompty.cover }}>
+        <image-slot
+          id={`v2-cover-${prompty.id}`}
+          shape="rect"
+          placeholder="solte uma imagem (opcional)"
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            '--is-bg': 'transparent',
+            '--is-border': 'rgba(255,255,255,0.35)',
+            '--is-fg': 'rgba(255,255,255,0.92)',
+          }}
+        />
+      </div>
+
+      {/* Reaction count */}
+      <div style={{ padding: '10px 16px 6px', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: 18, height: 18, borderRadius: 9,
+          background: 'var(--like)', color: '#fff',
+        }}>
+          <Icon name="heartFill" size={11} color="#fff"/>
+        </div>
+        <span style={{ fontSize: 12.5, color: 'var(--text-2)', fontWeight: 500 }}>
+          {(prompty.likes + (liked ? 1 : 0)).toLocaleString('pt-BR')}
+        </span>
+        <span style={{ flex: 1 }}/>
+        <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
+          {prompty.copies} pessoas usaram
+        </span>
+      </div>
+
+      {/* Action row */}
+      <div style={{
+        margin: '0 16px',
+        padding: '4px 0',
+        borderTop: '1px solid var(--line)',
+        borderBottom: '1px solid var(--line)',
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4,
+      }}>
+        <ActionBtn icon={liked ? 'heartFill' : 'heart'} label="Curtir"
+                   color={liked ? 'var(--like)' : 'var(--text-2)'}
+                   onClick={onLike}/>
+        <ActionBtn icon={isCopied ? 'check' : 'copy'} label={isCopied ? 'Copiado!' : 'Copiar prompt'}
+                   color={isCopied ? '#34D399' : 'var(--text-2)'}
+                   onClick={onCopy}/>
+      </div>
+
+      {/* Post-copy CTA — appears when this card was just copied */}
+      {isCopied && (
+        <div style={{
+          margin: '12px 16px 14px',
+          padding: 14, borderRadius: 14,
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.12), rgba(34,211,238,0.06))',
+          border: '1px solid var(--line)',
+          animation: 'fadeIn .25s',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+            <Icon name="sparkle" size={16} color="var(--primary)"/>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)' }}>
+              Cole no Gemini, ChatGPT ou Midjourney
+            </span>
+          </div>
+          <div style={{ fontSize: 12.5, color: 'var(--text-2)', lineHeight: 1.4, marginBottom: 12 }}>
+            Quando voltar com a imagem pronta, conte para a comunidade como ficou.
+          </div>
+          <PrimaryButton icon="star" full onClick={onRate} color="var(--primary)">
+            Avaliar este prompt (+5p)
+          </PrimaryButton>
+        </div>
+      )}
+
+      {isRated && !isCopied && (
+        <div style={{
+          margin: '12px 16px 14px',
+          padding: '10px 12px', borderRadius: 12,
+          background: 'rgba(52,211,153,0.10)',
+          border: '1px solid rgba(52,211,153,0.25)',
+          display: 'flex', alignItems: 'center', gap: 8,
+          fontSize: 12.5, color: 'var(--text-1)',
+        }}>
+          <Icon name="check" size={16} color="#34D399"/>
+          Você já avaliou este Prompty. Obrigada!
+        </div>
+      )}
+
+      {/* breathing room */}
+      {!isCopied && !isRated && <div style={{ height: 6 }}/>}
+    </article>
+  );
+};
+
+const ActionBtn = ({ icon, label, color, onClick }) => (
+  <button onClick={onClick} style={{
+    all: 'unset', cursor: 'pointer',
+    padding: '11px 8px',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    color, fontSize: 13.5, fontWeight: 600,
+    borderRadius: 8,
+    transition: 'background .12s',
+  }}>
+    <Icon name={icon} size={18} color={color} strokeWidth={2}/>
+    {label}
+  </button>
+);
+
+// ─── Feed screen ────────────────────────────────────────────────
+const FeedScreen = ({ state, dispatch, level }) => {
+  const onLike = (id) => dispatch({ type: 'toggleLike', id });
+  const onCopy = (p) => {
+    if (navigator.clipboard) navigator.clipboard.writeText(p.prompt).catch(() => {});
+    dispatch({ type: 'copy', id: p.id });
+  };
+  const onRate = (p) => dispatch({ type: 'openRate', id: p.id });
+
+  return (
+    <div style={{ paddingBottom: 96 }}>
+      <Header level={level}/>
+
+      {/* Welcome strip — ONLY for L1 first session */}
+      {level === 'L1' && (
+        <div style={{
+          margin: '12px 16px 8px',
+          padding: 14, borderRadius: 16,
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.10), rgba(34,211,238,0.06))',
+          border: '1px solid var(--line)',
+        }}>
+          <div style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
+            color: 'var(--primary)', textTransform: 'uppercase', marginBottom: 4,
+          }}>Como funciona</div>
+          <div style={{ fontSize: 13.5, color: 'var(--text-1)', lineHeight: 1.45 }}>
+            Promptys são <b>receitas prontas</b> para gerar imagens com IA. Toque em <b>Copiar prompt</b>, cole no Gemini ou outro app, depois volte aqui e conte como ficou.
+          </div>
+        </div>
+      )}
+
+      {PROMPTYS.map(p => (
+        <FeedCard key={p.id}
+          prompty={p}
+          liked={state.liked.has(p.id)}
+          onLike={() => onLike(p.id)}
+          onCopy={() => onCopy(p)}
+          onRate={() => onRate(p)}
+          copiedId={state.copiedId}
+          ratedIds={state.ratedIds}
+        />
+      ))}
+
+      {level === 'L1' && (
+        <div style={{
+          margin: '20px 16px 0', padding: 16, borderRadius: 16,
+          textAlign: 'center', border: '1px dashed var(--line-strong)',
+          color: 'var(--text-3)', fontSize: 13, lineHeight: 1.45,
+        }}>
+          Conforme você usar mais Promptys, novas funções vão aparecer aqui.
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Profile (L1 minimalist version) ────────────────────────────
+const ProfileScreen = ({ state, level }) => {
+  const me = USERS.ume;
+  const used = state.copiedIds.size;
+  const target = level === 'L1' ? 8 : level === 'L2' ? 30 : 100;
+  const progress = Math.min(used / target, 1);
+
+  return (
+    <div style={{ paddingBottom: 96 }}>
+      <Header level={level}/>
+      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+          <Avatar user={me} size={88}/>
+        </div>
+        <h1 style={{
+          margin: 0, fontFamily: 'Space Grotesk, sans-serif',
+          fontSize: 22, fontWeight: 700, color: 'var(--text-1)', letterSpacing: -0.4,
+        }}>{me.name}</h1>
+        <div style={{ marginTop: 4, fontSize: 13, color: 'var(--text-3)' }}>@{me.handle}</div>
+
+        <div style={{ marginTop: 18 }}>
+          <div style={{
+            fontSize: 13, color: 'var(--text-2)', marginBottom: 10,
+          }}>Você usou <b style={{ color: 'var(--text-1)' }}>{used}</b> {used === 1 ? 'Prompty' : 'Promptys'}</div>
+
+          {level !== 'L3' && (
+            <div style={{
+              maxWidth: 280, margin: '0 auto',
+              padding: 14, borderRadius: 14,
+              background: 'var(--surface)',
+              border: '1px solid var(--line)',
+              textAlign: 'left',
+            }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8,
+              }}>
+                <Icon name="lock" size={14} color="var(--text-3)"/>
+                <div style={{ fontSize: 12, color: 'var(--text-3)', flex: 1 }}>
+                  Próximo desbloqueio
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-1)', fontWeight: 700 }}>
+                  {Math.max(target - used, 0)} para ir
+                </div>
+              </div>
+              <div style={{ height: 8, borderRadius: 4, background: 'var(--surface-2)', overflow: 'hidden' }}>
+                <div style={{
+                  width: `${progress * 100}%`, height: '100%',
+                  background: 'linear-gradient(90deg,#7C3AED,#22D3EE)',
+                  transition: 'width .3s',
+                }}/>
+              </div>
+              <div style={{ marginTop: 10, fontSize: 12.5, color: 'var(--text-2)', lineHeight: 1.4 }}>
+                {level === 'L1' && (
+                  <>Use mais alguns Promptys para destravar <b>Buscar</b> e <b>Salvos</b>.</>
+                )}
+                {level === 'L2' && (
+                  <>Continue contribuindo para destravar <b>Criar</b> e <b>Remix</b>.</>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Recent used */}
+        <div style={{ marginTop: 28, textAlign: 'left', padding: '0 0 20px' }}>
+          <div style={{
+            fontSize: 12, fontWeight: 700, color: 'var(--text-3)',
+            textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10,
+          }}>Seus últimos usados</div>
+          {state.copiedIds.size === 0 ? (
+            <div style={{
+              padding: 24, borderRadius: 14, textAlign: 'center',
+              border: '1px dashed var(--line-strong)',
+              color: 'var(--text-3)', fontSize: 13,
+            }}>
+              Você ainda não copiou nenhum Prompty.<br/>Volte ao feed e experimente um.
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+              {[...state.copiedIds].map(id => {
+                const p = PROMPTYS.find(x => x.id === id);
+                if (!p) return null;
+                return (
+                  <div key={id} style={{
+                    aspectRatio: '4/5', borderRadius: 12,
+                    background: p.cover,
+                    position: 'relative', overflow: 'hidden',
+                    border: '1px solid var(--line)',
+                  }}>
+                    <div style={{
+                      position: 'absolute', left: 0, right: 0, bottom: 0,
+                      padding: '20px 8px 8px',
+                      background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.65))',
+                      color: '#fff', fontSize: 11, fontWeight: 700, lineHeight: 1.2,
+                    }}>{p.title}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Onboarding (L1 = single slide) ─────────────────────────────
+const Onboarding = ({ onDone, level }) => (
+  <div style={{
+    height: '100%', display: 'flex', flexDirection: 'column',
+    padding: '80px 28px 28px', background: 'var(--bg)',
+  }}>
+    <div style={{
+      width: 64, height: 64, borderRadius: 18,
+      background: 'linear-gradient(135deg,#7C3AED,#22D3EE)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: '0 12px 36px rgba(124,58,237,0.35)',
+    }}>
+      <Icon name="wand" size={32} color="#fff" strokeWidth={2.2}/>
+    </div>
+
+    <h1 style={{
+      margin: '32px 0 16px',
+      fontFamily: 'Space Grotesk, sans-serif',
+      fontSize: 34, fontWeight: 800, letterSpacing: -1.2,
+      color: 'var(--text-1)', lineHeight: 1.05,
+    }}>
+      Receitas prontas<br/>para criar imagens<br/>com IA.
+    </h1>
+
+    <p style={{
+      margin: 0, fontSize: 16, lineHeight: 1.5, color: 'var(--text-2)',
+    }}>
+      Toque em um Prompty, copie o texto, cole no <b>Gemini</b> ou outro app de IA, e veja o resultado. Depois volte e conte como ficou.
+    </p>
+
+    <div style={{ flex: 1 }}/>
+
+    <PrimaryButton full icon="sparkle" onClick={onDone}>Começar a explorar</PrimaryButton>
+
+    <div style={{
+      marginTop: 14, fontSize: 12, color: 'var(--text-3)', textAlign: 'center',
+    }}>
+      Sem cadastro, sem cartão. Entre direto no feed.
+    </div>
+  </div>
+);
+
+// ─── Rate sheet ─────────────────────────────────────────────────
+const RateSheet = ({ open, onClose, onSubmit, prompty }) => {
+  const [rating, setRating] = useState(0);
+  useEffect(() => { if (open) setRating(0); }, [open]);
+  if (!open || !prompty) return null;
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 100,
+      display: 'flex', alignItems: 'flex-end',
+      background: 'rgba(0,0,0,0.5)',
+      animation: 'fadeIn .2s',
+    }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: '100%', background: 'var(--surface)',
+        borderTopLeftRadius: 24, borderTopRightRadius: 24,
+        padding: '20px 20px 36px',
+        animation: 'slideUp .25s cubic-bezier(.2,.8,.2,1)',
+      }}>
+        <div style={{
+          width: 36, height: 4, borderRadius: 2,
+          background: 'var(--line-strong)', margin: '0 auto 18px',
+        }}/>
+
+        <h2 style={{
+          margin: '0 0 6px', fontFamily: 'Space Grotesk, sans-serif',
+          fontSize: 21, fontWeight: 700, color: 'var(--text-1)', letterSpacing: -0.4,
+          textAlign: 'center',
+        }}>Como ficou?</h2>
+        <p style={{
+          margin: '0 0 24px', fontSize: 13.5, color: 'var(--text-2)',
+          textAlign: 'center', lineHeight: 1.4,
+        }}>{prompty.title}</p>
+
+        <Stars value={rating} onChange={setRating} size={36}/>
+
+        <div style={{
+          marginTop: 24, padding: 14, borderRadius: 14,
+          background: 'var(--surface-2)', border: '1px solid var(--line)',
+        }}>
+          <div style={{
+            fontSize: 12, fontWeight: 600, color: 'var(--text-3)',
+            textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8,
+          }}>Anexar imagem (opcional)</div>
+          <image-slot
+            id={`rate-${prompty.id}`}
+            shape="rounded" radius="12"
+            placeholder="solte aqui a imagem que você gerou"
+            style={{
+              width: '100%', height: 140,
+              '--is-bg': 'var(--surface)',
+              '--is-border': 'var(--line-strong)',
+              '--is-fg': 'var(--text-3)',
+            }}
+          />
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, marginTop: 22 }}>
+          <SecondaryButton onClick={onClose} full>Depois</SecondaryButton>
+          <PrimaryButton full icon="check" disabled={rating === 0} onClick={() => onSubmit(rating)}>
+            Enviar (+5p)
+          </PrimaryButton>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Toast ──────────────────────────────────────────────────────
+const Toast = ({ toast }) => {
+  if (!toast) return null;
+  return (
+    <div style={{
+      position: 'absolute', left: '50%', bottom: 110, zIndex: 90,
+      transform: 'translateX(-50%)',
+      padding: '10px 16px', borderRadius: 999,
+      background: 'rgba(20,20,30,0.94)', color: '#fff',
+      fontSize: 13, fontWeight: 600,
+      display: 'flex', alignItems: 'center', gap: 8,
+      boxShadow: '0 8px 28px rgba(0,0,0,0.3)',
+      animation: 'fadeIn .2s',
+    }}>
+      <Icon name={toast.icon || 'check'} size={16} color={toast.color || '#34D399'} strokeWidth={2.4}/>
+      {toast.text}
+      {toast.points && (
+        <span style={{
+          padding: '2px 8px', borderRadius: 999,
+          background: 'rgba(124,58,237,0.85)', fontSize: 11, fontWeight: 700,
+        }}>{toast.points}</span>
+      )}
+    </div>
+  );
+};
+
+// ─── Tab bar (gated by level) ───────────────────────────────────
+const TabBar = ({ current, onGo, level }) => {
+  const tabs = [{ key: 'feed', icon: 'home', label: 'Feed' }];
+  if (level === 'L2' || level === 'L3') {
+    tabs.push({ key: 'search', icon: 'image', label: 'Buscar' });
+  }
+  if (level === 'L3') {
+    tabs.push({ key: 'create', icon: 'sparkle', label: '', primary: true });
+    tabs.push({ key: 'rankings', icon: 'starFill', label: 'Ranking' });
+  }
+  tabs.push({ key: 'profile', icon: 'user', label: 'Perfil' });
+
+  return (
+    <div style={{
+      position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50,
+      padding: '8px 14px 28px',
+      background: 'linear-gradient(180deg, transparent, var(--bg) 35%)',
+      pointerEvents: 'none',
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-around',
+        padding: '8px 6px',
+        background: 'var(--surface)',
+        border: '1px solid var(--line)',
+        borderRadius: 22,
+        boxShadow: '0 12px 40px rgba(0,0,0,0.10)',
+        backdropFilter: 'blur(20px)',
+        pointerEvents: 'auto',
+      }}>
+        {tabs.map(t => {
+          if (t.primary) {
+            return (
+              <button key={t.key} onClick={() => onGo(t.key)} style={{
+                width: 48, height: 48, margin: '-12px 4px',
+                borderRadius: 16, border: 'none',
+                background: 'linear-gradient(135deg,#8B4DF5,#22D3EE)',
+                color: '#fff', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 8px 22px rgba(124,58,237,0.4)',
+              }}>
+                <Icon name="sparkle" size={22} color="#fff" strokeWidth={2.2}/>
+              </button>
+            );
+          }
+          const active = current === t.key;
+          return (
+            <button key={t.key} onClick={() => onGo(t.key)} style={{
+              flex: 1, padding: '8px 4px', borderRadius: 12, border: 'none',
+              background: 'transparent', cursor: 'pointer',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+              color: active ? 'var(--primary)' : 'var(--text-3)',
+              fontFamily: 'inherit',
+            }}>
+              <Icon name={t.icon} size={22} strokeWidth={active ? 2.2 : 1.8}/>
+              <span style={{ fontSize: 10.5, fontWeight: 600 }}>{t.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// ─── Locked-tab placeholder (L2/L3 only — never shown to L1) ────
+const ComingScreen = ({ title, body, level }) => (
+  <div style={{ paddingBottom: 96 }}>
+    <Header level={level}/>
+    <div style={{
+      padding: '60px 28px', textAlign: 'center',
+    }}>
+      <div style={{
+        width: 60, height: 60, borderRadius: 18,
+        background: 'var(--surface-2)',
+        margin: '0 auto 20px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <Icon name="sparkle" size={26} color="var(--primary)" strokeWidth={2}/>
+      </div>
+      <h2 style={{
+        margin: '0 0 8px', fontFamily: 'Space Grotesk, sans-serif',
+        fontSize: 22, fontWeight: 700, color: 'var(--text-1)', letterSpacing: -0.4,
+      }}>{title}</h2>
+      <p style={{ margin: 0, fontSize: 14, color: 'var(--text-2)', lineHeight: 1.5, maxWidth: 280, marginInline: 'auto' }}>
+        {body}
+      </p>
+    </div>
+  </div>
+);
+
+// Expose to gamification.jsx
+Object.assign(window, { Icon, Avatar, PrimaryButton, SecondaryButton, Header, USERS, PROMPTYS });
+
+// ─── Reducer ────────────────────────────────────────────────────
+const initial = {
+  screen: 'onboarding',
+  liked: new Set(),
+  copiedId: null,         // last copied (drives in-card CTA)
+  copiedIds: new Set(),   // history of all copied
+  ratedIds: new Set(),
+  saved: new Set(),
+  created: new Set(),
+  streak: 4,
+  rateOpenFor: null,
+  toast: null,
+  levelUpFor: null,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'go': return { ...state, screen: action.screen };
+    case 'toggleLike': {
+      const liked = new Set(state.liked);
+      const will = !liked.has(action.id);
+      will ? liked.add(action.id) : liked.delete(action.id);
+      return { ...state, liked };
+    }
+    case 'copy': {
+      const ids = new Set(state.copiedIds); ids.add(action.id);
+      return {
+        ...state, copiedId: action.id, copiedIds: ids,
+        toast: { text: 'Prompt copiado', icon: 'copy', color: '#34D399' },
+      };
+    }
+    case 'openRate': return { ...state, rateOpenFor: action.id };
+    case 'closeRate': return { ...state, rateOpenFor: null };
+    case 'submitRate': {
+      const rated = new Set(state.ratedIds); rated.add(action.id);
+      return {
+        ...state, rateOpenFor: null, copiedId: null,
+        ratedIds: rated,
+        toast: { text: 'Avaliação enviada', icon: 'check', color: '#34D399', points: '+5p' },
+      };
+    }
+    case 'toggleSave': {
+      const saved = new Set(state.saved);
+      saved.has(action.id) ? saved.delete(action.id) : saved.add(action.id);
+      return { ...state, saved, toast: saved.has(action.id) ? { text: 'Salvo na biblioteca', icon: 'bookmark', color: '#7C3AED' } : null };
+    }
+    case 'publish': {
+      const created = new Set(state.created); created.add('new-' + Date.now());
+      return { ...state, created, screen: 'profile', toast: { text: 'Prompty publicado!', icon: 'sparkle', color: '#FF6B4A', points: '+50p' } };
+    }
+    case 'showLevelUp': return { ...state, levelUpFor: action.level };
+    case 'dismissLevelUp': return { ...state, levelUpFor: null };
+    case 'clearToast': return { ...state, toast: null };
+    case 'reset': return { ...initial, screen: action.screen || 'feed' };
+    default: return state;
+  }
+}
+
+// ─── App ────────────────────────────────────────────────────────
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [state, dispatch] = useReducer(reducer, initial);
+  const level = tweaks.level || 'L1';
+
+  useEffect(() => {
+    if (state.toast) {
+      const t = setTimeout(() => dispatch({ type: 'clearToast' }), 2400);
+      return () => clearTimeout(t);
+    }
+  }, [state.toast]);
+
+  // If level changes to lower, send back to feed if on a now-locked screen.
+  useEffect(() => {
+    const allowed = new Set(['feed', 'profile', 'onboarding']);
+    if (level === 'L2' || level === 'L3') allowed.add('search');
+    if (level === 'L3') { allowed.add('create'); allowed.add('rankings'); }
+    if (!allowed.has(state.screen)) dispatch({ type: 'go', screen: 'feed' });
+  }, [level]);
+
+  const themeClass = tweaks.dark ? 'theme-dark' : 'theme-light';
+  const ratePrompty = state.rateOpenFor ? PROMPTYS.find(p => p.id === state.rateOpenFor) : null;
+
+  return (
+    <div className={`page-bg ${tweaks.dark ? 'dark' : ''}`}>
+      <div style={{ position: 'relative' }}>
+        <IOSDevice width={402} height={874} dark={tweaks.dark}>
+          <div className={themeClass} style={{
+            width: '100%', height: '100%', position: 'relative',
+            background: 'var(--bg)', color: 'var(--text-1)', overflow: 'hidden',
+          }}>
+            <div style={{ width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+              {state.screen === 'onboarding' && (
+                <Onboarding level={level} onDone={() => dispatch({ type: 'go', screen: 'feed' })}/>
+              )}
+              {state.screen === 'feed' && <FeedScreen state={state} dispatch={dispatch} level={level}/>}
+              {state.screen === 'profile' && <ProfileScreenV2 state={state} level={level}/>}
+              {state.screen === 'search' && <SearchScreen state={state} dispatch={dispatch} level={level}/>}
+              {state.screen === 'create' && <CreateScreen state={state} dispatch={dispatch} level={level}/>}
+              {state.screen === 'rankings' && <RankingsScreen state={state} level={level}/>}
+            </div>
+
+            {state.screen !== 'onboarding' && (
+              <TabBar current={state.screen} onGo={(s) => dispatch({ type: 'go', screen: s })} level={level}/>
+            )}
+
+            <Toast toast={state.toast}/>
+
+            <RateSheet
+              open={!!state.rateOpenFor}
+              prompty={ratePrompty}
+              onClose={() => dispatch({ type: 'closeRate' })}
+              onSubmit={(r) => dispatch({ type: 'submitRate', id: state.rateOpenFor, rating: r })}
+            />
+
+            <LevelUpModal
+              open={!!state.levelUpFor}
+              level={state.levelUpFor && LEVELS.find(l => l.id === state.levelUpFor)}
+              onDismiss={() => dispatch({ type: 'dismissLevelUp' })}
+            />
+          </div>
+        </IOSDevice>
+        <div className="device-caption">Promptys v2 · {level} · {state.screen}</div>
+      </div>
+
+      <TweaksPanel>
+        <TweakSection label="Aparência"/>
+        <TweakToggle label="Modo escuro" value={tweaks.dark} onChange={v => setTweak('dark', v)}/>
+
+        <TweakSection label="Nível do usuário"/>
+        <TweakRadio
+          value={level}
+          onChange={v => setTweak('level', v)}
+          options={[
+            { value: 'L1', label: 'L1' },
+            { value: 'L2', label: 'L2' },
+            { value: 'L3', label: 'L3' },
+          ]}
+        />
+
+        <TweakSection label="Navegação"/>
+        <TweakButton label="Onboarding" onClick={() => dispatch({ type: 'reset', screen: 'onboarding' })}/>
+        <TweakButton label="Feed"       onClick={() => dispatch({ type: 'reset', screen: 'feed' })}/>
+        <TweakButton label="Buscar"     onClick={() => dispatch({ type: 'reset', screen: 'search' })}/>
+        <TweakButton label="Criar"      onClick={() => dispatch({ type: 'reset', screen: 'create' })}/>
+        <TweakButton label="Ranking"    onClick={() => dispatch({ type: 'reset', screen: 'rankings' })}/>
+        <TweakButton label="Perfil"     onClick={() => dispatch({ type: 'reset', screen: 'profile' })}/>
+
+        <TweakSection label="Celebrações"/>
+        <TweakButton label="Subir para L2 ✨" onClick={() => dispatch({ type: 'showLevelUp', level: 'L2' })}/>
+        <TweakButton label="Subir para L3 🎨" onClick={() => dispatch({ type: 'showLevelUp', level: 'L3' })}/>
+        <TweakButton label="Subir para L4 👑" onClick={() => dispatch({ type: 'showLevelUp', level: 'L4' })}/>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+window.App = App;
+</script>
+
+<script type="text/babel" src="gamification.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

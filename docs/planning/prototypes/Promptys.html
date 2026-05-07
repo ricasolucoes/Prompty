@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Promptys — Protótipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+  :root, * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #f3f0ec;
+    min-height: 100vh;
+    color: #29261b;
+  }
+
+  /* ── Light theme tokens ───────────────────────────────────── */
+  .theme-light {
+    --bg: #F8F7F2;
+    --bg-2: #FFFFFF;
+    --header-bg: rgba(248,247,242,0.85);
+    --card-bg: #FFFFFF;
+    --chip-bg: #EDEAE2;
+    --chip-bd: #E2DED4;
+    --text-1: #171717;
+    --text-2: #4A4A4A;
+    --text-3: #8A8A8A;
+    --input-bg: #F4F2EC;
+    --input-bd: #E2DED4;
+    --code-bg: #1A1B26;
+    --code-fg: #C8CDDA;
+    --btn-2-bg: #F0EDE5;
+    --btn-2-bd: #E2DED4;
+  }
+
+  /* ── Dark theme tokens ────────────────────────────────────── */
+  .theme-dark {
+    --bg: #090A14;
+    --bg-2: #0E1020;
+    --header-bg: rgba(9,10,20,0.85);
+    --card-bg: #131526;
+    --chip-bg: #1A1D32;
+    --chip-bd: #272A3A;
+    --text-1: #F5F7FA;
+    --text-2: #B5BAC8;
+    --text-3: #6E7388;
+    --input-bg: #131526;
+    --input-bd: #272A3A;
+    --code-bg: #06070D;
+    --code-fg: #C8CDDA;
+    --btn-2-bg: #1A1D32;
+    --btn-2-bd: #272A3A;
+  }
+
+  /* ── Typography ───────────────────────────────────────────── */
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+
+  /* image-slot styling (web component) */
+  image-slot {
+    --is-bg: var(--card-bg);
+    --is-border: var(--chip-bd);
+    --is-fg: var(--text-3);
+  }
+
+  /* ── Animations ───────────────────────────────────────────── */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes toastIn { from { transform: translate(-50%, 12px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  @keyframes screenFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .screen { animation: screenFade .25s cubic-bezier(.2,.8,.2,1); }
+
+  /* hide scrollbars on horizontal lists */
+  .hscroll::-webkit-scrollbar { display: none; }
+
+  /* page bg for the canvas around device */
+  .page-bg {
+    min-height: 100vh;
+    width: 100vw;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(124,58,237,0.12), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(34,211,238,0.10), transparent 55%),
+      linear-gradient(180deg, #f3f0ec 0%, #e9e5dd 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 16px;
+  }
+  .page-bg.dark {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(124,58,237,0.18), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(34,211,238,0.12), transparent 55%),
+      linear-gradient(180deg, #0a0b18 0%, #050610 100%);
+  }
+
+  /* meta info caption around device */
+  .device-caption {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: -38px; font-size: 12px; color: rgba(0,0,0,0.45);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+  .page-bg.dark .device-caption { color: rgba(255,255,255,0.45); }
+
+  /* utility: tabular nums for stats */
+  .tabular { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React + Babel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- Image slot web component (plain JS) -->
+<script src="components/image-slot.js"></script>
+
+<!-- Babel-compiled scripts -->
+<script type="text/babel" src="components/ios-frame.jsx"></script>
+<script type="text/babel" src="components/tweaks-panel.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="ui.jsx"></script>
+<script type="text/babel" src="screens-feed.jsx"></script>
+<script type="text/babel" src="screens-prompty.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useReducer, useMemo, useRef } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "dark": true
+}/*EDITMODE-END*/;
+
+// ─── Initial state ──────────────────────────────────────────────
+const initialState = {
+  history: [{ screen: 'onboarding' }],
+  activePromptyId: 'p1',
+  activeFinalPrompt: null,
+  liked: new Set(['p1', 'p3']),
+  saved: new Set(['p1', 'p4']),
+  myDrafts: ['p1'], // pretend we already authored p1 for profile demo
+  users: Object.fromEntries(MOCK_USERS.map(u => [u.id, { ...u }])),
+  toast: null,
+  profileTab: 'promptys',
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'go': {
+      const last = state.history[state.history.length - 1];
+      if (last.screen === action.screen && last.id === action.id) return state;
+      const next = {
+        ...state,
+        history: [...state.history, { screen: action.screen, id: action.id, tab: action.tab }],
+        profileTab: action.tab || state.profileTab,
+      };
+      if (action.id) next.activePromptyId = action.id;
+      return next;
+    }
+    case 'back': {
+      if (state.history.length <= 1) return state;
+      return { ...state, history: state.history.slice(0, -1) };
+    }
+    case 'reset':
+      return { ...initialState, history: [{ screen: action.screen || 'home' }] };
+
+    case 'toggleLike': {
+      const liked = new Set(state.liked);
+      const willLike = !liked.has(action.id);
+      if (willLike) liked.add(action.id); else liked.delete(action.id);
+      return { ...state, liked, toast: willLike ? { text: 'Curtido', icon: 'heartFill', color: '#FF6B4A' } : null };
+    }
+    case 'toggleSave': {
+      const saved = new Set(state.saved);
+      const willSave = !saved.has(action.id);
+      if (willSave) saved.add(action.id); else saved.delete(action.id);
+      return { ...state, saved, toast: willSave ? { text: 'Salvo na sua biblioteca', icon: 'bookmarkFill', color: '#7C3AED' } : null };
+    }
+
+    case 'test':
+      return {
+        ...state,
+        activePromptyId: action.id,
+        activeFinalPrompt: action.finalPrompt,
+        history: [...state.history, { screen: 'test', id: action.id }],
+      };
+
+    case 'submitTest': {
+      // award points
+      const me = state.users.u_me;
+      const newPts = me.points + 15;
+      return {
+        ...state,
+        users: { ...state.users, u_me: { ...me, points: newPts } },
+        history: state.history.slice(0, -1), // back to detail
+        toast: { text: 'Teste publicado · obrigada por contribuir!', icon: 'check', color: '#34D399', points: '+15p' },
+      };
+    }
+
+    case 'publish': {
+      const me = state.users.u_me;
+      return {
+        ...state,
+        users: { ...state.users, u_me: { ...me, points: me.points + 50 } },
+        history: [{ screen: 'home' }],
+        toast: { text: 'Prompty publicado · agora é da comunidade.', icon: 'sparkle', color: '#7C3AED', points: '+50p' },
+      };
+    }
+
+    case 'publishRemix': {
+      const me = state.users.u_me;
+      return {
+        ...state,
+        users: { ...state.users, u_me: { ...me, points: me.points + 25 } },
+        history: state.history.slice(0, -1),
+        toast: { text: 'Remix publicado · aguardando moderação leve.', icon: 'remix', color: '#22D3EE', points: '+25p' },
+      };
+    }
+
+    case 'toast': return { ...state, toast: action.toast };
+    case 'clearToast': return { ...state, toast: null };
+    default: return state;
+  }
+}
+
+// ─── Screen router ──────────────────────────────────────────────
+function ScreenRouter({ state, dispatch }) {
+  const last = state.history[state.history.length - 1];
+  const key = `${last.screen}-${last.id || ''}-${state.history.length}`;
+
+  let content = null;
+  switch (last.screen) {
+    case 'onboarding': content = <OnboardingScreen state={state} dispatch={dispatch}/>; break;
+    case 'home':       content = <HomeScreen       state={state} dispatch={dispatch}/>; break;
+    case 'search':     content = <SearchScreen     state={state} dispatch={dispatch}/>; break;
+    case 'rankings':   content = <RankingsScreen   state={state} dispatch={dispatch}/>; break;
+    case 'profile':    content = <ProfileScreen    state={state} dispatch={dispatch}/>; break;
+    case 'prompty':    content = <PromptyScreen    state={state} dispatch={dispatch}/>; break;
+    case 'create':     content = <CreateScreen     state={state} dispatch={dispatch}/>; break;
+    case 'test':       content = <TestScreen       state={state} dispatch={dispatch}/>; break;
+    case 'remix':      content = <RemixScreen      state={state} dispatch={dispatch}/>; break;
+    default:           content = <HomeScreen       state={state} dispatch={dispatch}/>;
+  }
+
+  return <div key={key} className="screen" style={{ minHeight: '100%' }}>{content}</div>;
+}
+
+// ─── Tab bar (visible on home/search/rankings/profile/create) ───
+const TAB_BAR_SCREENS = new Set(['home', 'search', 'rankings', 'profile']);
+
+function TabBar({ state, dispatch }) {
+  const current = state.history[state.history.length - 1].screen;
+  if (!TAB_BAR_SCREENS.has(current)) return null;
+
+  const tabs = [
+    { key: 'home',     icon: 'home',   label: 'Feed' },
+    { key: 'search',   icon: 'search', label: 'Buscar' },
+    { key: 'create',   icon: 'plus',   label: '', primary: true },
+    { key: 'rankings', icon: 'trophy', label: 'Ranking' },
+    { key: 'profile',  icon: 'user',   label: 'Perfil' },
+  ];
+
+  return (
+    <div style={{
+      position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50,
+      padding: '8px 12px 28px',
+      background: 'linear-gradient(180deg, transparent, var(--bg) 40%)',
+      pointerEvents: 'none',
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 4,
+        padding: '8px 8px',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--chip-bd)',
+        borderRadius: 22,
+        boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        pointerEvents: 'auto',
+      }}>
+        {tabs.map(t => {
+          const active = current === t.key;
+          if (t.primary) {
+            return (
+              <button key={t.key} onClick={() => dispatch({ type: 'go', screen: 'create' })} style={{
+                width: 48, height: 48, margin: '-12px 4px',
+                borderRadius: 16, border: 'none',
+                background: 'linear-gradient(135deg,#8B4DF5,#22D3EE)',
+                color: '#fff', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 8px 24px rgba(124,58,237,0.45)',
+              }}>
+                <Icon name="plus" size={26} strokeWidth={2.4} color="#fff"/>
+              </button>
+            );
+          }
+          return (
+            <button key={t.key} onClick={() => dispatch({ type: 'go', screen: t.key })} style={{
+              flex: 1, padding: '8px 4px', borderRadius: 12, border: 'none',
+              background: 'transparent', cursor: 'pointer',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+              color: active ? '#7C3AED' : 'var(--text-3)',
+              fontFamily: 'inherit',
+            }}>
+              <Icon name={t.icon} size={22} strokeWidth={active ? 2.2 : 1.8}/>
+              <span style={{ fontSize: 10, fontWeight: 600 }}>{t.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── App ─────────────────────────────────────────────────────────
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  // Toast auto-dismiss
+  useEffect(() => {
+    if (state.toast) {
+      const t = setTimeout(() => dispatch({ type: 'clearToast' }), 2400);
+      return () => clearTimeout(t);
+    }
+  }, [state.toast]);
+
+  const themeClass = tweaks.dark ? 'theme-dark' : 'theme-light';
+
+  return (
+    <div className={`page-bg ${tweaks.dark ? 'dark' : ''}`}>
+      <div style={{ position: 'relative' }}>
+        <IOSDevice width={402} height={874} dark={tweaks.dark}>
+          <div className={themeClass} style={{
+            width: '100%', height: '100%', position: 'relative',
+            background: 'var(--bg)', color: 'var(--text-1)', overflow: 'hidden',
+          }}>
+            <div style={{ width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+              <ScreenRouter state={state} dispatch={dispatch}/>
+            </div>
+            <TabBar state={state} dispatch={dispatch}/>
+            <Toast toast={state.toast}/>
+          </div>
+        </IOSDevice>
+        <div className="device-caption">Promptys · iOS · {state.history[state.history.length-1].screen}</div>
+      </div>
+
+      <TweaksPanel>
+        <TweakSection label="Aparência"/>
+        <TweakToggle label="Modo escuro" value={tweaks.dark} onChange={v => setTweak('dark', v)}/>
+
+        <TweakSection label="Navegação rápida"/>
+        <TweakButton label="Onboarding"      onClick={() => dispatch({ type: 'reset', screen: 'onboarding' })}/>
+        <TweakButton label="Feed"            onClick={() => dispatch({ type: 'reset', screen: 'home' })}/>
+        <TweakButton label="Detalhe Prompty" onClick={() => dispatch({ type: 'reset', screen: 'prompty' })}/>
+        <TweakButton label="Criar Prompty"   onClick={() => dispatch({ type: 'reset', screen: 'create' })}/>
+        <TweakButton label="Testar / Resultado" onClick={() => dispatch({ type: 'reset', screen: 'test' })}/>
+        <TweakButton label="Remix"           onClick={() => dispatch({ type: 'reset', screen: 'remix' })}/>
+        <TweakButton label="Buscar"          onClick={() => dispatch({ type: 'reset', screen: 'search' })}/>
+        <TweakButton label="Ranking"         onClick={() => dispatch({ type: 'reset', screen: 'rankings' })}/>
+        <TweakButton label="Perfil"          onClick={() => dispatch({ type: 'reset', screen: 'profile' })}/>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
