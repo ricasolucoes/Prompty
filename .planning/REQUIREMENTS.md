@@ -73,7 +73,7 @@
 - [x] **INFR-02**: Action tracking (copies, saves, feedback) recorded via SQL triggers in immutable events table; no direct frontend writes to internal_points
 - [x] **INFR-03**: Client-side image compression before upload (max 2 MB → target ≤200 KB WebP)
 - [x] **INFR-04**: Supabase Storage enforces file size limit and allowed MIME types
-- [ ] **INFR-05**: Usage monitoring (GitHub Actions weekly cron) alerts at 70% and 90% of free tier limits
+- [x] **INFR-05**: Usage monitoring (GitHub Actions weekly cron) alerts at 70% and 90% of free tier limits
 
 ## v2 Requirements
 
@@ -149,7 +149,7 @@
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
-| INFR-05 | Phase 1 | Pending |
+| INFR-05 | Phase 1 | Complete |
 | FEED-06 | Phase 2 | Pending |
 | FEED-07 | Phase 2 | Pending |
 | CUR-01 | Phase 2 | Pending |

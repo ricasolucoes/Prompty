@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-07-PLAN.md
-last_updated: "2026-05-07T15:31:29.544Z"
+stopped_at: Completed 01-09-PLAN.md
+last_updated: "2026-05-07T19:03:14.511Z"
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -54,6 +54,7 @@ Plan: 1 of 9
 | Phase 01-foundation P06 | 20min | 3 tasks | 9 files |
 | Phase 01 P08 | 20 | 3 tasks | 8 files |
 | Phase 01-foundation P07 | 20min | 3 tasks | 4 files |
+| Phase 01 P09 | 88min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: [Phase 01-07]: Tauri clipboard plugin loaded via Function constructor dynamic import — avoids TS resolution error for optional plugin not yet installed (deferred to plan-09)
 - [Phase 01-foundation]: [Phase 01-07]: record_copy RPC is best-effort — errors swallowed after clipboard write succeeds so user feedback is never blocked
 - [Phase 01-foundation]: [Phase 01-07]: Image upload failure non-fatal — null image_url allows prompty_tests insert to proceed without image
+- [Phase 01]: TweaksPanel level override uses inline fallback {id: levelId, min: 0} instead of LEVELS[0] to avoid TS18048 on const array element access
+- [Phase 01]: GitHub usage monitor dedup: listForRepo with open state + supabase-usage label before creating issue — prevents duplicate critical alerts
+- [Phase 01]: supabase-usage.yml uses pnpm exec tsx (not npx tsx) to match project toolchain
 
 ### Pending Todos
 
@@ -98,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T15:31:29.542Z
-Stopped at: Completed 01-07-PLAN.md
+Last session: 2026-05-07T19:03:14.507Z
+Stopped at: Completed 01-09-PLAN.md
 Resume file: None
