@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-05-PLAN.md
-last_updated: "2026-05-07T14:42:26.838Z"
+stopped_at: Completed 01-06-PLAN.md
+last_updated: "2026-05-07T15:05:28.358Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Plan: 1 of 9
 | Phase 01-foundation P03 | 7min | 2 tasks | 5 files |
 | Phase 01-foundation P02 | 20min | 3 tasks | 2 files |
 | Phase 01 P05 | 125min | 3 tasks | 15 files |
+| Phase 01-foundation P06 | 20min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 01]: TabBar uses LEVEL_ORDER index comparison — locked tabs are absent from DOM (not greyed/disabled), enforcing LEVL-07
 - [Phase 01]: theme.store default is light — matches index.css theme-light class applied on html element
 - [Phase 01]: App.tsx redirects / to /onboarding inline via hasOnboarded() check before Routes render
+- [Phase 01-foundation]: Cursor pagination uses .or(created_at.lt + and(created_at.eq,id.lt)) — no OFFSET (FEED-05)
+- [Phase 01-foundation]: FeedCard action row limited to Curtir + Copiar only — LEVL-06 enforced by 9 RTL tests
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T14:42:26.835Z
-Stopped at: Completed 01-05-PLAN.md
+Last session: 2026-05-07T15:05:28.354Z
+Stopped at: Completed 01-06-PLAN.md
 Resume file: None
