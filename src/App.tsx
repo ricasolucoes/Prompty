@@ -3,6 +3,7 @@ import { LoginPage } from '@/pages/LoginPage'
 import { SignupPage } from '@/pages/SignupPage'
 import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 import { OnboardingPage, hasOnboarded } from '@/pages/OnboardingPage'
+import { FeedPage } from '@/pages/FeedPage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
 
@@ -34,7 +35,7 @@ function ChromeShell() {
       <AppHeader />
       <main style={{ paddingBottom: 96 }}>
         <Routes>
-          <Route path="/" element={<FeedPlaceholder />} />
+          <Route path="/" element={<FeedPage />} />
           <Route path="/profile" element={<ProfilePlaceholder />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -44,13 +45,6 @@ function ChromeShell() {
   )
 }
 
-function FeedPlaceholder() {
-  return (
-    <section className="screen" style={{ padding: 16 }}>
-      <p style={{ color: 'var(--text-2)' }}>O feed entra no plano 01-06.</p>
-    </section>
-  )
-}
 function ProfilePlaceholder() {
   return (
     <section className="screen" style={{ padding: 16 }}>
