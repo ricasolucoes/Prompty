@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "01-02 paused at Task 2 checkpoint:human-action — supabase link required"
-last_updated: "2026-05-07T12:02:33.374Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-05-07T12:05:19.125Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 1
+  completed_plans: 3
 ---
 
 # Project State
@@ -46,6 +46,8 @@ Plan: 1 of 9
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01 P04 | 5 | 3 tasks | 10 files |
+| Phase 01 P01 | 5 | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -57,6 +59,9 @@ Recent decisions affecting current work:
 - Phase 1: Gamification `point_events` table + SQL triggers MUST be in Phase 1 — retroactive migration is painful and this table is append-only by design
 - Phase 1: RLS on all tables from day one — no permissive defaults to fix later
 - [Phase 01]: Storage bucket SQL added to migration 004 (not migration 005) — simpler, atomic, avoids unnecessary 5th file
+- [Phase 01]: Auth listener registered in main.tsx IIFE — avoids double-registration in React StrictMode
+- [Phase 01]: database.types.ts promoted to typed placeholder covering all Phase 1 tables before gen:types is run
+- [Phase 01]: QueryClient defaults: staleTime=60s, gcTime=5min, refetchOnWindowFocus=false for Tauri app
 
 ### Pending Todos
 
@@ -68,6 +73,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T12:02:28.424Z
-Stopped at: 01-02 paused at Task 2 checkpoint:human-action — supabase link required
+Last session: 2026-05-07T12:05:06.012Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
