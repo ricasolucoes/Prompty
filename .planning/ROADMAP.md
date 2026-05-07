@@ -28,7 +28,16 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Cada cópia, save e feedback é registrado internamente via trigger SQL; a interface L1 não exibe pontos, ranking, badges, comentários, remix ou editor avançado em nenhuma situação
   4. Todas as tabelas têm RLS habilitado; escritas de eventos internos só acontecem via triggers (nunca pelo frontend)
   5. Quando critérios de L2 são atingidos, o sistema exibe mensagem discreta de desbloqueio
-**Plans**: TBD
+**Plans**: 9 plans
+  - [ ] 01-01-PLAN.md — Vitest setup + design tokens (CSS variables/animations) + pure libs (levelOf, resolveBeginner, compressToWebP) with unit tests
+  - [ ] 01-02-PLAN.md — Supabase migrations: schema (9 tables) + RLS + triggers (points engine + auto-profile + level transitions) + Storage bucket + regenerate types
+  - [ ] 01-03-PLAN.md — Seed 6 prototype promptys + demo author (idempotent SQL via tsx generator)
+  - [ ] 01-04-PLAN.md — Auth Zustand stores (auth + level) + useAuth hook (signUp/signIn/signOut/reset) + PrivateRoute + main.tsx wiring (QueryClient, BrowserRouter, onAuthStateChange listener)
+  - [ ] 01-05-PLAN.md — UI primitives (Icon, Avatar, Buttons, ProgressBar, Toast) + AppHeader + TabBar (LEVL-07 RTL test) + Onboarding + Login/Signup/ResetPassword pages + theme toggle store
+  - [ ] 01-06-PLAN.md — Feed: useFeed (cursor pagination FEED-05) + WelcomeStrip + FeedCard (LEVL-06 RTL test) + SkeletonCard + FeedPage
+  - [ ] 01-07-PLAN.md — Copy flow (clipboard browser + Tauri fallback + record_copy RPC) + RateSheet (5 stars + image upload) + useCopy + useTest (with WebP compression INFR-03/04) + Toast wiring + manual smoke checkpoint
+  - [ ] 01-08-PLAN.md — useLike (optimistic) + useSave + useProfile + LevelUpModal + ProfilePage L1 + PublicProfilePage + manual smoke checkpoint
+  - [ ] 01-09-PLAN.md — INFR-05 weekly cron (GitHub Actions + check-supabase-usage.ts) + dev-only TweaksPanel + final UAT walkthrough
 
 ### Phase 2: L2 Curador + Descoberta
 **Goal**: Usuários que atingiram L2 podem enviar imagens geradas, avaliar qualidade e ajudar a curar a biblioteca; feed ganha filtros, busca e moderação básica
@@ -59,6 +68,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. L1 Iniciante — Feed e Copiar | 0/TBD | Not started | - |
+| 1. L1 Iniciante — Feed e Copiar | 0/9 | Not started | - |
 | 2. L2 Curador + Descoberta | 0/TBD | Not started | - |
 | 3. L3 Criador | 0/TBD | Not started | - |
