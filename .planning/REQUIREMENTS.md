@@ -133,8 +133,6 @@
 
 ## Traceability
 
-Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AUTH-01 | Phase 1 | Pending |
@@ -142,6 +140,10 @@ Updated during roadmap creation.
 | AUTH-03 | Phase 1 | Pending |
 | AUTH-04 | Phase 1 | Pending |
 | AUTH-05 | Phase 1 | Pending |
+| PROF-01 | Phase 1 | Pending |
+| PROF-02 | Phase 1 | Pending |
+| PROF-03 | Phase 1 | Pending |
+| PROF-04 | Phase 1 | Pending |
 | INFR-01 | Phase 1 | Pending |
 | INFR-02 | Phase 1 | Pending |
 | INFR-03 | Phase 1 | Pending |
@@ -150,10 +152,6 @@ Updated during roadmap creation.
 | GAME-01 | Phase 1 | Pending |
 | GAME-02 | Phase 1 | Pending |
 | GAME-05 | Phase 1 | Pending |
-| PROF-01 | Phase 1 | Pending |
-| PROF-02 | Phase 1 | Pending |
-| PROF-03 | Phase 1 | Pending |
-| PROF-04 | Phase 1 | Pending |
 | CREAT-01 | Phase 2 | Pending |
 | CREAT-02 | Phase 2 | Pending |
 | CREAT-03 | Phase 2 | Pending |
@@ -186,10 +184,10 @@ Updated during roadmap creation.
 | MODR-04 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 40 total
-- Mapped to phases: 40
+- v1 requirements: 47 total
+- Mapped to phases: 47
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-06*
-*Last updated: 2026-05-06 after initial definition*
+*Last updated: 2026-05-06 — traceability confirmed after roadmap creation*
