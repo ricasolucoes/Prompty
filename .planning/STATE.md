@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-09-PLAN.md
-last_updated: "2026-05-07T19:03:14.511Z"
+stopped_at: Completed 01-11-PLAN.md
+last_updated: "2026-05-07T20:09:48.427Z"
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 0
+  total_plans: 11
+  completed_plans: 10
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-05-06)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 1 of 9
+Plan: 1 of 11
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 1 of 9
 | Phase 01 P08 | 20 | 3 tasks | 8 files |
 | Phase 01-foundation P07 | 20min | 3 tasks | 4 files |
 | Phase 01 P09 | 88min | 3 tasks | 5 files |
+| Phase 01 P11 | 8min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ Recent decisions affecting current work:
 - [Phase 01]: TweaksPanel level override uses inline fallback {id: levelId, min: 0} instead of LEVELS[0] to avoid TS18048 on const array element access
 - [Phase 01]: GitHub usage monitor dedup: listForRepo with open state + supabase-usage label before creating issue — prevents duplicate critical alerts
 - [Phase 01]: supabase-usage.yml uses pnpm exec tsx (not npx tsx) to match project toolchain
+- [Phase 01]: profiles.last_active_at is passive timestamp only — no points awarded, not in point_events trigger chain; provides DB surface for return-visit tracking (LEVL-02 approximation)
+- [Phase 01]: touchLastActive is fire-and-forget (void + try/catch swallowed) — transient network errors never block auth flow or UI rendering
+- [Phase 01]: SQL COMMENT ON FUNCTION/COLUMN used for LEVL-02 design documentation — survives schema dumps, visible in Supabase Studio
 
 ### Pending Todos
 
@@ -102,6 +106,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T19:03:14.507Z
-Stopped at: Completed 01-09-PLAN.md
+Last session: 2026-05-07T20:09:48.424Z
+Stopped at: Completed 01-11-PLAN.md
 Resume file: None

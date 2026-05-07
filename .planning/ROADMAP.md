@@ -12,7 +12,7 @@ Promptys é construído seguindo a progressão natural do usuário: primeiro con
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: L1 Iniciante — Feed e Copiar** - Schema/auth/RLS/tracking interno + feed público + copiar prompt + feedback básico + desbloqueio de nível (completed 2026-05-07)
+- [ ] **Phase 1: L1 Iniciante — Feed e Copiar** - Schema/auth/RLS/tracking interno + feed público + copiar prompt + feedback básico + desbloqueio de nível (gap closure in progress 2026-05-07)
 - [ ] **Phase 2: L2 Curador + Descoberta** - Upload de resultado + avaliação + histórico + denúncia + filtros de feed + busca
 - [ ] **Phase 3: L3 Criador** - Criar/publicar promptys + variações + estatísticas + modo avançado opcional
 
@@ -28,16 +28,18 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Cada cópia, save e feedback é registrado internamente via trigger SQL; a interface L1 não exibe pontos, ranking, badges, comentários, remix ou editor avançado em nenhuma situação
   4. Todas as tabelas têm RLS habilitado; escritas de eventos internos só acontecem via triggers (nunca pelo frontend)
   5. Quando critérios de L2 são atingidos, o sistema exibe mensagem discreta de desbloqueio
-**Plans**: 9 plans
-  - [ ] 01-01-PLAN.md — Vitest setup + design tokens (CSS variables/animations) + pure libs (levelOf, resolveBeginner, compressToWebP) with unit tests
-  - [ ] 01-02-PLAN.md — Supabase migrations: schema (9 tables) + RLS + triggers (points engine + auto-profile + level transitions) + Storage bucket + regenerate types
-  - [ ] 01-03-PLAN.md — Seed 6 prototype promptys + demo author (idempotent SQL via tsx generator)
-  - [ ] 01-04-PLAN.md — Auth Zustand stores (auth + level) + useAuth hook (signUp/signIn/signOut/reset) + PrivateRoute + main.tsx wiring (QueryClient, BrowserRouter, onAuthStateChange listener)
-  - [ ] 01-05-PLAN.md — UI primitives (Icon, Avatar, Buttons, ProgressBar, Toast) + AppHeader + TabBar (LEVL-07 RTL test) + Onboarding + Login/Signup/ResetPassword pages + theme toggle store
-  - [ ] 01-06-PLAN.md — Feed: useFeed (cursor pagination FEED-05) + WelcomeStrip + FeedCard (LEVL-06 RTL test) + SkeletonCard + FeedPage
-  - [ ] 01-07-PLAN.md — Copy flow (clipboard browser + Tauri fallback + record_copy RPC) + RateSheet (5 stars + image upload) + useCopy + useTest (with WebP compression INFR-03/04) + Toast wiring + manual smoke checkpoint
-  - [ ] 01-08-PLAN.md — useLike (optimistic) + useSave + useProfile + LevelUpModal + ProfilePage L1 + PublicProfilePage + manual smoke checkpoint
-  - [ ] 01-09-PLAN.md — INFR-05 weekly cron (GitHub Actions + check-supabase-usage.ts) + dev-only TweaksPanel + final UAT walkthrough
+**Plans**: 11 plans (9 original + 2 gap closure)
+  - [x] 01-01-PLAN.md — Vitest setup + design tokens (CSS variables/animations) + pure libs (levelOf, resolveBeginner, compressToWebP) with unit tests
+  - [x] 01-02-PLAN.md — Supabase migrations: schema (9 tables) + RLS + triggers (points engine + auto-profile + level transitions) + Storage bucket + regenerate types
+  - [x] 01-03-PLAN.md — Seed 6 prototype promptys + demo author (idempotent SQL via tsx generator)
+  - [x] 01-04-PLAN.md — Auth Zustand stores (auth + level) + useAuth hook (signUp/signIn/signOut/reset) + PrivateRoute + main.tsx wiring (QueryClient, BrowserRouter, onAuthStateChange listener)
+  - [x] 01-05-PLAN.md — UI primitives (Icon, Avatar, Buttons, ProgressBar, Toast) + AppHeader + TabBar (LEVL-07 RTL test) + Onboarding + Login/Signup/ResetPassword pages + theme toggle store
+  - [x] 01-06-PLAN.md — Feed: useFeed (cursor pagination FEED-05) + WelcomeStrip + FeedCard (LEVL-06 RTL test) + SkeletonCard + FeedPage
+  - [x] 01-07-PLAN.md — Copy flow (clipboard browser + Tauri fallback + record_copy RPC) + RateSheet (5 stars + image upload) + useCopy + useTest (with WebP compression INFR-03/04) + Toast wiring + manual smoke checkpoint
+  - [x] 01-08-PLAN.md — useLike (optimistic) + useSave + useProfile + LevelUpModal + ProfilePage L1 + PublicProfilePage + manual smoke checkpoint
+  - [x] 01-09-PLAN.md — INFR-05 weekly cron (GitHub Actions + check-supabase-usage.ts) + dev-only TweaksPanel + final UAT walkthrough
+  - [ ] 01-10-PLAN.md — GAP CLOSURE: PromptyDetailPage `/p/:slug` (FEED-03) + Salvar button on detail page wiring `useSave` (SOCL-01) + FeedCard title becomes Link
+  - [ ] 01-11-PLAN.md — GAP CLOSURE: `profiles.last_active_at` migration + auth listener touchLastActive + LEVL-02 design annotation + LevelUpModal LEVL-03 unlock copy fix
 
 ### Phase 2: L2 Curador + Descoberta
 **Goal**: Usuários que atingiram L2 podem enviar imagens geradas, avaliar qualidade e ajudar a curar a biblioteca; feed ganha filtros, busca e moderação básica
@@ -68,6 +70,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. L1 Iniciante — Feed e Copiar | 9/9 | Complete   | 2026-05-07 |
+| 1. L1 Iniciante — Feed e Copiar | 10/11 | In Progress|  |
 | 2. L2 Curador + Descoberta | 0/TBD | Not started | - |
 | 3. L3 Criador | 0/TBD | Not started | - |
