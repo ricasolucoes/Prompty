@@ -29,7 +29,7 @@
 
 - Cores do projeto: Midnight Ink `#090A14`, Electric Violet `#7C3AED`, Prompt Cyan `#22D3EE`, Solar Coral `#FF6B4A`, Mint Signal `#34D399`.
 - Fontes: Space Grotesk (logo/headings), Inter (UI), JetBrains Mono (blocos de prompt).
-- Tailwind é a única forma de estilização — sem CSS Modules ou styled-components.
+- Estilização via inline styles (`style={{ }}`) é o padrão estabelecido em produção (Phase 1). Não use CSS Modules ou styled-components. Tailwind pode ser usado para utilitários de layout/espaçamento quando conveniente, mas não é obrigatório.
 
 ## Regras Gerais
 
