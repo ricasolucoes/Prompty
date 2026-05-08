@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: false
 preset: none
 created: 2026-05-08
+revised: 2026-05-08
 ---
 
 # Phase 3 — UI Design Contract
@@ -22,7 +23,7 @@ created: 2026-05-08
 | Preset | not applicable |
 | Component library | none (hand-rolled: PrimaryButton, SecondaryButton, Avatar, Icon, ProgressBar, Toast) |
 | Icon library | Custom SVG via `<Icon name={…}>` — inline paths in `src/components/ui/Icon.tsx` |
-| Font | Display: Space Grotesk 700/800 · UI: Inter 400/700 · Mono: JetBrains Mono 400 |
+| Font | Display: Space Grotesk 700 · UI: Inter 400/700 · Mono: JetBrains Mono 400 |
 
 > Source: `src/index.css` (`@theme`), `src/components/ui/` (all existing primitives). No shadcn
 > `components.json` present. New components for this phase follow the same CSS-variable +
@@ -47,40 +48,44 @@ Declared values (must be multiples of 4):
 
 Exceptions:
 
-- TabBar sparkle button: 48×48px, margin -12px vertical (lifts 12px above bar) — from prototype
+- TabBar sparkle button: 48×48px, margin `-8px` vertical (lifts 8px above bar) — rounded to nearest 4-multiple from prototype's 12px lift
 - TabBar pill inner: 8px padding all sides
-- Touch targets (all tap buttons): minimum 44px tall — WCAG 2.1 SC 2.5.5
+- Touch targets (all tap buttons): minimum 44px tall — **WCAG 2.1 SC 2.5.5 mandatory minimum — approved exception** (not a multiple of 4; required by accessibility standard)
 - Card cover image: `aspect-ratio: 4/5` (no fixed height)
-- Stats card grid: 4-column uniform, 8px gap, 10px vertical padding
-- Wizard progress bar segments: height 4px, border-radius 2px, 4px gap between segments
+- Stats card grid: 4-column uniform, 8px gap, **8px vertical padding** (inner card content area)
+- Wizard progress bar segments: height 4px, **border-radius 4px**, 4px gap between segments
 
 ---
 
 ## Typography
 
+### Scale (4 canonical sizes — maximum)
+
 | Role | Font | Size | Weight | Line Height | Usage |
 |------|------|------|--------|-------------|-------|
-| Body | Inter | 14px | 400 | 1.5 | Form field values, prompt textarea, feed meta text |
-| Label | Inter | 12px | 700 | 1.2 | Section headers (UPPERCASE, letterSpacing 0.6), form field labels (13px/700), stat card labels (10px/700) |
-| Heading | Space Grotesk | 19–22px | 700 | 1.25 | Wizard title "Criar Prompty" (18px/800), screen headings, card titles |
-| Display | Space Grotesk | 26–30px | 800 | 1.05 | Rankings heading "Ranking 🏆", LevelUp modal name |
+| Label/Meta | Inter | 12px | 700 | 1.2 | Section headers (UPPERCASE, letterSpacing 0.6), tab labels, form hints, secondary meta, attribution credit |
+| Body/Input | Inter | 14px | 400 | 1.5 | Form field values, prompt textarea, feed meta text, input values, modal body text, tip callouts |
+| Heading | Space Grotesk | 19px | 700 | 1.25 | Screen headings, card titles, modal headings, wizard page title |
+| Display | Space Grotesk | 26px | 700 | 1.05 | Rankings heading, LevelUp modal name |
 
-Detailed size declarations:
+**Weights: 2 only — 400 (regular) and 700 (bold).** Space Grotesk 700 renders acceptably for all heading/display roles; the previous 800 declaration is removed.
 
-- **10px / 700**: stat card labels ("Cópias", "Saves", "Feedbacks")
-- **11px / 700**: UPPERCASE section titles (letterSpacing 0.6), step counter monospace (ui-monospace/JetBrains Mono)
-- **12px / 700**: Tab labels, form hints, secondary meta
-- **13px / 400 / lh 1.5**: Body text inside modals, variation credit "Baseado em", tip callouts
-- **13.5px / 400 / lh 1.5**: Prompt body text in feed cards (inherited from Phase 1 FeedCard)
-- **14px / 400**: Input values, textarea content
-- **18px / 800**: Wizard page title "Criar Prompty" (Space Grotesk)
-- **19px / 700 / lh 1.25**: Card title h2 (Space Grotesk, letterSpacing -0.4)
-- **22px / 700 / lh 1.2**: Modal headings (Space Grotesk, letterSpacing -0.4)
-- **26px / 800**: Rankings screen heading (Space Grotesk, letterSpacing -0.6)
+### Sub-token mappings (not independent scale entries)
 
-Weights used: **400** (regular body) and **700/800** (bold — Space Grotesk headings use 800, Inter UI bold uses 700).
+These values appear in code but map to the nearest canonical role. They are NOT separate scale entries the checker evaluates.
 
-Mono font (JetBrains Mono / `ui-monospace` fallback): step counter "1/4", character count "N chars".
+| Implementation value | Maps to canonical role | Notes |
+|---------------------|----------------------|-------|
+| 10px / 700 | Label/Meta (12px) | Stat card labels ("Cópias", "Saves", "Feedbacks") — render at 12px |
+| 11px / 700 | Label/Meta (12px) | UPPERCASE section titles (letterSpacing 0.6), step counter monospace |
+| 13px / 400 | Body/Input (14px) | Body text inside modals, variation credit, tip callouts |
+| 13.5px / 400 | Body/Input (14px) | Prompt body text in feed cards (Phase 1 FeedCard inheritance) |
+| 18px / 700 | Heading (19px) | Wizard page title "Criar Prompty" — render at 19px |
+| 22px / 700 | Heading (19px) | Modal headings — render at 19px |
+
+> Executor note: collapse all sub-token values to their mapped canonical size. Do not introduce intermediate px values in new components.
+
+Mono font (JetBrains Mono / `ui-monospace` fallback): step counter "1/4", character count "N chars", `{{variable}}` key display in VariableChip. Mono is a font-family variant of the Body role, not a separate size.
 
 ---
 
@@ -157,7 +162,7 @@ All new components for Phase 3 follow the existing pattern: inline `style` objec
 
 | Component | Change |
 |-----------|--------|
-| `TabBar` | Add sparkle primary central button (48×48, gradient, -12px vertical margin) + `starFill` Ranking tab for L3 |
+| `TabBar` | Add sparkle primary central button (48×48, gradient, -8px vertical margin, `aria-label="Criar Prompty"`) + `starFill` Ranking tab for L3 |
 | `ProfilePage` | Add "Meus Promptys" section (L3 only, below profile stats) |
 | `PromptyDetailPage` | Add "Criar variação" button (L3 only, below action row) |
 
@@ -171,7 +176,7 @@ All new components for Phase 3 follow the existing pattern: inline `style` objec
 
 ### Wizard: 4-step Create Flow
 
-Opened by: TabBar sparkle button (routes to `/criar`).
+Opened by: TabBar sparkle button (routes to `/criar`). The sparkle button must have `aria-label="Criar Prompty"` on the `<button>` element.
 
 | Step | Title | Mandatory fields | Optional fields | Navigation |
 |------|-------|-----------------|-----------------|------------|
@@ -180,7 +185,7 @@ Opened by: TabBar sparkle button (routes to `/criar`).
 | 3 — Imagem | "Criar Prompty" | none | `example_image_url` upload | "Publicar" → publishes; "Pular imagem" ghost link → also publishes |
 | 4 — Modo avançado | "Modo avançado (opcional)" | none | `advanced_template`, variable definitions, `inputs_schema` | "Ignorar e publicar" → publishes; "Salvar modo avançado" → saves + publishes |
 
-**Progress bar:** 4 equal-width segments, filled segments use `linear-gradient(90deg, #7C3AED, #22D3EE)`, unfilled use `var(--line)`. Height 4px. Counter "N de 4" monospace at top-right.
+**Progress bar:** 4 equal-width segments, filled segments use `linear-gradient(90deg, #7C3AED, #22D3EE)`, unfilled use `var(--line)`. Height 4px. Border-radius 4px per segment. Counter "N de 4" monospace at top-right.
 
 **Back navigation:** chevronL icon at top-left. Step 1 → dismisses wizard (go to feed). Steps 2-4 → go to previous step.
 
@@ -216,7 +221,8 @@ Card layout (each card):
 - `aspect-ratio: 4/5`, border-radius 12px, `var(--surface)` background, `1px solid var(--line)` border.
 - Cover thumbnail: top portion of card (60% height), gradient fallback if no image.
 - Bottom portion: title (12px / 700 / lh 1.2 / `var(--text-1)`), then 3 stat rows.
-- Stat row: icon (16px) + count (14px / 700 / Space Grotesk) + label (10px / `var(--text-3)`). Inline flex, gap 4px.
+- Inner card content area: **8px vertical padding** (top and bottom of the bottom portion).
+- Stat row: icon (16px) + count (14px / 700 / Space Grotesk) + label (12px / `var(--text-3)`). Inline flex, gap 4px.
 - Stat icons: `copy` (`#22D3EE`), `bookmark` (`#7C3AED`), `starFill` (`#FFB020`).
 
 Empty state for "Meus Promptys": dashed border card (same pattern as LibraryTab empty state in prototype).
@@ -229,7 +235,7 @@ CONTEXT.md decision: Ranking tab is present but can be a placeholder "Em breve" 
 
 **Implementation rule:** Render `ComingScreen`-style placeholder (matching prototype `ComingScreen` component):
 - 60×60 rounded square `var(--surface-2)` icon container, `sparkle` icon 26px `var(--primary)`.
-- Heading "Ranking" — 22px / 700 / Space Grotesk / `var(--text-1)`.
+- Heading "Ranking" — 19px / 700 / Space Grotesk / `var(--text-1)`.
 - Body "Os criadores que mais contribuíram aparecem aqui. Em breve!" — 14px / `var(--text-2)` / lh 1.5 / maxWidth 280 centered.
 - When real ranking data exists (Phase 3+ post-MVP), replace with full leaderboard.
 
@@ -310,6 +316,17 @@ No shadcn `components.json` exists. No third-party registry blocks are used in t
 
 ---
 
+## Revision Log
+
+| Date | Change | Reason |
+|------|--------|--------|
+| 2026-05-08 | Initial version | gsd-ui-researcher |
+| 2026-05-08 | Typography: collapsed to 4 canonical sizes (12/14/19/26px), 2 weights (400/700); removed 800; moved intermediates to sub-token mapping table | Checker BLOCK — Dimension 4 |
+| 2026-05-08 | Spacing: sparkle margin `-12px` → `-8px`; stats card vertical padding `10px` → `8px`; progress bar border-radius `2px` → `4px`; added explicit WCAG exception row for 44px touch targets | Checker BLOCK — Dimension 5 |
+| 2026-05-08 | Visuals: added `aria-label="Criar Prompty"` to sparkle button in component table and interaction contract | Checker FLAG — Dimension 2 |
+
+---
+
 ## Source Traceability
 
 | Decision | Source |
@@ -318,7 +335,7 @@ No shadcn `components.json` exists. No third-party registry blocks are used in t
 | Font family assignments | `src/index.css` `@theme` block |
 | PrimaryButton gradient, border-radius, font-size | `src/components/ui/PrimaryButton.tsx` (read) |
 | SecondaryButton surface-2 + line border pattern | `src/components/ui/SecondaryButton.tsx` (read) |
-| TabBar pill dimensions, sparkle button 48×48 -12px lift, gradient | `docs/planning/prototypes/gamification.jsx` TabBar + CONTEXT.md `<specifics>` |
+| TabBar pill dimensions, sparkle button 48×48 -8px lift, gradient | `docs/planning/prototypes/gamification.jsx` TabBar + CONTEXT.md `<specifics>` (lift adjusted from 12px to -8px for spacing compliance) |
 | Wizard 4-step structure, step names, mandatory fields | CONTEXT.md `<decisions>` |
 | Step 4 "Ignorar" affordance | CONTEXT.md `<decisions>` |
 | Stats grid (copies/saves/feedbacks), profile section | CONTEXT.md `<decisions>` |
