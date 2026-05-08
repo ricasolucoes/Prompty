@@ -61,7 +61,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Usuário L3 pode ver quantas cópias, saves e feedbacks seus promptys receberam
   3. Usuário L3 pode criar variações simples de um prompty existente
   4. Modo avançado (template com variáveis, prompt negativo, versões) disponível opcionalmente para usuários L3 sem alterar a experiência L1 da home
-**Plans**: TBD
+**Plans**: 6 plans
+  - [ ] 03-01-PLAN.md — Migration (parent_id, prompty-covers bucket, publish trigger) + types regen + Wave 0 test scaffolds
+  - [ ] 03-02-PLAN.md — useCreatePrompty hook (publish/cover/parent_id/version) + useMyPromptys hook (stats aggregation)
+  - [ ] 03-03-PLAN.md — Wizard core: CreateWizard state machine + WizardStep1Basics + WizardStep2Prompt + WizardProgressBar
+  - [ ] 03-04-PLAN.md — MyPromptyCard + MyPromptysGrid (L3-gated stats grid) + ProfilePage integration
+  - [ ] 03-05-PLAN.md — WizardStep3Image + WizardStep4Advanced + VariableChip + CriarPage + App.tsx route
+  - [ ] 03-06-PLAN.md — TabBar update (sparkle Criar route) + RankingPage placeholder + PromptyDetailPage variation button
 
 ## Progress
 
@@ -72,4 +78,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. L1 Iniciante — Feed e Copiar | 11/11 | Complete   | 2026-05-07 |
 | 2. L2 Curador + Descoberta | 0/TBD | Not started | - |
-| 3. L3 Criador | 0/TBD | Not started | - |
+| 3. L3 Criador | 0/6 | Not started | - |
