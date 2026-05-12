@@ -71,22 +71,18 @@ Objetivo: criar, publicar e melhorar promptys.
 - [x] Usuário pode marcar "Funcionou / Não ficou bom" — via RateSheet (star rating)
 - [x] Sistema registra cópias internamente (sem mostrar contador para L1)
 
+**Fase 2 — L2 Curador + Descoberta** *(Validated in Phase 2: l2-curador-descoberta — 2026-05-12)*
+- [x] Sistema detecta critérios de L2 e exibe mensagem de desbloqueio discreta (LevelUpModal Phase 1)
+- [x] Usuário pode enviar imagem gerada como resultado — RateSheet + useTest + CommunityResults gallery
+- [x] Usuário pode avaliar qualidade do prompty — RateSheet star rating (combinado com upload)
+- [x] Usuário tem histórico de promptys copiados e salvos — SavedPage com 3 chips (Salvos/Avaliações/Resultados)
+- [x] Usuário pode denunciar conteúdo impróprio — OptionsSheet + ReportSheet via "..." menu
+- [x] Feed/busca por categoria + modelo + palavra-chave — SearchPage com FTS + FilterChipBar
+- [x] MODR-03 enforcement — useFeed/useSearch/PromptyDetailPage filtram `.eq('status','published')`
+
 ### Active
 
-**Fase 2 — L2 Curador:**
-- [ ] Sistema detecta critérios de L2 e exibe mensagem de desbloqueio discreta
-- [ ] Usuário pode enviar imagem gerada como resultado
-- [ ] Usuário pode avaliar qualidade do prompty
-- [ ] Usuário tem histórico de promptys copiados e salvos
-- [ ] Usuário pode denunciar conteúdo impróprio
-
-**Fase 3 — Feed e descoberta:**
-- [ ] Feed com ordenação por Novos e Em Alta
-- [ ] Filtro por categoria, modelo recomendado e complexidade
-- [ ] Busca por palavra-chave
-- [ ] Paginação cursor-based (sem OFFSET)
-
-**Fase 4 — L3 Criador:**
+**Fase 3 — L3 Criador:**
 - [ ] Usuário L3 pode criar e publicar promptys
 - [ ] Editor com título, descrição, imagem exemplo, prompt beginner e modelo recomendado
 - [ ] Usuário pode criar variações simples
@@ -172,4 +168,4 @@ Objetivo: criar, publicar e melhorar promptys.
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | — Pending |
 
 ---
-*Last updated: 2026-05-07 — Phase 1 complete (11 plans, 66 tests, gap closure verified)*
+*Last updated: 2026-05-12 — Phase 2 complete (7 plans, 146 tests total, FTS search + curadoria + denúncia + community results live)*
