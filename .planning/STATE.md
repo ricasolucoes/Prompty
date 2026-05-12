@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-05-12T20:49:58.157Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-05-12T20:51:32.216Z"
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 24
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -60,6 +60,7 @@ Plan: 2 of 7
 | Phase 02 P01 | 7min | 4 tasks | 16 files |
 | Phase 02 P02 | 2min | 3 tasks | 5 files |
 | Phase 02 P03 | 4min | 2 tasks | 7 files |
+| Phase 02 P05 | 5min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,8 @@ Recent decisions affecting current work:
 - [Phase 02]: useSearch disabled (enabled=false) when query empty and no filters — prevents unnecessary fetches on idle state
 - [Phase 02]: textSearch uses {type:websearch,config:simple} — websearch handles partial words; simple config matches migration 006
 - [Phase 02]: Debounce uses useRef timer (no library) — 300ms, clearTimeout on each keystroke, immediate reset on clear
+- [Phase 02]: OptionsSheet test uses not.toContain('1px solid') for last-option border — JSDOM expands borderBottom:'none' to empty string, not 'none'
+- [Phase 02]: useCommunityResults filter uses plain callback + 'as string' cast — TS2677 prevents type predicate when profiles union is wider than intersection
 
 ### Pending Todos
 
@@ -124,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T20:49:58.155Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-05-12T20:51:32.213Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None
