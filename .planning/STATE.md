@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-05-12T20:44:18.531Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-05-12T20:49:58.157Z"
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 24
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -59,6 +59,7 @@ Plan: 2 of 7
 | Phase 01 P10 | 4 | 2 tasks | 5 files |
 | Phase 02 P01 | 7min | 4 tasks | 16 files |
 | Phase 02 P02 | 2min | 3 tasks | 5 files |
+| Phase 02 P03 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Placeholder pages inline in App.tsx (SavedPagePlaceholder/SearchPagePlaceholder) — deleted by owning plans 02-03/02-04
 - [Phase 02]: CATEGORIES/MODELS exported as const tuples for type inference; DB-driven categories deferred to future phase
 - [Phase 02]: moreHorizontal icon uses filled circles (fill=currentColor, stroke=none) — strokeWidth on 1.2px circles is invisible
+- [Phase 02]: useSearch disabled (enabled=false) when query empty and no filters — prevents unnecessary fetches on idle state
+- [Phase 02]: textSearch uses {type:websearch,config:simple} — websearch handles partial words; simple config matches migration 006
+- [Phase 02]: Debounce uses useRef timer (no library) — 300ms, clearTimeout on each keystroke, immediate reset on clear
 
 ### Pending Todos
 
@@ -120,6 +124,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T20:44:18.528Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-05-12T20:49:58.155Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
