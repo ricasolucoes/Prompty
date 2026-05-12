@@ -20,8 +20,8 @@
 - [x] **FEED-03**: Any visitor can open a Prompty detail page showing example image, title, beginner_prompt in full, and the "Copiar prompt" button
 - [x] **FEED-04**: User can copy the full beginner_prompt to clipboard with one tap — this is the primary action
 - [x] **FEED-05**: Feed uses cursor-based keyset pagination — no OFFSET queries
-- [ ] **FEED-06**: Feed can be filtered by category and recommended_model
-- [ ] **FEED-07**: User can search Promptys by keyword across title, description, and tags
+- [x] **FEED-06**: Feed can be filtered by category and recommended_model
+- [x] **FEED-07**: User can search Promptys by keyword across title, description, and tags
 
 ### Social Actions — L1
 
@@ -51,7 +51,7 @@
 - [ ] **CUR-02**: L2 user can rate a Prompty quality (simple 1-5 or thumbs)
 - [ ] **CUR-03**: L2 user has a history of copied and saved Promptys
 - [ ] **CUR-04**: L2 user can suggest a category correction
-- [ ] **CUR-05**: L2 user can report inappropriate content
+- [x] **CUR-05**: L2 user can report inappropriate content
 
 ### Criação — L3
 
@@ -63,9 +63,9 @@
 
 ### Moderation
 
-- [ ] **MODR-01**: Authenticated user can report a Prompty or result
-- [ ] **MODR-02**: Admin can change Prompty status (published → flagged → hidden → removed)
-- [ ] **MODR-03**: Flagged or removed Promptys are not visible in feed or via direct URL for non-admins
+- [x] **MODR-01**: Authenticated user can report a Prompty or result
+- [x] **MODR-02**: Admin can change Prompty status (published → flagged → hidden → removed)
+- [x] **MODR-03**: Flagged or removed Promptys are not visible in feed or via direct URL for non-admins
 
 ### Infrastructure and Security
 
@@ -150,16 +150,16 @@
 | INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 1 | Complete |
-| FEED-06 | Phase 2 | Pending |
-| FEED-07 | Phase 2 | Pending |
+| FEED-06 | Phase 2 | Complete |
+| FEED-07 | Phase 2 | Complete |
 | CUR-01 | Phase 2 | Pending |
 | CUR-02 | Phase 2 | Pending |
 | CUR-03 | Phase 2 | Pending |
 | CUR-04 | Phase 2 | Pending |
-| CUR-05 | Phase 2 | Pending |
-| MODR-01 | Phase 2 | Pending |
-| MODR-02 | Phase 2 | Pending |
-| MODR-03 | Phase 2 | Pending |
+| CUR-05 | Phase 2 | Complete |
+| MODR-01 | Phase 2 | Complete |
+| MODR-02 | Phase 2 | Complete |
+| MODR-03 | Phase 2 | Complete |
 | CREAT-01 | Phase 3 | Pending |
 | CREAT-02 | Phase 3 | Pending |
 | CREAT-03 | Phase 3 | Pending |

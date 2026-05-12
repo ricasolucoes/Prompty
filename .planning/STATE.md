@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-05-12T20:30:18.628Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-05-12T20:38:22Z"
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 24
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-05-06)
 ## Current Position
 
 Phase: 02 (l2-curador-descoberta) — EXECUTING
-Plan: 1 of 7
+Plan: 2 of 7
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: 1 of 7
 | Phase 01 P09 | 88min | 3 tasks | 5 files |
 | Phase 01 P11 | 8min | 2 tasks | 6 files |
 | Phase 01 P10 | 4 | 2 tasks | 5 files |
+| Phase 02 P01 | 7min | 4 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Save button placed on PromptyDetailPage, not FeedCard, to preserve LEVL-06 test (FeedCard asserts no save/bookmark button)
 - [Phase 01]: Plain <button> used for Save action on detail page because SecondaryButton does not accept aria-label — stateful aria-label required for accessibility
 - [Phase 01]: FeedCard.test.tsx wrapped in MemoryRouter after Link addition — required whenever FeedCard renders Link children
+- [Phase 02]: FTS column uses trigger (not GENERATED ALWAYS AS) — array_to_string(TEXT[], TEXT) is STABLE in PG17, forbidden in generated column expressions; trigger achieves identical semantics
+- [Phase 02]: FTS config uses 'simple'::regconfig — universally available; 'portuguese' config available on Supabase hosted but deferred; upgrade via future migration if needed
+- [Phase 02]: Wave 0 test scaffolds use anchor assertion (expect(true).toBe(true)) — Vite static module resolution fails dynamic import of non-existent modules even in catch() blocks (unlike Jest/Node)
+- [Phase 02]: Supabase CLI gen types stdout appends version notice — strip trailing lines after `} as const` when piping to file
 
 ### Pending Todos
 
@@ -110,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T20:09:56.619Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-l2-curador-descoberta/02-UI-SPEC.md
+Last session: 2026-05-12T20:38:22Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: .planning/phases/02-l2-curador-descoberta/02-02-PLAN.md
