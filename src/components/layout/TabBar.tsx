@@ -11,11 +11,12 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { to: '/',        icon: 'home',    label: 'Feed',    minLevel: 'L1' },
-  { to: '/search',  icon: 'search',  label: 'Buscar',  minLevel: 'L2' },
-  { to: '/create',  icon: 'sparkle', label: 'Criar',   minLevel: 'L3' },
-  { to: '/ranking', icon: 'flame',   label: 'Ranking', minLevel: 'L3' },
-  { to: '/profile', icon: 'user',    label: 'Perfil',  minLevel: 'L1' },
+  { to: '/',        icon: 'home',     label: 'Feed',    minLevel: 'L1' },
+  { to: '/saved',   icon: 'bookmark', label: 'Salvos',  minLevel: 'L2' },
+  { to: '/search',  icon: 'search',   label: 'Buscar',  minLevel: 'L2' },
+  { to: '/create',  icon: 'sparkle',  label: 'Criar',   minLevel: 'L3' },
+  { to: '/ranking', icon: 'flame',    label: 'Ranking', minLevel: 'L3' },
+  { to: '/profile', icon: 'user',     label: 'Perfil',  minLevel: 'L1' },
 ]
 
 const LEVEL_ORDER = ['L1', 'L2', 'L3', 'L4', 'L5']

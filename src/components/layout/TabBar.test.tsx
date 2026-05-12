@@ -52,17 +52,29 @@ describe('TabBar — progressive disclosure (LEVL-07)', () => {
     expect(screen.queryByText(/ranking/i)).not.toBeInTheDocument()
   })
 
-  it('renders 3 tabs for L2 (Feed + Buscar + Perfil)', () => {
-    setLevel('L2', 100)
+  it('L1 user does NOT see Salvos tab (LEVL-07)', () => {
+    setLevel('L1', 49)
     renderTabBar()
-    expect(screen.getAllByRole('link')).toHaveLength(3)
-    expect(screen.getByLabelText('Buscar')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Salvos')).not.toBeInTheDocument()
+    expect(screen.queryByText(/salvos/i)).not.toBeInTheDocument()
   })
 
-  it('renders 5 tabs for L3 (adds Criar + Ranking)', () => {
+  it('renders 4 tabs for L2 (Feed + Salvos + Buscar + Perfil)', () => {
+    setLevel('L2', 100)
+    renderTabBar()
+    expect(screen.getAllByRole('link')).toHaveLength(4)
+    expect(screen.getByLabelText('Feed')).toBeInTheDocument()
+    expect(screen.getByLabelText('Salvos')).toBeInTheDocument()
+    expect(screen.getByLabelText('Buscar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Perfil')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Criar')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Ranking')).not.toBeInTheDocument()
+  })
+
+  it('renders 6 tabs for L3 (adds Criar + Ranking)', () => {
     setLevel('L3', 300)
     renderTabBar()
-    expect(screen.getAllByRole('link')).toHaveLength(5)
+    expect(screen.getAllByRole('link')).toHaveLength(6)
     expect(screen.getByLabelText('Criar')).toBeInTheDocument()
     expect(screen.getByLabelText('Ranking')).toBeInTheDocument()
   })
