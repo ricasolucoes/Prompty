@@ -49,7 +49,7 @@
 
 - [ ] **CUR-01**: L2 user can upload a generated image as a Prompty result (with notes)
 - [ ] **CUR-02**: L2 user can rate a Prompty quality (simple 1-5 or thumbs)
-- [ ] **CUR-03**: L2 user has a history of copied and saved Promptys
+- [x] **CUR-03**: L2 user has a history of copied and saved Promptys
 - [ ] **CUR-04**: L2 user can suggest a category correction
 - [x] **CUR-05**: L2 user can report inappropriate content
 
@@ -154,7 +154,7 @@
 | FEED-07 | Phase 2 | Complete |
 | CUR-01 | Phase 2 | Pending |
 | CUR-02 | Phase 2 | Pending |
-| CUR-03 | Phase 2 | Pending |
+| CUR-03 | Phase 2 | Complete |
 | CUR-04 | Phase 2 | Pending |
 | CUR-05 | Phase 2 | Complete |
 | MODR-01 | Phase 2 | Complete |
