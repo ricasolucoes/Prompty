@@ -5,6 +5,7 @@ export type IconName =
   | 'home' | 'user' | 'heart' | 'heartFill' | 'copy' | 'check'
   | 'star' | 'starFill' | 'chevronL' | 'x' | 'sparkle' | 'wand'
   | 'gemini' | 'image' | 'flame' | 'search' | 'bookmark' | 'lock'
+  | 'moreHorizontal' | 'flag' | 'tag'
 
 interface IconProps {
   name: IconName
@@ -33,6 +34,20 @@ const PATHS: Record<IconName, React.ReactElement> = {
   search: <><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.5-4.5" /></>,
   bookmark: <path d="M6 4h12v17l-6-4-6 4V4z" />,
   lock: <><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 1 1 8 0v3" /></>,
+  moreHorizontal: (
+    <>
+      <circle cx="5"  cy="12" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="19" cy="12" r="1.2" fill="currentColor" stroke="none" />
+    </>
+  ),
+  flag: <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7" />,
+  tag: (
+    <>
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+      <line x1="7" y1="7" x2="7.01" y2="7" />
+    </>
+  ),
 }
 
 export function Icon({ name, size = 20, color = 'currentColor', strokeWidth = 1.8, className }: IconProps) {
