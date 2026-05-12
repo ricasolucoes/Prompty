@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       point_events: {
@@ -55,6 +80,7 @@ export type Database = {
           bio: string | null
           created_at: string
           id: string
+          is_admin: boolean
           last_active_at: string | null
           level: string
           name: string | null
@@ -68,6 +94,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           id: string
+          is_admin?: boolean
           last_active_at?: string | null
           level?: string
           name?: string | null
@@ -81,6 +108,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           id?: string
+          is_admin?: boolean
           last_active_at?: string | null
           level?: string
           name?: string | null
@@ -333,11 +361,13 @@ export type Database = {
       promptys: {
         Row: {
           author_id: string
+          category: string | null
           cover_gradient: string | null
           cover_url: string | null
           created_at: string
           description: string | null
           difficulty: string | null
+          fts: unknown
           id: string
           inputs_schema: Json
           license: string
@@ -353,11 +383,13 @@ export type Database = {
         }
         Insert: {
           author_id: string
+          category?: string | null
           cover_gradient?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           difficulty?: string | null
+          fts?: unknown
           id?: string
           inputs_schema?: Json
           license?: string
@@ -373,11 +405,13 @@ export type Database = {
         }
         Update: {
           author_id?: string
+          category?: string | null
           cover_gradient?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           difficulty?: string | null
+          fts?: unknown
           id?: string
           inputs_schema?: Json
           license?: string
@@ -395,6 +429,51 @@ export type Database = {
           {
             foreignKeyName: "promptys_author_id_fkey"
             columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reports: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          prompty_id: string
+          reason: string
+          reporter_id: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          prompty_id: string
+          reason: string
+          reporter_id: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          prompty_id?: string
+          reason?: string
+          reporter_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_prompty_id_fkey"
+            columns: ["prompty_id"]
+            isOneToOne: false
+            referencedRelation: "promptys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reporter_id_fkey"
+            columns: ["reporter_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -440,6 +519,7 @@ export type Database = {
     Functions: {
       level_from_points: { Args: { p: number }; Returns: string }
       record_copy: { Args: { p_prompty_id: string }; Returns: undefined }
+      tags_to_text: { Args: { tags: string[] }; Returns: string }
       update_profile_points: {
         Args: { target_user: string }
         Returns: undefined
@@ -572,6 +652,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
