@@ -50,7 +50,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Usuário L2 pode avaliar qualidade e tem histórico de promptys copiados e salvos
   3. Usuário pode filtrar o feed por categoria e modelo, e buscar por palavra-chave
   4. Usuário pode denunciar conteúdo; admin pode alterar status do prompty
-**Plans**: TBD
+**Plans**: 7 plans
+  - [ ] 02-01-PLAN.md — Migration 006 (reports + category + fts + is_admin) + types regen + 13 Wave 0 test scaffolds
+  - [ ] 02-02-PLAN.md — TabBar Salvos tab + new icons (moreHorizontal, flag, tag) + /saved + /search routes + CATEGORIES/MODELS constants
+  - [ ] 02-03-PLAN.md — useSearch hook (FTS + filters + cursor) + FilterChipBar + SearchPage (FEED-06, FEED-07, MODR-03)
+  - [ ] 02-04-PLAN.md — useSaved hook + SavedCard + SavedPage with 3-chip filter (CUR-03)
+  - [ ] 02-05-PLAN.md — useReport + useCommunityResults + generic OptionsSheet (CUR-04, CUR-05, MODR-01)
+  - [ ] 02-06-PLAN.md — ReportSheet + CategorySuggestSheet + PromptyDetailPage "..." menu wiring (CUR-04, CUR-05, MODR-01)
+  - [ ] 02-07-PLAN.md — CommunityResults + FullImageModal + PromptyDetailPage integration + MODR-03 audit (CUR-01, CUR-02, MODR-03)
 
 ### Phase 3: L3 Criador
 **Goal**: Usuários que atingiram L3 podem criar e publicar promptys; modo avançado com variáveis e versões disponível opcionalmente; estatísticas básicas do próprio conteúdo
