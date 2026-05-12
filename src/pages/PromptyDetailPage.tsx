@@ -12,6 +12,7 @@ import { Toast } from '@/components/ui/Toast'
 import { OptionsSheet } from '@/components/ui/OptionsSheet'
 import { ReportSheet } from '@/components/feed/ReportSheet'
 import { CategorySuggestSheet } from '@/components/feed/CategorySuggestSheet'
+import { CommunityResults } from '@/components/feed/CommunityResults'
 import { levelOf } from '@/lib/constants/levels'
 import type { Database } from '@/types/database.types'
 
@@ -254,6 +255,9 @@ export function PromptyDetailPage() {
           </button>
         )}
       </div>
+
+      {/* CUR-01 surface: community-uploaded result images — L2+ only */}
+      {isL2 && prompty && <CommunityResults promptyId={prompty.id} />}
 
       {/* L2 menu: "..." options + report + category suggest sheets */}
       {isL2 && prompty && (
