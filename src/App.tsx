@@ -7,6 +7,7 @@ import { FeedPage } from '@/pages/FeedPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { PublicProfilePage } from '@/pages/PublicProfilePage'
 import { PromptyDetailPage } from '@/pages/PromptyDetailPage'
+import { SearchPage } from '@/pages/SearchPage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
 import { TweaksPanel } from '@/components/dev/TweaksPanel'
@@ -44,7 +45,7 @@ function ChromeShell() {
         <Routes>
           <Route path="/" element={<FeedPage />} />
           <Route path="/saved" element={<SavedPagePlaceholder />} />
-          <Route path="/search" element={<SearchPagePlaceholder />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/u/:username" element={<PublicProfilePage />} />
           <Route path="/p/:slug" element={<PromptyDetailPage />} />
@@ -62,17 +63,6 @@ function SavedPagePlaceholder() {
     <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
       <p style={{ color: 'var(--text-3)', fontSize: 13.5 }}>
         Salvos em construção — disponível em breve.
-      </p>
-    </main>
-  )
-}
-
-// TODO Plan 02-03: replace with real <SearchPage />
-function SearchPagePlaceholder() {
-  return (
-    <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
-      <p style={{ color: 'var(--text-3)', fontSize: 13.5 }}>
-        Busca em construção — disponível em breve.
       </p>
     </main>
   )
