@@ -75,7 +75,7 @@ Inherits Phase 1 scale in full. Phase 2 additions:
 **Phase 2 exceptions (approved):**
 - Community results grid: `aspect-ratio: 1/1` thumbnails (square) — no fixed height; exempt from grid.
 - Touch targets: minimum 44px height on all tappable elements — **WCAG 2.1 SC 2.5.5 mandatory minimum, approved exception**.
-- "..." button: 40×40px tappable area centered within its 24×24px icon — the wrapper is the tap target.
+- "..." button: 44×44px tappable area centered within its 20px icon (via `padding: 12px`) — satisfies WCAG 2.1 SC 2.5.5 minimum.
 
 > Source: 01-UI-SPEC.md § Spacing Scale; 03-UI-SPEC.md § Spacing exceptions; WCAG 2.1 SC 2.5.5.
 
@@ -307,7 +307,7 @@ Static list: "Gemini", "Midjourney", "DALL·E", "Stable Diffusion", "Flux".
 - Rendered ONLY when `isL2 === true` (per LEVL-07 — absent for L1, not greyed)
 - Position: top-right of the author header row, adjacent to the Avatar/name block
 - Element: `<button type="button" aria-label="Mais opções" aria-haspopup="dialog">` wrapping `Icon name="moreHorizontal" size={20}`
-- Tappable area: 40×40px centered around the 20px icon (via `padding: 10px`)
+- Tappable area: 44×44px centered around the 20px icon (via `padding: 12px`) — satisfies WCAG 2.1 SC 2.5.5
 - Color: `var(--text-3)` default; `var(--text-1)` on hover/active
 - On tap: open `OptionsSheet` with two options:
   1. `{ label: 'Sugerir categoria', icon: 'tag', onClick: openCategorySuggestSheet }`
@@ -323,7 +323,7 @@ Static list: "Gemini", "Midjourney", "DALL·E", "Stable Diffusion", "Flux".
   Section container: padding 16px 16px 24px
     Section header row:
       Label "RESULTADOS DA COMUNIDADE" — 12px / 700 / uppercase / letterSpacing 0.6px / var(--text-3)
-      Count badge: "N" — 12px / 700 / var(--primary), padding 2px 8px, border-radius 999px, background: var(--primary-soft)
+      Count badge: "N" — 12px / 700 / var(--primary), padding 4px 8px, border-radius 999px, background: var(--primary-soft)
     Grid: display grid, grid-template-columns: repeat(3, 1fr), gap 8px, margin-top 12px
       Each result tile: aspect-ratio 1/1, border-radius 8px, overflow hidden
         Image: object-fit cover, full tile size
@@ -351,7 +351,7 @@ Sheet: background var(--surface), border-radius 24px 24px 0 0, padding 20px 20px
   Option list:
     Each option: full-width button, padding 16px, flex row, align-center, gap 12px
       Icon: 20px, color var(--text-2) (or #FF3B6B if destructive)
-      Label: 14px / 400 (or 13.5px) / var(--text-1) (or #FF3B6B if destructive)
+      Label: 13.5px / 400 / var(--text-1) (or #FF3B6B if destructive)
       border-bottom: 1px solid var(--line) between items (not after last)
     No dismiss button — close on backdrop tap
 ```
@@ -793,3 +793,6 @@ Carried from Phase 1 — no changes for Phase 2:
 | Dismiss labels "Fechar" (not "Cancelar") | Checker fix: "Cancelar" is on BLOCK list; "Fechar" describes closing the sheet |
 | SavedPage focal point: FilterChipBar | Checker fix: Dimension 2 visual hierarchy declaration added |
 | SearchPage focal point: search input | Checker fix: Dimension 2 visual hierarchy declaration added |
+| Count badge padding 4px 8px | Checker fix (round 2): replaced non-multiple-of-4 value 2px with 4px |
+| "..." button 44×44px via padding: 12px | Checker fix (round 2): replaced 40×40px / padding: 10px — 10px is not a multiple of 4 and 40px is below WCAG 44px minimum; 44×44px satisfies WCAG 2.1 SC 2.5.5 |
+| OptionsSheet label 13.5px / 400 | Checker fix (round 2): removed ambiguous "14px / 400 (or 13.5px)" — 14px is not a declared type scale role; 13.5px is Body/Input role |
