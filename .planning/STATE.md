@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-05-PLAN.md
-last_updated: "2026-05-12T20:51:32.216Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-05-12T20:58:13.515Z"
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 24
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -61,6 +61,7 @@ Plan: 2 of 7
 | Phase 02 P02 | 2min | 3 tasks | 5 files |
 | Phase 02 P03 | 4min | 2 tasks | 7 files |
 | Phase 02 P05 | 5min | 2 tasks | 6 files |
+| Phase 02 P04 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Debounce uses useRef timer (no library) — 300ms, clearTimeout on each keystroke, immediate reset on clear
 - [Phase 02]: OptionsSheet test uses not.toContain('1px solid') for last-option border — JSDOM expands borderBottom:'none' to empty string, not 'none'
 - [Phase 02]: useCommunityResults filter uses plain callback + 'as string' cast — TS2677 prevents type predicate when profiles union is wider than intersection
+- [Phase 02]: SavedCard uses backgroundImage (not background shorthand) for URL images — JSDOM expands background shorthand to empty string, backgroundImage is directly assertable in tests
+- [Phase 02]: ratings = all prompty_tests; results = subset where image_url non-empty — two derivations from a single query avoiding a third parallel request
+- [Phase 02]: SavedPage handleChipChange ignores null to enforce always-one-active UX (FilterChipBar emits null on toggle-off of active chip)
 
 ### Pending Todos
 
@@ -127,6 +131,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T20:51:32.213Z
-Stopped at: Completed 02-05-PLAN.md
+Last session: 2026-05-12T20:58:13.512Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
