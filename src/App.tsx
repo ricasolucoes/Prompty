@@ -43,6 +43,8 @@ function ChromeShell() {
       <main style={{ paddingBottom: 96 }}>
         <Routes>
           <Route path="/" element={<FeedPage />} />
+          <Route path="/saved" element={<SavedPagePlaceholder />} />
+          <Route path="/search" element={<SearchPagePlaceholder />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/u/:username" element={<PublicProfilePage />} />
           <Route path="/p/:slug" element={<PromptyDetailPage />} />
@@ -51,5 +53,27 @@ function ChromeShell() {
       </main>
       <TabBar />
     </>
+  )
+}
+
+// TODO Plan 02-04: replace with real <SavedPage />
+function SavedPagePlaceholder() {
+  return (
+    <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
+      <p style={{ color: 'var(--text-3)', fontSize: 13.5 }}>
+        Salvos em construção — disponível em breve.
+      </p>
+    </main>
+  )
+}
+
+// TODO Plan 02-03: replace with real <SearchPage />
+function SearchPagePlaceholder() {
+  return (
+    <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
+      <p style={{ color: 'var(--text-3)', fontSize: 13.5 }}>
+        Busca em construção — disponível em breve.
+      </p>
+    </main>
   )
 }
