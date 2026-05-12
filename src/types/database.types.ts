@@ -373,6 +373,7 @@ export type Database = {
           license: string
           models: string[]
           negative: string | null
+          parent_id: string | null
           slug: string
           status: string
           style_tags: string[]
@@ -395,6 +396,7 @@ export type Database = {
           license?: string
           models?: string[]
           negative?: string | null
+          parent_id?: string | null
           slug: string
           status?: string
           style_tags?: string[]
@@ -417,6 +419,7 @@ export type Database = {
           license?: string
           models?: string[]
           negative?: string | null
+          parent_id?: string | null
           slug?: string
           status?: string
           style_tags?: string[]
