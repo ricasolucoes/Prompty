@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-06-PLAN.md
-last_updated: "2026-05-12T21:05:31.904Z"
+stopped_at: Completed 02-07-PLAN.md
+last_updated: "2026-05-12T21:11:17.339Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 24
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -63,6 +63,7 @@ Plan: 2 of 7
 | Phase 02 P05 | 5min | 2 tasks | 6 files |
 | Phase 02 P04 | 4min | 2 tasks | 7 files |
 | Phase 02 P06 | 4min | 3 tasks | 6 files |
+| Phase 02 P07 | 4min | 4 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,9 @@ Recent decisions affecting current work:
 - [Phase 02]: ReportSheet destructive button uses raw <button> styled inline (#FF3B6B) — PrimaryButton has no style prop, avoids modifying shared component
 - [Phase 02]: isL2 uses LEVEL_ORDER.indexOf comparison (not id==='L2') — correctly treats L3/L4/L5 as qualifying
 - [Phase 02]: PromptyDetailPage test mock extended with mockProfile alongside mockUser — enables per-test level simulation without Zustand setState on mocked store
+- [Phase 02]: CommunityResults absent (returns null) when results.length===0 — no empty state per UI-SPEC
+- [Phase 02]: FullImageModal backdrop-click uses e.target===e.currentTarget guard — prevents close when clicking image/attribution
+- [Phase 02]: PromptyDetailPage test mock extended with .not() and .or() chain methods — useCommunityResults uses .not('image_url','is',null)
 
 ### Pending Todos
 
@@ -135,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T21:05:31.902Z
-Stopped at: Completed 02-06-PLAN.md
+Last session: 2026-05-12T21:11:17.336Z
+Stopped at: Completed 02-07-PLAN.md
 Resume file: None
