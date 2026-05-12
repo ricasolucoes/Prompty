@@ -9,6 +9,10 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Icon } from '@/components/ui/Icon'
 import { PrimaryButton } from '@/components/ui/PrimaryButton'
 import { Toast } from '@/components/ui/Toast'
+import { OptionsSheet } from '@/components/ui/OptionsSheet'
+import { ReportSheet } from '@/components/feed/ReportSheet'
+import { CategorySuggestSheet } from '@/components/feed/CategorySuggestSheet'
+import { levelOf } from '@/lib/constants/levels'
 import type { Database } from '@/types/database.types'
 
 type Prompty = Database['public']['Tables']['promptys']['Row'] & {
@@ -19,11 +23,21 @@ export function PromptyDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   const nav = useNavigate()
   const user = useAuthStore((s) => s.user)
+  const profile = useAuthStore((s) => s.profile)
   const [prompty, setPrompty] = useState<Prompty | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [copied, setCopied] = useState(false)
   const [toast, setToast] = useState<{ message: string; icon: 'check' | 'copy' | 'bookmark'; iconColor?: string } | null>(null)
+
+  // LEVL-07: "..." menu only for L2+ users
+  const LEVEL_ORDER: ReadonlyArray<string> = ['L1', 'L2', 'L3', 'L4', 'L5']
+  const isL2 = profile
+    ? LEVEL_ORDER.indexOf(levelOf(profile.points ?? 0).id) >= LEVEL_ORDER.indexOf('L2')
+    : false
+  const [showOptions, setShowOptions] = useState(false)
+  const [showReport, setShowReport] = useState(false)
+  const [showCategorySuggest, setShowCategorySuggest] = useState(false)
 
   // Fetch prompty by slug
   useEffect(() => {
@@ -143,6 +157,26 @@ export function PromptyDetailPage() {
             compartilhou um Prompty
           </div>
         </div>
+        {isL2 && (
+          <button
+            type="button"
+            aria-label="Mais opções"
+            aria-haspopup="dialog"
+            onClick={() => setShowOptions(true)}
+            style={{
+              padding: 12,
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--text-3)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icon name="moreHorizontal" size={20} />
+          </button>
+        )}
       </header>
 
       {/* Title */}
@@ -220,6 +254,42 @@ export function PromptyDetailPage() {
           </button>
         )}
       </div>
+
+      {/* L2 menu: "..." options + report + category suggest sheets */}
+      {isL2 && prompty && (
+        <>
+          <OptionsSheet
+            open={showOptions}
+            onClose={() => setShowOptions(false)}
+            ariaLabel="Opções para este Prompty"
+            options={[
+              {
+                label: 'Sugerir categoria',
+                icon: 'tag',
+                onClick: () => setShowCategorySuggest(true),
+              },
+              {
+                label: 'Denunciar',
+                icon: 'flag',
+                destructive: true,
+                onClick: () => setShowReport(true),
+              },
+            ]}
+          />
+          <ReportSheet
+            open={showReport}
+            prompty={{ id: prompty.id, title: prompty.title }}
+            onClose={() => setShowReport(false)}
+            onSubmitted={() => setToast({ message: 'Denúncia enviada', icon: 'check', iconColor: '#34D399' })}
+          />
+          <CategorySuggestSheet
+            open={showCategorySuggest}
+            prompty={{ id: prompty.id, title: prompty.title }}
+            onClose={() => setShowCategorySuggest(false)}
+            onSubmitted={() => setToast({ message: 'Sugestão enviada', icon: 'check', iconColor: '#34D399' })}
+          />
+        </>
+      )}
 
       {toast && (
         <Toast
