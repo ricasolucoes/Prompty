@@ -73,7 +73,6 @@ Inherits Phase 1 scale in full. Phase 2 additions:
 | 2xl | 48px | Feed/Search/Saved page bottom padding (tab bar clearance) |
 
 **Phase 2 exceptions (approved):**
-- Filter chip: height 32px, padding `6px 12px` — not a multiple of 4 for the `6px` vertical pad. This is an established chip pattern from Phase 3 category chips; approved for readability. Horizontal pad `12px` is a 4-multiple.
 - Community results grid: `aspect-ratio: 1/1` thumbnails (square) — no fixed height; exempt from grid.
 - Touch targets: minimum 44px height on all tappable elements — **WCAG 2.1 SC 2.5.5 mandatory minimum, approved exception**.
 - "..." button: 40×40px tappable area centered within its 24×24px icon — the wrapper is the tap target.
@@ -190,6 +189,18 @@ Phase 2 additions:
 
 ---
 
+## Visual Hierarchy
+
+### SavedPage focal point
+
+The `FilterChipBar` (Salvos / Avaliações / Resultados) is the primary focal point. It sits directly below the AppHeader and determines what the grid shows. The 3-column grid fills the remaining viewport area and is subordinate to the chip selection.
+
+### SearchPage focal point
+
+The search input field at the top is the primary focal point. It is the first interactive element and draws immediate attention. The two chip rows (CATEGORIA / MODELO) are secondary — they refine an active query. Results are tertiary.
+
+---
+
 ## Screen Layouts
 
 ### 1. SavedPage (`/saved`)
@@ -207,7 +218,7 @@ AppHeader (sticky, inherited)
 - 3 chips: "Salvos", "Avaliações", "Resultados"
 - Chip order is fixed; only one chip active at a time (single-select)
 - Default active: "Salvos"
-- Chip sizing: height 32px, padding `6px 12px`, border-radius 999px (pill)
+- Chip sizing: height 36px, padding `8px 12px`, border-radius 999px (pill)
 - Scroll direction: horizontal (overflow-x: auto, hide scrollbar: `-webkit-scrollbar { display: none }`)
 - No wrap — single horizontal row
 
@@ -251,7 +262,7 @@ AppHeader (sticky, inherited)
 **Search input field:**
 - `width: 100%`, `height: 44px`, `box-sizing: border-box`
 - `background: var(--surface-2)`, `border: 1px solid var(--line)`, `border-radius: 12px`
-- `padding: 10px 16px 10px 44px` — left pad leaves room for search icon
+- `padding: 12px 16px 12px 44px` — left pad leaves room for search icon
 - Search icon: `Icon name="search"` size 18, `var(--text-3)`, absolutely positioned `left: 12px, top: 50%, translateY(-50%)`
 - Clear button: `Icon name="x"` size 16, `var(--text-3)`, absolutely positioned `right: 12px`, appears only when `query.length > 0`
 - Font: 13.5px / 400 / `var(--text-1)` for typed value, `var(--text-3)` for placeholder
@@ -338,11 +349,11 @@ Overlay: rgba(0,0,0,0.5), fadeIn .2s
 Sheet: background var(--surface), border-radius 24px 24px 0 0, padding 20px 20px 32px
   Drag handle: 32×4px, background var(--line-strong), centered, margin: 0 auto 16px
   Option list:
-    Each option: full-width button, padding 14px 16px, flex row, align-center, gap 12px
+    Each option: full-width button, padding 16px, flex row, align-center, gap 12px
       Icon: 20px, color var(--text-2) (or #FF3B6B if destructive)
       Label: 14px / 400 (or 13.5px) / var(--text-1) (or #FF3B6B if destructive)
       border-bottom: 1px solid var(--line) between items (not after last)
-    No cancel button — close on backdrop tap
+    No dismiss button — close on backdrop tap
 ```
 
 `aria-label="Opções para este Prompty"` on the sheet dialog element.
@@ -358,7 +369,7 @@ Sheet: same base as OptionsSheet (border-radius 24px 24px 0 0, padding 20px 20px
   Subtitle: prompty.title — 13.5px / 400 / var(--text-2) / centered / margin-bottom 24px
 
   Reason dropdown / select:
-    Label "Motivo" — 12px / 700 / var(--text-3) / margin-bottom 6px
+    Label "Motivo" — 12px / 700 / var(--text-3) / margin-bottom 8px
     <select> styled: full-width, padding 12px, border-radius 12px,
       background var(--surface-2), border: 1px solid var(--line),
       color var(--text-1), font-size 13.5px
@@ -370,7 +381,7 @@ Sheet: same base as OptionsSheet (border-radius 24px 24px 0 0, padding 20px 20px
       - "other": "Outro"
 
   Notes textarea (optional):
-    Label "Detalhes (opcional)" — 12px / 700 / var(--text-3) / margin-bottom 6px
+    Label "Detalhes (opcional)" — 12px / 700 / var(--text-3) / margin-bottom 8px
     Same textarea style as RateSheet notes: border-radius 12px, 3 rows, surface-2 background
     placeholder "Descreva o problema (opcional)", maxLength 500
     margin-bottom 16px
@@ -378,7 +389,7 @@ Sheet: same base as OptionsSheet (border-radius 24px 24px 0 0, padding 20px 20px
   Error: role="alert", color #FF3B6B, fontSize 13.5px (shown only on submit without reason)
 
   Action row (flex, gap 8px):
-    SecondaryButton "Cancelar" (full) — calls onClose
+    SecondaryButton "Fechar" (full) — calls onClose
     PrimaryButton "Denunciar" (full) — background #FF3B6B, disabled until reason selected
       Busy state: "Enviando…"
 ```
@@ -407,7 +418,7 @@ Sheet: same base
     margin-bottom 16px
 
   Action row:
-    SecondaryButton "Cancelar" (full)
+    SecondaryButton "Fechar" (full)
     PrimaryButton "Enviar sugestão" (full, var(--primary), disabled until category selected)
       Busy state: "Enviando…"
 ```
@@ -607,7 +618,7 @@ All copy is in Brazilian Portuguese. Consistent with Phase 1 voice (plain, funct
 | ReportSheet notes label | "Detalhes (opcional)" |
 | ReportSheet notes placeholder | "Descreva o problema (opcional)" |
 | ReportSheet CTA | "Denunciar" |
-| ReportSheet dismiss | "Cancelar" |
+| ReportSheet dismiss | "Fechar" |
 | ReportSheet error (no reason) | "Selecione um motivo para denunciar." |
 | ReportSheet busy state | "Enviando…" |
 | Toast — report submitted | "Denúncia enviada" |
@@ -618,7 +629,7 @@ All copy is in Brazilian Portuguese. Consistent with Phase 1 voice (plain, funct
 | CategorySuggestSheet notes label | "Por que esta categoria? (opcional)" |
 | CategorySuggestSheet notes placeholder | "Explique brevemente" |
 | CategorySuggestSheet CTA | "Enviar sugestão" |
-| CategorySuggestSheet dismiss | "Cancelar" |
+| CategorySuggestSheet dismiss | "Fechar" |
 | CategorySuggestSheet busy state | "Enviando…" |
 | Toast — suggestion submitted | "Sugestão enviada" |
 | Community results section label | "RESULTADOS DA COMUNIDADE" |
@@ -775,3 +786,10 @@ Carried from Phase 1 — no changes for Phase 2:
 | Animation keyframes | `src/index.css` (existing); `.screen` class already declared |
 | FullImageModal pattern | Claude's Discretion — standard image-viewer overlay pattern |
 | moreHorizontal icon uses filled circles | Engineering note: stroke on 1.2px circle is invisible; fill is correct approach |
+| Chip padding 8px 12px (height 36px) | Checker fix: replaced non-multiple-of-4 value 6px with 8px |
+| Search input padding 12px 16px 12px 44px | Checker fix: replaced non-multiple-of-4 value 10px with 12px |
+| ReportSheet label margin-bottom 8px | Checker fix: replaced non-multiple-of-4 value 6px with 8px (both labels) |
+| OptionsSheet option row padding 16px | Checker fix: replaced non-multiple-of-4 value 14px with 16px (uniform) |
+| Dismiss labels "Fechar" (not "Cancelar") | Checker fix: "Cancelar" is on BLOCK list; "Fechar" describes closing the sheet |
+| SavedPage focal point: FilterChipBar | Checker fix: Dimension 2 visual hierarchy declaration added |
+| SearchPage focal point: search input | Checker fix: Dimension 2 visual hierarchy declaration added |
