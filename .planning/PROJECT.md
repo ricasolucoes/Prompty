@@ -80,14 +80,16 @@ Objetivo: criar, publicar e melhorar promptys.
 - [x] Feed/busca por categoria + modelo + palavra-chave — SearchPage com FTS + FilterChipBar
 - [x] MODR-03 enforcement — useFeed/useSearch/PromptyDetailPage filtram `.eq('status','published')`
 
+**Fase 3 — L3 Criador** *(Validated in Phase 3: l3-criador — 2026-05-13)*
+- [x] Usuário L3 pode criar e publicar promptys — CreateWizard 4 passos + useCreatePrompty + /criar route
+- [x] Editor com título, descrição, imagem exemplo, prompt beginner e modelo recomendado — WizardStep1Basics + WizardStep2Prompt + WizardStep3Image
+- [x] Usuário pode criar variações simples — `?from=<id>` query param + parent_id column + "Criar variação" button no PromptyDetailPage
+- [x] Estatísticas básicas: cópias, saves, feedbacks — useMyPromptys + MyPromptysGrid no ProfilePage (L3-gated)
+- [x] Modo avançado opcional: template com variáveis, prompt negativo, versões — WizardStep4Advanced + VariableChip + prompty_versions snapshot
+
 ### Active
 
-**Fase 3 — L3 Criador:**
-- [ ] Usuário L3 pode criar e publicar promptys
-- [ ] Editor com título, descrição, imagem exemplo, prompt beginner e modelo recomendado
-- [ ] Usuário pode criar variações simples
-- [ ] Estatísticas básicas: cópias, saves, feedbacks
-- [ ] Modo avançado opcional: template com variáveis, prompt negativo, versões
+— Nenhuma fase ativa. Milestone v1.0 completo. —
 
 ### Out of Scope
 
