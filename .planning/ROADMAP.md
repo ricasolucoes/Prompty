@@ -88,7 +88,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. useSaved query joins promptys with `.eq('status','published')` so moderated promptys do not appear in Salvos/Avaliações/Resultados tabs
   4. ProfilePage progress nudge text reflects the actual next-level unlocks (e.g., "Buscar e Salvos" for L1→L2, "Criar Promptys" for L2→L3) computed from the level lookup
   5. WizardStep2Prompt surfaces detected `{{var}}` syntax to the creator (chip preview or inline message) so creators who publish from step 2 don't ship empty inputs_schema
-**Plans**: TBD (will be created by /gsd:plan-phase 3.1)
+**Plans**: 2 plans
+  - [ ] 03.1-01-PLAN.md — Gamification refetch (AuthStore.refetchProfile + useCopy/useTest wiring) + PrivateRoute minLevel + App.tsx route guards + useSaved MODR-03 status filter
+  - [ ] 03.1-02-PLAN.md — ProfilePage level-aware nudge copy + extractVariables moved to template.ts + WizardStep2Prompt inline variable detection hint
 
 ## Progress
 
@@ -100,4 +102,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 3.1
 | 1. L1 Iniciante — Feed e Copiar | 11/11 | Complete   | 2026-05-07 |
 | 2. L2 Curador + Descoberta | 7/7 | Complete   | 2026-05-12 |
 | 3. L3 Criador | 6/6 | Complete   | 2026-05-13 |
-| 3.1. Milestone Gap Closure | 0/TBD | Not started | - |
+| 3.1. Milestone Gap Closure | 0/2 | Not started | - |
