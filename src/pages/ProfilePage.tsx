@@ -11,6 +11,7 @@ import { PrimaryButton } from '@/components/ui/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/SecondaryButton'
 import { Icon } from '@/components/ui/Icon'
 import { LevelUpModal } from '@/components/modals/LevelUpModal'
+import { MyPromptysGrid } from '@/components/profile/MyPromptysGrid'
 
 export function ProfilePage() {
   const { profile, update, recents } = useProfile()
@@ -149,6 +150,8 @@ export function ProfilePage() {
               </div>
             )}
           </section>
+          {/* L3-only stats grid (CREAT-03) — component returns null for L1/L2 per LEVL-07 */}
+          <MyPromptysGrid />
 
           <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 8 }}>
             <SecondaryButton full onClick={() => setEditing(true)}>Editar perfil</SecondaryButton>
