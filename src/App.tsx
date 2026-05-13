@@ -10,18 +10,10 @@ import { PromptyDetailPage } from '@/pages/PromptyDetailPage'
 import { SavedPage } from '@/pages/SavedPage'
 import { SearchPage } from '@/pages/SearchPage'
 import { CriarPage } from '@/pages/CriarPage'
+import { RankingPage } from '@/pages/RankingPage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
 import { TweaksPanel } from '@/components/dev/TweaksPanel'
-
-// RankingPage placeholder — Plan 03-06 will replace with proper component
-function RankingPage() {
-  return (
-    <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
-      <p style={{ color: 'var(--text-3)', fontSize: 13.5 }}>Ranking em breve.</p>
-    </main>
-  )
-}
 
 /**
  * App routing shell. The Feed and Profile contents are added in plans 06 and 08.
