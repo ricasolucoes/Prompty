@@ -102,4 +102,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 3.1
 | 1. L1 Iniciante — Feed e Copiar | 11/11 | Complete   | 2026-05-07 |
 | 2. L2 Curador + Descoberta | 7/7 | Complete   | 2026-05-12 |
 | 3. L3 Criador | 6/6 | Complete   | 2026-05-13 |
-| 3.1. Milestone Gap Closure | 0/2 | Not started | - |
+| 3.1. Milestone Gap Closure | 1/2 | In Progress|  |

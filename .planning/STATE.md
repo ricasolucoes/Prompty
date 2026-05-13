@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-05-13T05:49:04.380Z"
+stopped_at: Completed 03.1-01-PLAN.md
+last_updated: "2026-05-13T14:25:57.427Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
-  total_plans: 24
-  completed_plans: 24
+  total_plans: 26
+  completed_plans: 25
 ---
 
 # Project State
@@ -68,6 +68,7 @@ Plan: 6 of 6
 | Phase 03 P03 | 129 | 3 tasks | 5 files |
 | Phase 03 P05 | 98min | 3 tasks | 8 files |
 | Phase 03 P06 | 30min | 3 tasks | 5 files |
+| Phase 03.1-milestone-gap-closure P01 | 4min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -145,6 +146,9 @@ Recent decisions affecting current work:
 - [Phase 03]: fireEvent.change instead of userEvent.type for {{variable}} strings — userEvent treats '{' as keyboard modifier, breaking double-brace template input in tests
 - [Phase 03]: [Phase 03-06]: TabBar sparkle uses isCriar conditional inside visible.map — keeps NavLink role=link while applying gradient pill styling; aria-label="Criar Prompty" satisfies WCAG 2.4.4
 - [Phase 03]: [Phase 03-06]: isL3OrAbove explicit id comparison (L3||L4||L5) — same pattern as MyPromptysGrid; levelOf() called with profile?.points ?? 0 so anonymous=L1=button hidden
+- [Phase 03.1-01]: refetchProfile lives in AuthStore for consistency with setUser/setProfile; fire-and-forget from useCopy and useTest success paths
+- [Phase 03.1-01]: PrivateRoute redirects level-insufficient users to / (root) not /feed since FeedPage is mounted at path /
+- [Phase 03.1-01]: MODR-03 filter chained as .eq('promptys.status', 'published') after .order() on both useSaved queries using PostgREST join-column dot notation
 
 ### Pending Todos
 
@@ -156,6 +160,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-13T04:56:42.329Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-05-13T14:25:57.425Z
+Stopped at: Completed 03.1-01-PLAN.md
 Resume file: None
