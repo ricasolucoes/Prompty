@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-05-13T03:14:36.558Z"
+stopped_at: Completed 03-05-PLAN.md
+last_updated: "2026-05-13T04:56:42.332Z"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 24
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -66,6 +66,7 @@ Plan: 2 of 6
 | Phase 02 P07 | 4min | 4 tasks | 6 files |
 | Phase 03 P04 | 9min | 3 tasks | 4 files |
 | Phase 03 P03 | 129 | 3 tasks | 5 files |
+| Phase 03 P05 | 98min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -138,6 +139,9 @@ Recent decisions affecting current work:
 - [Phase 03]: ProfilePage MyPromptysGrid integration uses content anchors (aria-label + button text) not line numbers
 - [Phase 03]: [Phase 03-03]: handlePublish defined in CreateWizard and referenced via false-branch render to satisfy TypeScript strict unused-variable check — Plan 03-05 will wire it to the publish button
 - [Phase 03]: [Phase 03-03]: WizardStep1Basics uses role=radio on buttons inside role=radiogroup — ARIA 1.1 pattern enables aria-checked for chip-style selectors without native input type=radio
+- [Phase 03]: exactOptionalPropertyTypes bypass: use 'undefined as unknown as T' for Partial<T> fields that must be cleared — avoids illegal undefined assignment while signaling field erasure
+- [Phase 03]: handlePublish(overrides?) override pattern prevents stale closure: skip buttons pass cleared values directly as override rather than patching state and reading stale data
+- [Phase 03]: fireEvent.change instead of userEvent.type for {{variable}} strings — userEvent treats '{' as keyboard modifier, breaking double-brace template input in tests
 
 ### Pending Todos
 
@@ -149,6 +153,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-13T03:14:36.551Z
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-05-13T04:56:42.329Z
+Stopped at: Completed 03-05-PLAN.md
 Resume file: None
