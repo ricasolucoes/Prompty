@@ -14,8 +14,8 @@ const TABS: TabDef[] = [
   { to: '/',        icon: 'home',     label: 'Feed',    minLevel: 'L1' },
   { to: '/saved',   icon: 'bookmark', label: 'Salvos',  minLevel: 'L2' },
   { to: '/search',  icon: 'search',   label: 'Buscar',  minLevel: 'L2' },
-  { to: '/create',  icon: 'sparkle',  label: 'Criar',   minLevel: 'L3' },
-  { to: '/ranking', icon: 'flame',    label: 'Ranking', minLevel: 'L3' },
+  { to: '/criar',   icon: 'sparkle',  label: 'Criar',   minLevel: 'L3' },
+  { to: '/ranking', icon: 'starFill', label: 'Ranking', minLevel: 'L3' },
   { to: '/profile', icon: 'user',     label: 'Perfil',  minLevel: 'L1' },
 ]
 
@@ -59,34 +59,61 @@ export function TabBar() {
           width: '100%',
         }}
       >
-        {visible.map((t) => (
-          <NavLink
-            key={t.to}
-            to={t.to}
-            end={t.to === '/'}
-            aria-label={t.label}
-            style={({ isActive }) => ({
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 4,
-              padding: '8px',
-              color: isActive ? 'var(--primary)' : 'var(--text-3)',
-              fontFamily: 'var(--font-sans, sans-serif)',
-              fontSize: 12,
-              fontWeight: 700,
-              textDecoration: 'none',
-            })}
-          >
-            {({ isActive }) => (
-              <>
-                <Icon name={t.icon} size={22} strokeWidth={isActive ? 2.2 : 1.8} />
-                <span>{t.label}</span>
-              </>
-            )}
-          </NavLink>
-        ))}
+        {visible.map((t) => {
+          const isCriar = t.to === '/criar'
+          return (
+            <NavLink
+              key={t.to}
+              to={t.to}
+              end={t.to === '/'}
+              aria-label={isCriar ? 'Criar Prompty' : t.label}
+              style={({ isActive }) =>
+                isCriar
+                  ? {
+                      // Sparkle styling: 48x48 gradient pill, lifts -8px above bar
+                      flex: '0 0 auto',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 48,
+                      height: 48,
+                      marginTop: -8,
+                      marginBottom: -8,
+                      borderRadius: 999,
+                      background: 'linear-gradient(135deg, #8B4DF5, #22D3EE)',
+                      color: '#fff',
+                      boxShadow: '0 8px 24px rgba(124,58,237,0.35)',
+                      textDecoration: 'none',
+                      fontSize: 0,  // hide label visually; aria-label preserves a11y
+                    }
+                  : {
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 4,
+                      padding: '8px',
+                      color: isActive ? 'var(--primary)' : 'var(--text-3)',
+                      fontFamily: 'var(--font-sans, sans-serif)',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      textDecoration: 'none',
+                    }
+              }
+            >
+              {({ isActive }) =>
+                isCriar ? (
+                  <Icon name="sparkle" size={24} color="#fff" strokeWidth={2.2} />
+                ) : (
+                  <>
+                    <Icon name={t.icon} size={22} strokeWidth={isActive ? 2.2 : 1.8} />
+                    <span>{t.label}</span>
+                  </>
+                )
+              }
+            </NavLink>
+          )
+        })}
       </div>
     </nav>
   )

@@ -31,7 +31,7 @@ describe('TabBar — progressive disclosure (LEVL-07)', () => {
     expect(screen.getByLabelText('Feed')).toBeInTheDocument()
     expect(screen.getByLabelText('Perfil')).toBeInTheDocument()
     expect(screen.queryByLabelText('Buscar')).not.toBeInTheDocument()
-    expect(screen.queryByLabelText('Criar')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Criar Prompty')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Ranking')).not.toBeInTheDocument()
   })
 
@@ -48,7 +48,7 @@ describe('TabBar — progressive disclosure (LEVL-07)', () => {
     renderTabBar()
     // Locked tabs must NOT exist in the DOM (LEVL-07: no greyed/disabled)
     expect(screen.queryByText(/buscar/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/criar/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Criar Prompty')).not.toBeInTheDocument()
     expect(screen.queryByText(/ranking/i)).not.toBeInTheDocument()
   })
 
@@ -67,15 +67,26 @@ describe('TabBar — progressive disclosure (LEVL-07)', () => {
     expect(screen.getByLabelText('Salvos')).toBeInTheDocument()
     expect(screen.getByLabelText('Buscar')).toBeInTheDocument()
     expect(screen.getByLabelText('Perfil')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Criar')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Criar Prompty')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Ranking')).not.toBeInTheDocument()
   })
 
   it('renders 6 tabs for L3 (adds Criar + Ranking)', () => {
     setLevel('L3', 300)
     renderTabBar()
-    expect(screen.getAllByRole('link')).toHaveLength(6)
-    expect(screen.getByLabelText('Criar')).toBeInTheDocument()
+    const links = screen.getAllByRole('link')
+    expect(links).toHaveLength(6)
+    // Criar must remain a NavLink (role=link) with correct aria-label
+    expect(screen.getByLabelText('Criar Prompty')).toBeInTheDocument()
     expect(screen.getByLabelText('Ranking')).toBeInTheDocument()
+    // New: route correctness — Criar links to /criar (not /create)
+    const criar = screen.getByLabelText('Criar Prompty') as HTMLAnchorElement
+    expect(criar.getAttribute('href')).toBe('/criar')
+  })
+
+  it('LEVL-07: Criar Prompty tab absent for L2 user', () => {
+    setLevel('L2', 100)
+    renderTabBar()
+    expect(screen.queryByLabelText('Criar Prompty')).not.toBeInTheDocument()
   })
 })
