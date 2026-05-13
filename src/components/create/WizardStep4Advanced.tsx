@@ -1,17 +1,7 @@
 import { useMemo } from 'react'
-import { resolveBeginner, type InputField } from '@/lib/prompty/template'
+import { resolveBeginner, extractVariables, type InputField } from '@/lib/prompty/template'
 import { VariableChip } from './VariableChip'
 import type { WizardData } from '@/hooks/useCreatePrompty'
-
-const VARIABLE_REGEX = /\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g
-
-export function extractVariables(template: string): string[] {
-  const keys = new Set<string>()
-  for (const match of template.matchAll(VARIABLE_REGEX)) {
-    if (match[1]) keys.add(match[1])
-  }
-  return Array.from(keys)
-}
 
 interface Props {
   data: WizardData

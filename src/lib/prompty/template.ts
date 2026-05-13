@@ -26,3 +26,18 @@ export function resolveBeginner(template: string, inputs: InputField[]): string 
     return acc.replaceAll(`{{${field.key}}}`, replacement)
   }, template)
 }
+
+const VARIABLE_REGEX = /\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g
+
+/**
+ * Extracts unique {{variable}} keys from a template string.
+ * Used in WizardStep2Prompt (inline hint) and WizardStep4Advanced (schema editor).
+ * Single source of truth — do not duplicate in components.
+ */
+export function extractVariables(template: string): string[] {
+  const keys = new Set<string>()
+  for (const match of template.matchAll(VARIABLE_REGEX)) {
+    if (match[1]) keys.add(match[1])
+  }
+  return Array.from(keys)
+}
