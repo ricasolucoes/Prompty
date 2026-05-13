@@ -168,4 +168,4 @@ Objetivo: criar, publicar e melhorar promptys.
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | — Pending |
 
 ---
-*Last updated: 2026-05-12 — Phase 2 complete (7 plans, 146 tests total, FTS search + curadoria + denúncia + community results live)*
+*Last updated: 2026-05-13 — Milestone v1.0 complete (Phase 1+2+3, 24 plans, 185 tests, full progressão L1→L2→L3 shipped)*
