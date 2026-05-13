@@ -45,6 +45,8 @@ export function useTest() {
     })
     if (error) return { ok: false, error: 'Não foi possível enviar a avaliação.' }
     // The SQL trigger awards +5p and updates profiles.points/level automatically.
+    // Fire-and-forget: refresh profile.points so gamification loop stays current within the session.
+    void useAuthStore.getState().refetchProfile()
     return { ok: true }
   }
   return { submit }

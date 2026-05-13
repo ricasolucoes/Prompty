@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/auth.store'
 
 async function writeToClipboard(text: string): Promise<void> {
   // Prefer Web Clipboard API
@@ -54,6 +55,8 @@ export function useCopy() {
     } catch {
       // swallow — copy already succeeded for the user
     }
+    // Fire-and-forget: refresh profile.points so gamification loop stays current within the session.
+    void useAuthStore.getState().refetchProfile()
     return { ok: true }
   }
   return { copy }
