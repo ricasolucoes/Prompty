@@ -15,6 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: L1 Iniciante — Feed e Copiar** - Schema/auth/RLS/tracking interno + feed público + copiar prompt + feedback básico + desbloqueio de nível (gap closure in progress 2026-05-07) (completed 2026-05-07)
 - [x] **Phase 2: L2 Curador + Descoberta** - Upload de resultado + avaliação + histórico + denúncia + filtros de feed + busca (completed 2026-05-12)
 - [x] **Phase 3: L3 Criador** - Criar/publicar promptys + variações + estatísticas + modo avançado opcional (completed 2026-05-13)
+- [ ] **Phase 3.1: Milestone Gap Closure** - Cross-phase integration fixes from v1.0 audit: gamification refetch, route guards, useSaved status filter, ProfilePage nudge text, Step 2 variable detection (INSERTED 2026-05-13)
 
 ## Phase Details
 
@@ -76,13 +77,27 @@ Decimal phases appear between their surrounding integers in numeric order.
   - [ ] 03-05-PLAN.md — WizardStep3Image + WizardStep4Advanced + VariableChip + CriarPage + App.tsx route
   - [ ] 03-06-PLAN.md — TabBar update (sparkle Criar route) + RankingPage placeholder + PromptyDetailPage variation button
 
+### Phase 3.1: Milestone Gap Closure
+**Goal**: Close 5 cross-phase integration gaps identified by the v1.0 milestone audit so that gamification feedback is current within-session, level-gated routes are unreachable by direct URL, MODR-03 enforcement covers useSaved, ProfilePage progress copy is level-aware, and Step 2 wizard surfaces inline variable detection.
+**Depends on**: Phase 3 + v1.0 milestone audit
+**Requirements**: LEVL-01, LEVL-02, LEVL-03, LEVL-05, LEVL-07, CUR-01, CUR-02, MODR-03, CREAT-01, CREAT-02, CREAT-05 (partial → satisfied)
+**Gap Closure**: Closes 5 gaps from `.planning/v1.0-MILESTONE-AUDIT.md`
+**Success Criteria** (what must be TRUE):
+  1. After useCopy.copy() or useTest.submit() succeeds, AuthStore.profile.points reflects the SQL trigger's update without app reload (gamification loop closed within-session)
+  2. Direct URL navigation to /saved, /search, /criar, /ranking enforces minimum level; unauthorized users are redirected or shown a level-gated message (PrivateRoute used)
+  3. useSaved query joins promptys with `.eq('status','published')` so moderated promptys do not appear in Salvos/Avaliações/Resultados tabs
+  4. ProfilePage progress nudge text reflects the actual next-level unlocks (e.g., "Buscar e Salvos" for L1→L2, "Criar Promptys" for L2→L3) computed from the level lookup
+  5. WizardStep2Prompt surfaces detected `{{var}}` syntax to the creator (chip preview or inline message) so creators who publish from step 2 don't ship empty inputs_schema
+**Plans**: TBD (will be created by /gsd:plan-phase 3.1)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3
+Phases execute in numeric order: 1 → 2 → 3 → 3.1
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. L1 Iniciante — Feed e Copiar | 11/11 | Complete   | 2026-05-07 |
 | 2. L2 Curador + Descoberta | 7/7 | Complete   | 2026-05-12 |
 | 3. L3 Criador | 6/6 | Complete   | 2026-05-13 |
+| 3.1. Milestone Gap Closure | 0/TBD | Not started | - |
