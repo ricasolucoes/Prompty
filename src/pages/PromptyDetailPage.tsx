@@ -36,6 +36,9 @@ export function PromptyDetailPage() {
   const isL2 = profile
     ? LEVEL_ORDER.indexOf(levelOf(profile.points ?? 0).id) >= LEVEL_ORDER.indexOf('L2')
     : false
+  // CREAT-04 / LEVL-07: "Criar variação" only for L3+ users — hidden (not disabled) for L1/L2
+  const lvl = levelOf(profile?.points ?? 0)
+  const isL3OrAbove = lvl.id === 'L3' || lvl.id === 'L4' || lvl.id === 'L5'
   const [showOptions, setShowOptions] = useState(false)
   const [showReport, setShowReport] = useState(false)
   const [showCategorySuggest, setShowCategorySuggest] = useState(false)
@@ -102,6 +105,11 @@ export function PromptyDetailPage() {
       icon: 'bookmark',
       iconColor: wasSaved ? '#FF3B6B' : '#34D399',
     })
+  }
+
+  function handleVariation() {
+    if (!prompty) return
+    nav(`/criar?from=${prompty.id}`)
   }
 
   // Loading state
@@ -252,6 +260,29 @@ export function PromptyDetailPage() {
           >
             <Icon name="bookmark" size={18} color={saved ? 'var(--primary)' : 'currentColor'} />
             <span>{saved ? 'Salvo' : 'Salvar'}</span>
+          </button>
+        )}
+
+        {/* CREAT-04: Criar variação — L3+ only (LEVL-07: hidden for L1/L2) */}
+        {isL3OrAbove && (
+          <button
+            type="button"
+            onClick={handleVariation}
+            aria-label="Criar variação deste Prompty"
+            className="inline-flex w-full items-center justify-center rounded-[14px] px-4 py-3 font-bold"
+            style={{
+              background: 'var(--surface-2)',
+              border: '1px solid var(--line)',
+              color: 'var(--text-1)',
+              fontFamily: 'var(--font-sans, sans-serif)',
+              fontSize: 13.5,
+              lineHeight: 1.2,
+              cursor: 'pointer',
+              gap: 8,
+            }}
+          >
+            <Icon name="wand" size={18} color="var(--primary)" />
+            <span>Criar variação</span>
           </button>
         )}
       </div>

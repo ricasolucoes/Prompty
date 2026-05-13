@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { PromptyDetailPage } from './PromptyDetailPage'
+
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom')
+  return { ...actual, useNavigate: () => mockNavigate }
+})
 
 // Mock supabase: detail fetch + save table queries return a stable fake prompty
 vi.mock('@/lib/supabase', () => {
@@ -84,7 +91,7 @@ function renderAtSlug(slug: string) {
 }
 
 describe('PromptyDetailPage', () => {
-  beforeEach(() => { mockUser = null; mockProfile = null })
+  beforeEach(() => { mockUser = null; mockProfile = null; mockNavigate.mockClear() })
 
   it('FEED-03: renders title, full prompt with resolved variables, and Copiar button (anon)', async () => {
     renderAtSlug('retrato-cinematografico')
@@ -226,5 +233,44 @@ describe('PromptyDetailPage — CommunityResults section (Phase 2)', () => {
     // Asserting the negative — that "..." button is present (L2 surfaces) — confirms
     // the L2 path was taken.
     expect(screen.getByLabelText('Mais opções')).toBeInTheDocument()
+  })
+})
+
+// ---------- CREAT-04 / LEVL-07: "Criar variação" button (Phase 3 Plan 03-06) ----------
+
+describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', () => {
+  beforeEach(() => { mockUser = null; mockProfile = null; mockNavigate.mockClear() })
+
+  it('CREAT-04 / LEVL-07: Criar variação button absent for L1 user', async () => {
+    mockUser = { id: 'user-1' }
+    mockProfile = { id: 'user-1', points: 0, level: 'L1' }
+    renderAtSlug('retrato-cinematografico')
+    await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
+    expect(screen.queryByRole('button', { name: /Criar variação/i })).not.toBeInTheDocument()
+  })
+
+  it('CREAT-04 / LEVL-07: Criar variação button absent for L2 user', async () => {
+    mockUser = { id: 'user-1' }
+    mockProfile = { id: 'user-1', points: 100, level: 'L2' }  // L2 (50-249)
+    renderAtSlug('retrato-cinematografico')
+    await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
+    expect(screen.queryByRole('button', { name: /Criar variação/i })).not.toBeInTheDocument()
+  })
+
+  it('CREAT-04: Criar variação button present for L3 user', async () => {
+    mockUser = { id: 'user-1' }
+    mockProfile = { id: 'user-1', points: 300, level: 'L3' }  // L3 (250+)
+    renderAtSlug('retrato-cinematografico')
+    await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
+    expect(await screen.findByRole('button', { name: /Criar variação/i })).toBeInTheDocument()
+  })
+
+  it('CREAT-04: clicking Criar variação navigates to /criar?from=<promptyId>', async () => {
+    mockUser = { id: 'user-1' }
+    mockProfile = { id: 'user-1', points: 300, level: 'L3' }
+    renderAtSlug('retrato-cinematografico')
+    const btn = await screen.findByRole('button', { name: /Criar variação/i })
+    await userEvent.click(btn)
+    expect(mockNavigate).toHaveBeenCalledWith(expect.stringMatching(/^\/criar\?from=p1$/))
   })
 })
