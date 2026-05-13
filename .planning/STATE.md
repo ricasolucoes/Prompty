@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03.1-01-PLAN.md
-last_updated: "2026-05-13T14:25:57.427Z"
+stopped_at: Completed 03.1-02-PLAN.md
+last_updated: "2026-05-13T14:32:17.690Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 26
-  completed_plans: 25
+  completed_plans: 26
 ---
 
 # Project State
@@ -69,6 +69,7 @@ Plan: 6 of 6
 | Phase 03 P05 | 98min | 3 tasks | 8 files |
 | Phase 03 P06 | 30min | 3 tasks | 5 files |
 | Phase 03.1-milestone-gap-closure P01 | 4min | 3 tasks | 9 files |
+| Phase 03.1-milestone-gap-closure P02 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -149,6 +150,9 @@ Recent decisions affecting current work:
 - [Phase 03.1-01]: refetchProfile lives in AuthStore for consistency with setUser/setProfile; fire-and-forget from useCopy and useTest success paths
 - [Phase 03.1-01]: PrivateRoute redirects level-insufficient users to / (root) not /feed since FeedPage is mounted at path /
 - [Phase 03.1-01]: MODR-03 filter chained as .eq('promptys.status', 'published') after .order() on both useSaved queries using PostgREST join-column dot notation
+- [Phase 03.1-02]: NEXT_LEVEL_COPY defined as module-level Partial<Record> in ProfilePage — static data, no constants import needed
+- [Phase 03.1-02]: WizardStep2Prompt variable hint is informational-only (no Step 4 link) — keeps Step 2 lean per CONTEXT.md decision
+- [Phase 03.1-02]: extractVariables canonical home is template.ts — imported by both Step2 and Step4; no local duplicates
 
 ### Pending Todos
 
@@ -160,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-13T14:25:57.425Z
-Stopped at: Completed 03.1-01-PLAN.md
+Last session: 2026-05-13T14:32:17.687Z
+Stopped at: Completed 03.1-02-PLAN.md
 Resume file: None
