@@ -14,6 +14,7 @@ import { RankingPage } from '@/pages/RankingPage'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { TabBar } from '@/components/layout/TabBar'
 import { TweaksPanel } from '@/components/dev/TweaksPanel'
+import { PrivateRoute } from '@/components/layout/PrivateRoute'
 
 /**
  * App routing shell. The Feed and Profile contents are added in plans 06 and 08.
@@ -47,13 +48,19 @@ function ChromeShell() {
       <main style={{ paddingBottom: 96 }}>
         <Routes>
           <Route path="/" element={<FeedPage />} />
-          <Route path="/saved" element={<SavedPage />} />
-          <Route path="/search" element={<SearchPage />} />
+          {/* L2-gated routes */}
+          <Route element={<PrivateRoute minLevel="L2" routeLabel="Salvos e Buscar" />}>
+            <Route path="/saved" element={<SavedPage />} />
+            <Route path="/search" element={<SearchPage />} />
+          </Route>
+          {/* L3-gated routes */}
+          <Route element={<PrivateRoute minLevel="L3" routeLabel="Criar Promptys e Ranking" />}>
+            <Route path="/criar" element={<CriarPage />} />
+            <Route path="/ranking" element={<RankingPage />} />
+          </Route>
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/u/:username" element={<PublicProfilePage />} />
           <Route path="/p/:slug" element={<PromptyDetailPage />} />
-          <Route path="/criar" element={<CriarPage />} />
-          <Route path="/ranking" element={<RankingPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

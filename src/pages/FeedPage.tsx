@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useFeed, type FeedItem } from '@/hooks/useFeed'
 import { useAuthStore } from '@/stores/auth.store'
 import { FeedCard } from '@/components/feed/FeedCard'
@@ -49,11 +50,15 @@ export function FeedPage() {
   const { pages, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useFeed()
   const user = useAuthStore((s) => s.user)
   const items: FeedItem[] = pages.flat()
+  const location = useLocation()
 
   const [copiedIds, setCopiedIds] = useState<Set<string>>(new Set())
   const [ratedIds, setRatedIds] = useState<Set<string>>(new Set())
   const [rateOpenFor, setRateOpenFor] = useState<FeedItem | null>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
+  const [levelGateMsg, setLevelGateMsg] = useState<string | null>(
+    (location.state as { levelGate?: string } | null)?.levelGate ?? null
+  )
 
   const { copy } = useCopy()
 
@@ -144,6 +149,15 @@ export function FeedPage() {
           {...(toast.iconColor ? { iconColor: toast.iconColor } : {})}
           {...(toast.points ? { points: toast.points } : {})}
           onDismiss={() => setToast(null)}
+        />
+      )}
+
+      {levelGateMsg && (
+        <Toast
+          message={`Você ainda não desbloqueou ${levelGateMsg}. Continue usando Promptys!`}
+          icon="lock"
+          iconColor="#7C3AED"
+          onDismiss={() => setLevelGateMsg(null)}
         />
       )}
     </section>
