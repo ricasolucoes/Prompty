@@ -55,11 +55,11 @@
 
 ### Criação — L3
 
-- [ ] **CREAT-01**: L3 user can create and publish a Prompty with: title, description, beginner_prompt, example_image_url, category, tags, recommended_model
+- [x] **CREAT-01**: L3 user can create and publish a Prompty with: title, description, beginner_prompt, example_image_url, category, tags, recommended_model
 - [ ] **CREAT-02**: L3 user can set complexity_level (simple/guided/advanced)
-- [ ] **CREAT-03**: L3 user can view basic stats for their own Promptys: copy count, save count, feedback count
-- [ ] **CREAT-04**: L3 user can create simple variations of an existing Prompty
-- [ ] **CREAT-05**: L3 user can optionally access advanced mode: advanced_template with {{variable}} syntax, negative_prompt, versions
+- [x] **CREAT-03**: L3 user can view basic stats for their own Promptys: copy count, save count, feedback count
+- [x] **CREAT-04**: L3 user can create simple variations of an existing Prompty
+- [x] **CREAT-05**: L3 user can optionally access advanced mode: advanced_template with {{variable}} syntax, negative_prompt, versions
 
 ### Moderation
 
@@ -160,11 +160,11 @@
 | MODR-01 | Phase 2 | Complete |
 | MODR-02 | Phase 2 | Complete |
 | MODR-03 | Phase 2 | Complete |
-| CREAT-01 | Phase 3 | Pending |
+| CREAT-01 | Phase 3 | Complete |
 | CREAT-02 | Phase 3 | Pending |
-| CREAT-03 | Phase 3 | Pending |
-| CREAT-04 | Phase 3 | Pending |
-| CREAT-05 | Phase 3 | Pending |
+| CREAT-03 | Phase 3 | Complete |
+| CREAT-04 | Phase 3 | Complete |
+| CREAT-05 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 43 total

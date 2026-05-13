@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-07-PLAN.md
-last_updated: "2026-05-12T21:17:52.287Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-05-13T00:12:45.722Z"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 24
-  completed_plans: 18
+  completed_plans: 20
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-05-06)
 ## Current Position
 
 Phase: 03 (l3-criador) — EXECUTING
-Plan: 1 of 6
+Plan: 2 of 6
 
 ## Performance Metrics
 
@@ -128,6 +128,10 @@ Recent decisions affecting current work:
 - [Phase 02]: CommunityResults absent (returns null) when results.length===0 — no empty state per UI-SPEC
 - [Phase 02]: FullImageModal backdrop-click uses e.target===e.currentTarget guard — prevents close when clicking image/attribution
 - [Phase 02]: PromptyDetailPage test mock extended with .not() and .or() chain methods — useCommunityResults uses .not('image_url','is',null)
+- [Phase 03]: [Phase 03-02]: generateSlug uses Math.random().toString(36).slice(2,8) suffix — no nanoid dependency, stays within project toolchain
+- [Phase 03]: [Phase 03-02]: Cover upload to prompty-covers uses upsert:true (creator may re-upload cover for same slug); prompty-results keeps upsert:false (unique path per test via timestamp)
+- [Phase 03]: [Phase 03-02]: prompty_versions insert is best-effort — publish() succeeds even if version snapshot fails; SQL trigger awards 50p regardless
+- [Phase 03]: [Phase 03-02]: useMyPromptys uses useEffect+useState (not useInfiniteQuery) — creator has tens of promptys at MVP scale; one-shot fetch + Promise.all is appropriate
 
 ### Pending Todos
 
@@ -139,6 +143,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T21:11:17.336Z
-Stopped at: Completed 02-07-PLAN.md
+Last session: 2026-05-13T00:12:45.718Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
