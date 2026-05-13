@@ -52,6 +52,29 @@ describe('useSaved', () => {
     })
   })
 
+  it('MODR-03: calls .eq(promptys.status, published) on both queries', async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, profile: null, loading: false })
+
+    const savesChain = makeChain({ data: [], error: null })
+    const testsChain = makeChain({ data: [], error: null })
+
+    fromMock.mockImplementation((table: string) => {
+      if (table === 'prompty_saves') return savesChain
+      if (table === 'prompty_tests') return testsChain
+      return makeChain({ data: [], error: null })
+    })
+
+    renderHook(() => useSaved())
+    await waitFor(() => {
+      expect(fromMock).toHaveBeenCalledWith('prompty_saves')
+      expect(fromMock).toHaveBeenCalledWith('prompty_tests')
+      const savesEq = savesChain.eq as ReturnType<typeof vi.fn>
+      const testsEq = testsChain.eq as ReturnType<typeof vi.fn>
+      expect(savesEq).toHaveBeenCalledWith('promptys.status', 'published')
+      expect(testsEq).toHaveBeenCalledWith('promptys.status', 'published')
+    })
+  })
+
   it('CUR-03: results = subset of tests where image_url is non-null', async () => {
     useAuthStore.setState({ user: { id: 'u1' } as never, profile: null, loading: false })
     const savesData: unknown[] = []

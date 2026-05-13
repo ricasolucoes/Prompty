@@ -53,12 +53,14 @@ export function useSaved() {
           .from('prompty_saves')
           .select('prompty_id, created_at, promptys(id,title,cover_url,cover_gradient,slug)')
           .eq('user_id', user.id)
-          .order('created_at', { ascending: false }),
+          .order('created_at', { ascending: false })
+          .eq('promptys.status', 'published'), // MODR-03: exclude flagged/hidden/removed promptys
         supabase
           .from('prompty_tests')
           .select('prompty_id, created_at, image_url, rating, promptys(id,title,cover_url,cover_gradient,slug)')
           .eq('user_id', user.id)
-          .order('created_at', { ascending: false }),
+          .order('created_at', { ascending: false })
+          .eq('promptys.status', 'published'), // MODR-03: exclude flagged/hidden/removed promptys
       ])
 
       if (cancelled) return
