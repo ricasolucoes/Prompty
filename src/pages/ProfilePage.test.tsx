@@ -1,10 +1,29 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 
-// Mock all dependencies that ProfilePage uses
+// Mutable profile holder so tests can inject different points values
+let mockPoints = 0
+
 vi.mock('@/hooks/useProfile', () => ({
-  useProfile: () => ({ profile: null, update: vi.fn(), recents: [] }),
+  useProfile: () => ({
+    profile: {
+      id: 'u1',
+      points: mockPoints,
+      name: 'Test',
+      username: null,
+      bio: null,
+      avatar_url: null,
+      is_admin: false,
+      level: 'L1',
+      streak: 0,
+      verified: false,
+      created_at: '2026-01-01',
+      last_active_at: null,
+    },
+    update: vi.fn(),
+    recents: [],
+  }),
 }))
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ signOut: vi.fn() }),
@@ -21,28 +40,12 @@ import { useAuthStore } from '@/stores/auth.store'
 import { ProfilePage } from '@/pages/ProfilePage'
 
 describe('ProfilePage nudge copy (LEVL-05)', () => {
-  beforeEach(() => {
-    // Reset store between tests
-    useAuthStore.setState({ user: null, profile: null, loading: false })
-  })
-
   function renderWithPoints(points: number) {
+    mockPoints = points
+    // Set user in store so ProfilePage doesn't render the anonymous CTA
     useAuthStore.setState({
       user: { id: 'u1' } as never,
-      profile: {
-        id: 'u1',
-        points,
-        name: 'Test',
-        username: null,
-        bio: null,
-        avatar_url: null,
-        is_admin: false,
-        level: 'L1',
-        streak: 0,
-        verified: false,
-        created_at: '2026-01-01',
-        last_active_at: null,
-      } as never,
+      profile: null,
       loading: false,
     })
     return render(<MemoryRouter><ProfilePage /></MemoryRouter>)

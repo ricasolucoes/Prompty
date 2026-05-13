@@ -13,6 +13,14 @@ import { Icon } from '@/components/ui/Icon'
 import { LevelUpModal } from '@/components/modals/LevelUpModal'
 import { MyPromptysGrid } from '@/components/profile/MyPromptysGrid'
 
+// Unlock description by next level id — what the user is unlocking at each threshold
+const NEXT_LEVEL_COPY: Partial<Record<'L2' | 'L3' | 'L4' | 'L5', string>> = {
+  L2: 'Buscar promptys e Salvos para depois',
+  L3: 'Criar seus próprios Promptys',
+  L4: 'Ranking e badges da comunidade',
+  L5: 'Modo avançado completo',
+}
+
 export function ProfilePage() {
   const { profile, update, recents } = useProfile()
   const { signOut } = useAuth()
@@ -114,7 +122,9 @@ export function ProfilePage() {
               </div>
               <ProgressBar value={profile?.points ?? 0} max={next.min} height={8} />
               <p style={{ marginTop: 12, marginBottom: 0, fontSize: 13.5, lineHeight: 1.4, color: 'var(--text-2)', textAlign: 'left' }}>
-                Use mais alguns Promptys para destravar <strong>Buscar</strong> e <strong>Salvos</strong>.
+                {NEXT_LEVEL_COPY[next.id as 'L2' | 'L3' | 'L4' | 'L5']
+                  ? <>Use mais alguns Promptys para destravar <strong>{NEXT_LEVEL_COPY[next.id as 'L2' | 'L3' | 'L4' | 'L5']}</strong>.</>
+                  : 'Continue usando Promptys para avançar de nível.'}
               </p>
             </section>
           )}

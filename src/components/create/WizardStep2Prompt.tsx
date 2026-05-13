@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+import { extractVariables } from '@/lib/prompty/template'
 import type { WizardData } from '@/hooks/useCreatePrompty'
 
 interface Props {
@@ -7,6 +9,7 @@ interface Props {
 
 export function WizardStep2Prompt({ data, onChange }: Props) {
   const charCount = data.beginner_prompt.length
+  const detectedVars = useMemo(() => extractVariables(data.beginner_prompt), [data.beginner_prompt])
 
   return (
     <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -52,6 +55,48 @@ export function WizardStep2Prompt({ data, onChange }: Props) {
           {charCount} chars
         </div>
       </div>
+
+      {/* Variable detection hint (CREAT-02 / CREAT-05) */}
+      {detectedVars.length > 0 && (
+        <aside
+          role="note"
+          aria-label="Variáveis detectadas"
+          style={{
+            padding: '10px 12px',
+            borderRadius: 12,
+            background: 'rgba(124,58,237,0.08)',
+            border: '1px solid rgba(124,58,237,0.25)',
+            color: 'var(--text-2)',
+            fontSize: 13,
+            lineHeight: 1.5,
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 6,
+            alignItems: 'center',
+          }}
+        >
+          <span style={{ fontWeight: 700, color: 'var(--text-1)' }}>Detectamos</span>
+          {detectedVars.map((v) => (
+            <span
+              key={v}
+              style={{
+                fontFamily: 'ui-monospace, "JetBrains Mono", monospace',
+                fontSize: 12,
+                padding: '2px 8px',
+                borderRadius: 999,
+                background: 'rgba(124,58,237,0.15)',
+                color: '#7C3AED',
+                border: '1px solid rgba(124,58,237,0.35)',
+              }}
+            >
+              {`{{${v}}}`}
+            </span>
+          ))}
+          <span style={{ color: 'var(--text-3)', fontSize: 12 }}>
+            — para configurar tipos e defaults, use o Modo Avançado (passo 4).
+          </span>
+        </aside>
+      )}
 
       {/* Tip callout */}
       <aside
