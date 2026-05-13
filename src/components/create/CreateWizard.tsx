@@ -5,7 +5,10 @@ import { Toast } from '@/components/ui/Toast'
 import { WizardProgressBar } from './WizardProgressBar'
 import { WizardStep1Basics } from './WizardStep1Basics'
 import { WizardStep2Prompt } from './WizardStep2Prompt'
+import { WizardStep3Image } from './WizardStep3Image'
+import { WizardStep4Advanced } from './WizardStep4Advanced'
 import type { WizardData } from '@/hooks/useCreatePrompty'
+import type { InputField } from '@/lib/prompty/template'
 
 const TOTAL_STEPS = 4
 
@@ -49,15 +52,16 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
     return true  // steps 2 (image) and 3 (advanced) have no mandatory fields
   }
 
-  async function handlePublish() {
+  async function handlePublish(overrides?: Partial<WizardData>) {
     setPublishing(true)
     setError(null)
-    const r = await onPublish(data)
+    const payload = overrides ? { ...data, ...overrides } : data
+    const r = await onPublish(payload)
     setPublishing(false)
     if (!r.ok) {
       setError(r.error ?? 'Não foi possível publicar. Verifique sua conexão e tente novamente.')
     }
-    // success redirect handled by CriarPage via onPublish's resolved value
+    // success — caller is responsible for navigation; the Promise has already resolved into onPublish
   }
 
   // Header title per step
@@ -111,26 +115,76 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
       <section style={{ marginTop: 8 }}>
         {step === 0 && <WizardStep1Basics data={data} onChange={patch} />}
         {step === 1 && <WizardStep2Prompt data={data} onChange={patch} />}
-        {/* steps 2 (image) and 3 (advanced) wired in Plan 03-05 */}
+        {step === 2 && <WizardStep3Image data={data} onChange={patch} />}
+        {step === 3 && <WizardStep4Advanced data={data} onChange={patch} />}
       </section>
 
-      {/* Footer CTA — Continuar for non-final steps; Plan 03-05 will add publish CTA on steps 2+3 */}
+      {/* Footer CTAs */}
       <div style={{ padding: '24px 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {step < TOTAL_STEPS - 1 && (
-          <PrimaryButton
-            full
-            disabled={!isStepValid(step) || publishing}
-            onClick={next}
-          >
+        {step === 0 && (
+          <PrimaryButton full disabled={!isStepValid(step) || publishing} onClick={next}>
             Continuar
           </PrimaryButton>
+        )}
+        {step === 1 && (
+          <PrimaryButton full disabled={!isStepValid(step) || publishing} onClick={next}>
+            Continuar
+          </PrimaryButton>
+        )}
+        {step === 2 && (
+          <>
+            <PrimaryButton full disabled={publishing} onClick={() => { void handlePublish() }}>
+              Publicar Prompty
+            </PrimaryButton>
+            <button
+              type="button"
+              onClick={next}
+              style={{
+                background: 'none', border: 'none', color: 'var(--primary)',
+                fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5,
+                fontWeight: 700, cursor: 'pointer', padding: 8,
+              }}
+            >
+              Continuar para modo avançado
+            </button>
+            <button
+              type="button"
+              onClick={() => { patch({ coverFile: undefined as unknown as File }); void handlePublish({ coverFile: undefined as unknown as File }) }}
+              style={{
+                background: 'none', border: 'none', color: 'var(--text-3)',
+                fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5,
+                fontWeight: 700, cursor: 'pointer', padding: 8,
+              }}
+            >
+              Pular imagem
+            </button>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <PrimaryButton full disabled={publishing} onClick={() => { void handlePublish() }}>
+              Salvar modo avançado e publicar
+            </PrimaryButton>
+            <button
+              type="button"
+              onClick={() => {
+                const skipAdv = { advancedTemplate: undefined as unknown as string, inputs_schema: [] as InputField[] }
+                patch(skipAdv)
+                void handlePublish(skipAdv)
+              }}
+              style={{
+                background: 'none', border: 'none', color: 'var(--primary)',
+                fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5,
+                fontWeight: 700, cursor: 'pointer', padding: 8,
+              }}
+            >
+              Ignorar e publicar
+            </button>
+          </>
         )}
       </div>
 
       {error && <Toast message={error} icon="x" iconColor="#FF3B6B" onDismiss={() => setError(null)} />}
-
-      {/* handlePublish wired by Plan 03-05 when adding publish button on steps 2+3 */}
-      {false && <button onClick={handlePublish} />}
     </div>
   )
 }
