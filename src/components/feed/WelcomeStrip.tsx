@@ -32,7 +32,9 @@ export function WelcomeStrip() {
           color: 'var(--text-1)',
         }}
       >
-        Promptys são <strong>receitas prontas</strong> para gerar imagens com IA. Toque em <strong>Copiar prompt</strong>, cole no Gemini ou outro app, depois volte aqui e conte como ficou.
+        Promptys são <strong>receitas prontas</strong> para gerar imagens com IA. Toque em{' '}
+        <strong>Copiar prompt</strong>, cole no Gemini ou outro app, depois volte aqui e conte como
+        ficou.
       </p>
     </section>
   )

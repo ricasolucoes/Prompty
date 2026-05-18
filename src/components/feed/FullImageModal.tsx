@@ -7,7 +7,7 @@ interface Props {
   onClose: () => void
 }
 
-export function FullImageModal({ result, onClose }: Props) {
+export function FullImageModal({ result, onClose }: Readonly<Props>) {
   if (!result) return null
 
   const userName = result.user?.name ?? 'Anônimo'
@@ -71,16 +71,11 @@ export function FullImageModal({ result, onClose }: Props) {
           padding: 8,
         }}
       >
-        <Avatar
-          user={{ name: userName, avatar_url: result.user?.avatar_url ?? null }}
-          size={24}
-        />
+        <Avatar user={{ name: userName, avatar_url: result.user?.avatar_url ?? null }} size={24} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{userName}</div>
           {result.rating != null && (
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#FFB020' }}>
-              {result.rating}★
-            </div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#FFB020' }}>{result.rating}★</div>
           )}
           {result.notes && (
             <div

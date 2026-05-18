@@ -39,7 +39,15 @@ export function MyPromptysGrid() {
             textAlign: 'center',
           }}
         >
-          <p style={{ margin: 0, marginBottom: 4, fontSize: 14, fontWeight: 700, color: 'var(--text-1)' }}>
+          <p
+            style={{
+              margin: 0,
+              marginBottom: 4,
+              fontSize: 14,
+              fontWeight: 700,
+              color: 'var(--text-1)',
+            }}
+          >
             Nenhum Prompty ainda
           </p>
           <p style={{ margin: 0, fontSize: 13.5, color: 'var(--text-3)', lineHeight: 1.4 }}>

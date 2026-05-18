@@ -14,13 +14,15 @@ import { LevelUpModal } from '@/components/modals/LevelUpModal'
 import { MyPromptysGrid } from '@/components/profile/MyPromptysGrid'
 
 // Unlock description by next level id — what the user is unlocking at each threshold
-const NEXT_LEVEL_COPY: Partial<Record<'L2' | 'L3' | 'L4' | 'L5', string>> = {
+type UnlockableLevel = 'L2' | 'L3' | 'L4' | 'L5'
+const NEXT_LEVEL_COPY: Partial<Record<UnlockableLevel, string>> = {
   L2: 'Buscar promptys e Salvos para depois',
   L3: 'Criar seus próprios Promptys',
   L4: 'Ranking e badges da comunidade',
   L5: 'Modo avançado completo',
 }
 
+// eslint-disable-next-line max-lines-per-function, complexity -- page-level shell with edit form; refactor deferred
 export function ProfilePage() {
   const { profile, update, recents } = useProfile()
   const { signOut } = useAuth()
@@ -55,87 +57,181 @@ export function ProfilePage() {
     setName(profile?.name ?? '')
     setUsername(profile?.username ?? '')
     setBio(profile?.bio ?? '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: only reset form fields when profile identity changes, not on every field update
   }, [profile?.id])
 
   if (!user) {
     // Anonymous L1: minimal CTA to login (Profile is reachable via tab bar)
     return (
-      <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
+      <main
+        className="screen"
+        style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}
+      >
         <Avatar user={{ name: '?' }} size={88} />
-        <h1 style={{ marginTop: 16, fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 22, letterSpacing: -0.4 }}>
+        <h1
+          style={{
+            marginTop: 16,
+            fontFamily: 'var(--font-display, sans-serif)',
+            fontWeight: 700,
+            fontSize: 22,
+            letterSpacing: -0.4,
+          }}
+        >
           Você ainda não tem conta
         </h1>
         <p style={{ marginTop: 8, color: 'var(--text-2)', fontSize: 13.5 }}>
           Entre para guardar seu progresso e voltar de onde parou.
         </p>
         <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <PrimaryButton full onClick={() => nav('/login')}>Entrar</PrimaryButton>
-          <SecondaryButton full onClick={() => nav('/signup')}>Criar conta</SecondaryButton>
+          <PrimaryButton
+            full
+            onClick={() => {
+              void nav('/login')
+            }}
+          >
+            Entrar
+          </PrimaryButton>
+          <SecondaryButton
+            full
+            onClick={() => {
+              void nav('/signup')
+            }}
+          >
+            Criar conta
+          </SecondaryButton>
         </div>
       </main>
     )
   }
 
-  async function onSave(e: React.FormEvent) {
+  async function onSave(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setBusy(true); setErr(null)
+    setBusy(true)
+    setErr(null)
     const r = await update({ name, username, bio })
     setBusy(false)
-    if (!r.ok) { setErr(r.error ?? 'Não foi possível salvar.'); return }
+    if (!r.ok) {
+      setErr(r.error ?? 'Não foi possível salvar.')
+      return
+    }
     setEditing(false)
   }
 
   async function onSignOut() {
     await signOut()
-    nav('/', { replace: true })
+    void nav('/', { replace: true })
   }
 
   return (
-    <main className="screen" style={{ padding: '20px 16px 96px', maxWidth: 430, margin: '0 auto', textAlign: 'center' }}>
-      <Avatar user={{ name: profile?.name ?? null, avatar_url: profile?.avatar_url ?? null }} size={88} />
+    <main
+      className="screen"
+      style={{ padding: '20px 16px 96px', maxWidth: 430, margin: '0 auto', textAlign: 'center' }}
+    >
+      <Avatar
+        user={{ name: profile?.name ?? null, avatar_url: profile?.avatar_url ?? null }}
+        size={88}
+      />
 
       {!editing ? (
         <>
-          <h1 style={{ marginTop: 16, fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 22, letterSpacing: -0.4, color: 'var(--text-1)' }}>
+          <h1
+            style={{
+              marginTop: 16,
+              fontFamily: 'var(--font-display, sans-serif)',
+              fontWeight: 700,
+              fontSize: 22,
+              letterSpacing: -0.4,
+              color: 'var(--text-1)',
+            }}
+          >
             {profile?.name ?? 'Sem nome'}
           </h1>
           {profile?.username && (
-            <p style={{ marginTop: 4, fontSize: 13.5, color: 'var(--text-3)' }}>@{profile.username}</p>
+            <p style={{ marginTop: 4, fontSize: 13.5, color: 'var(--text-3)' }}>
+              @{profile.username}
+            </p>
           )}
           {profile?.bio && (
-            <p style={{ marginTop: 12, fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.45 }}>{profile.bio}</p>
+            <p style={{ marginTop: 12, fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.45 }}>
+              {profile.bio}
+            </p>
           )}
 
           <p style={{ marginTop: 16, fontSize: 13.5, color: 'var(--text-2)' }}>
-            Você usou <strong style={{ color: 'var(--text-1)' }}>{usedCount}</strong> {usedCount === 1 ? 'Prompty' : 'Promptys'}
+            Você usou <strong style={{ color: 'var(--text-1)' }}>{usedCount}</strong>{' '}
+            {usedCount === 1 ? 'Prompty' : 'Promptys'}
           </p>
 
           {/* Progress card (no numeric points; feature-unlock copy) */}
           {next && (
             <section
-              style={{ maxWidth: 280, margin: '24px auto 0', padding: 16, borderRadius: 14, background: 'var(--surface)', border: '1px solid var(--line)' }}
+              style={{
+                maxWidth: 280,
+                margin: '24px auto 0',
+                padding: 16,
+                borderRadius: 14,
+                background: 'var(--surface)',
+                border: '1px solid var(--line)',
+              }}
               aria-label="Próximo desbloqueio"
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                 <Icon name="lock" size={14} color="var(--text-3)" />
-                <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)' }}>Próximo desbloqueio</span>
+                <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)' }}>
+                  Próximo desbloqueio
+                </span>
               </div>
               <ProgressBar value={profile?.points ?? 0} max={next.min} height={8} />
-              <p style={{ marginTop: 12, marginBottom: 0, fontSize: 13.5, lineHeight: 1.4, color: 'var(--text-2)', textAlign: 'left' }}>
-                {NEXT_LEVEL_COPY[next.id as 'L2' | 'L3' | 'L4' | 'L5']
-                  ? <>Use mais alguns Promptys para destravar <strong>{NEXT_LEVEL_COPY[next.id as 'L2' | 'L3' | 'L4' | 'L5']}</strong>.</>
-                  : 'Continue usando Promptys para avançar de nível.'}
+              <p
+                style={{
+                  marginTop: 12,
+                  marginBottom: 0,
+                  fontSize: 13.5,
+                  lineHeight: 1.4,
+                  color: 'var(--text-2)',
+                  textAlign: 'left',
+                }}
+              >
+                {NEXT_LEVEL_COPY[next.id as UnlockableLevel] ? (
+                  <>
+                    Use mais alguns Promptys para destravar{' '}
+                    <strong>{NEXT_LEVEL_COPY[next.id as UnlockableLevel]}</strong>.
+                  </>
+                ) : (
+                  'Continue usando Promptys para avançar de nível.'
+                )}
               </p>
             </section>
           )}
 
           {/* Recents grid */}
           <section style={{ marginTop: 24, textAlign: 'left' }} aria-label="Seus últimos usados">
-            <h2 style={{ margin: 0, marginBottom: 8, fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase', color: 'var(--text-3)' }}>
+            <h2
+              style={{
+                margin: 0,
+                marginBottom: 8,
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: 0.5,
+                textTransform: 'uppercase',
+                color: 'var(--text-3)',
+              }}
+            >
               Seus últimos usados
             </h2>
             {recents.length === 0 ? (
-              <p style={{ padding: 24, border: '1px dashed var(--line-strong)', borderRadius: 14, color: 'var(--text-3)', fontSize: 13.5, textAlign: 'center', lineHeight: 1.4, whiteSpace: 'pre-line' }}>
+              <p
+                style={{
+                  padding: 24,
+                  border: '1px dashed var(--line-strong)',
+                  borderRadius: 14,
+                  color: 'var(--text-3)',
+                  fontSize: 13.5,
+                  textAlign: 'center',
+                  lineHeight: 1.4,
+                  whiteSpace: 'pre-line',
+                }}
+              >
                 {`Você ainda não copiou nenhum Prompty.\nVolte ao feed e experimente um.`}
               </p>
             ) : (
@@ -144,7 +240,9 @@ export function ProfilePage() {
                   <div
                     key={r.id}
                     style={{
-                      aspectRatio: '4/5', borderRadius: 12, overflow: 'hidden',
+                      aspectRatio: '4/5',
+                      borderRadius: 12,
+                      overflow: 'hidden',
                       background: r.cover_url
                         ? `url(${r.cover_url}) center/cover no-repeat`
                         : (r.cover_gradient ?? 'linear-gradient(135deg,#7C3AED,#22D3EE)'),
@@ -152,7 +250,19 @@ export function ProfilePage() {
                     }}
                     aria-label={r.title}
                   >
-                    <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '32px 8px 8px', background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.7))', color: '#fff', fontSize: 12, fontWeight: 700 }}>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        padding: '32px 8px 8px',
+                        background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.7))',
+                        color: '#fff',
+                        fontSize: 12,
+                        fontWeight: 700,
+                      }}
+                    >
                       {r.title}
                     </div>
                   </div>
@@ -164,30 +274,68 @@ export function ProfilePage() {
           <MyPromptysGrid />
 
           <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <SecondaryButton full onClick={() => setEditing(true)}>Editar perfil</SecondaryButton>
-            <SecondaryButton full onClick={onSignOut}>Sair</SecondaryButton>
+            <SecondaryButton full onClick={() => setEditing(true)}>
+              Editar perfil
+            </SecondaryButton>
+            <SecondaryButton
+              full
+              onClick={() => {
+                void onSignOut()
+              }}
+            >
+              Sair
+            </SecondaryButton>
           </div>
         </>
       ) : (
-        <form onSubmit={onSave} style={{ marginTop: 24, textAlign: 'left' }}>
-          <label style={labelStyle()}>Nome
-            <input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} style={inputStyle()} />
+        <form
+          onSubmit={(e) => {
+            void onSave(e)
+          }}
+          style={{ marginTop: 24, textAlign: 'left' }}
+        >
+          <label style={labelStyle()}>
+            Nome
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={60}
+              style={inputStyle()}
+            />
           </label>
-          <label style={labelStyle()}>Username
+          <label style={labelStyle()}>
+            Username
             <input
               value={username}
-              onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g, ''))}
+              onChange={(e) =>
+                setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g, ''))
+              }
               maxLength={30}
               style={inputStyle()}
             />
           </label>
-          <label style={labelStyle()}>Bio
-            <textarea value={bio} onChange={(e) => setBio(e.target.value)} maxLength={160} rows={3} style={inputStyle()} />
+          <label style={labelStyle()}>
+            Bio
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              maxLength={160}
+              rows={3}
+              style={inputStyle()}
+            />
           </label>
-          {err && <p role="alert" style={{ color: '#FF3B6B', fontSize: 13.5 }}>{err}</p>}
+          {err && (
+            <p role="alert" style={{ color: '#FF3B6B', fontSize: 13.5 }}>
+              {err}
+            </p>
+          )}
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-            <SecondaryButton full onClick={() => setEditing(false)}>Cancelar</SecondaryButton>
-            <PrimaryButton type="submit" full disabled={busy}>{busy ? 'Salvando…' : 'Salvar'}</PrimaryButton>
+            <SecondaryButton full onClick={() => setEditing(false)}>
+              Cancelar
+            </SecondaryButton>
+            <PrimaryButton type="submit" full disabled={busy}>
+              {busy ? 'Salvando…' : 'Salvar'}
+            </PrimaryButton>
           </div>
         </form>
       )}
@@ -195,7 +343,10 @@ export function ProfilePage() {
       {showLevelUp && (
         <LevelUpModal
           level={showLevelUp}
-          onDismiss={() => { markShown(showLevelUp.id); setShowLevelUp(null) }}
+          onDismiss={() => {
+            markShown(showLevelUp.id)
+            setShowLevelUp(null)
+          }}
         />
       )}
     </main>
@@ -203,8 +354,27 @@ export function ProfilePage() {
 }
 
 function labelStyle(): React.CSSProperties {
-  return { display: 'block', marginBottom: 12, fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase', color: 'var(--text-3)' }
+  return {
+    display: 'block',
+    marginBottom: 12,
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+    color: 'var(--text-3)',
+  }
 }
 function inputStyle(): React.CSSProperties {
-  return { display: 'block', width: '100%', marginTop: 4, padding: '10px 12px', borderRadius: 12, border: '1px solid var(--line)', background: 'var(--surface-2)', color: 'var(--text-1)', fontSize: 13.5, fontFamily: 'var(--font-sans, sans-serif)' }
+  return {
+    display: 'block',
+    width: '100%',
+    marginTop: 4,
+    padding: '10px 12px',
+    borderRadius: 12,
+    border: '1px solid var(--line)',
+    background: 'var(--surface-2)',
+    color: 'var(--text-1)',
+    fontSize: 13.5,
+    fontFamily: 'var(--font-sans, sans-serif)',
+  }
 }

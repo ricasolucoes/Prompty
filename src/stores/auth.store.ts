@@ -27,11 +27,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   refetchProfile: async () => {
     const { user } = useAuthStore.getState()
     if (!user) return
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single()
     if (!error && data) {
       useAuthStore.getState().setProfile(data)
     }

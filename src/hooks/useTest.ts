@@ -9,7 +9,11 @@ export interface TestSubmitInput {
   image?: File
 }
 
-async function uploadResultImage(userId: string, promptyId: string, file: File): Promise<string | null> {
+async function uploadResultImage(
+  userId: string,
+  promptyId: string,
+  file: File,
+): Promise<string | null> {
   const blob = await compressToWebP(file, 200, 0.85)
   const ts = Date.now()
   const path = `${userId}/${promptyId}-${ts}.webp`
@@ -18,6 +22,7 @@ async function uploadResultImage(userId: string, promptyId: string, file: File):
     .upload(path, blob, { contentType: 'image/webp', upsert: false })
   if (error) {
     // Don't block the rating; just return null url
+    // eslint-disable-next-line no-console -- recoverable upload failure, surfaced via warn
     console.warn('Image upload failed:', error.message)
     return null
   }
@@ -29,7 +34,8 @@ export function useTest() {
   async function submit(input: TestSubmitInput): Promise<{ ok: boolean; error?: string }> {
     const user = useAuthStore.getState().user
     if (!user) return { ok: false, error: 'Faça login para avaliar.' }
-    if (input.rating < 1 || input.rating > 5) return { ok: false, error: 'Selecione uma nota de 1 a 5.' }
+    if (input.rating < 1 || input.rating > 5)
+      return { ok: false, error: 'Selecione uma nota de 1 a 5.' }
 
     let image_url: string | null = null
     if (input.image) {

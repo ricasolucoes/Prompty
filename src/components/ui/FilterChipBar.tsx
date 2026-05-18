@@ -5,7 +5,12 @@ export interface FilterChipBarProps {
   ariaLabelPrefix?: string
 }
 
-export function FilterChipBar({ options, value, onChange, ariaLabelPrefix = 'Filtro' }: FilterChipBarProps) {
+export function FilterChipBar({
+  options,
+  value,
+  onChange,
+  ariaLabelPrefix = 'Filtro',
+}: Readonly<FilterChipBarProps>) {
   return (
     <div
       role="group"

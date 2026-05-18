@@ -74,7 +74,7 @@ export function useMyPromptys() {
       )
 
       if (!cancelled) {
-        setPromptys(enriched as MyPromptyWithStats[])
+        setPromptys(enriched)
         setLoading(false)
       }
     }

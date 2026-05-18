@@ -17,7 +17,10 @@ const promptysChain = {
 }
 insertMock.mockReturnValue(promptysChain)
 selectMock.mockReturnValue(promptysChain)
-singleMock.mockResolvedValue({ data: { id: 'p1', slug: 'retrato-cinematografico-x7k2p9' }, error: null })
+singleMock.mockResolvedValue({
+  data: { id: 'p1', slug: 'retrato-cinematografico-x7k2p9' },
+  error: null,
+})
 
 // prompty_versions insert (best-effort)
 const versionsChain = { insert: versionsInsertMock }
@@ -30,7 +33,9 @@ const fromMock = vi.fn((table: string) => {
 })
 
 storageUploadMock.mockResolvedValue({ data: { path: 'u1/slug-cover.webp' }, error: null })
-storageGetPublicUrlMock.mockReturnValue({ data: { publicUrl: 'https://example.com/slug-cover.webp' } })
+storageGetPublicUrlMock.mockReturnValue({
+  data: { publicUrl: 'https://example.com/slug-cover.webp' },
+})
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -71,17 +76,26 @@ describe('useCreatePrompty', () => {
     // Reset defaults
     insertMock.mockReturnValue(promptysChain)
     selectMock.mockReturnValue(promptysChain)
-    singleMock.mockResolvedValue({ data: { id: 'p1', slug: 'retrato-cinematografico-x7k2p9' }, error: null })
+    singleMock.mockResolvedValue({
+      data: { id: 'p1', slug: 'retrato-cinematografico-x7k2p9' },
+      error: null,
+    })
     versionsInsertMock.mockResolvedValue({ data: null, error: null })
     storageUploadMock.mockResolvedValue({ data: { path: 'u1/slug-cover.webp' }, error: null })
-    storageGetPublicUrlMock.mockReturnValue({ data: { publicUrl: 'https://example.com/slug-cover.webp' } })
+    storageGetPublicUrlMock.mockReturnValue({
+      data: { publicUrl: 'https://example.com/slug-cover.webp' },
+    })
     getStateMock.mockReturnValue({ user: { id: 'u1' } })
   })
 
   // Test 1 (CREAT-01): insert with correct payload shape
   it('CREAT-01: publish() calls insert with title/template/difficulty/status=published/author_id', async () => {
     const { publish } = useCreatePrompty()
-    await publish({ title: 'Retrato Cinematográfico', beginner_prompt: 'Hello', category: 'beginner' })
+    await publish({
+      title: 'Retrato Cinematográfico',
+      beginner_prompt: 'Hello',
+      category: 'beginner',
+    })
 
     expect(fromMock).toHaveBeenCalledWith('promptys')
     expect(insertMock).toHaveBeenCalledTimes(1)
@@ -97,7 +111,11 @@ describe('useCreatePrompty', () => {
   // Test 2 (CREAT-01): returns ok=true with slug
   it('CREAT-01: publish() returns { ok: true, slug } where slug is kebab-case + 6 char suffix', async () => {
     const { publish } = useCreatePrompty()
-    const result = await publish({ title: 'Retrato Cinematográfico', beginner_prompt: 'Hello', category: 'beginner' })
+    const result = await publish({
+      title: 'Retrato Cinematográfico',
+      beginner_prompt: 'Hello',
+      category: 'beginner',
+    })
 
     expect(result.ok).toBe(true)
     expect(typeof result.slug).toBe('string')
@@ -119,10 +137,19 @@ describe('useCreatePrompty', () => {
   it('CREAT-01: publish() with coverFile uploads to prompty-covers with path u1/<slug>-cover.webp', async () => {
     const fakeFile = new File(['img'], 'photo.jpg', { type: 'image/jpeg' })
     const { publish } = useCreatePrompty()
-    await publish({ title: 'Cover Test', beginner_prompt: 'P', category: 'beginner', coverFile: fakeFile })
+    await publish({
+      title: 'Cover Test',
+      beginner_prompt: 'P',
+      category: 'beginner',
+      coverFile: fakeFile,
+    })
 
     expect(storageUploadMock).toHaveBeenCalledTimes(1)
-    const [path, , opts] = storageUploadMock.mock.calls[0] as [string, unknown, { contentType: string }]
+    const [path, , opts] = storageUploadMock.mock.calls[0] as [
+      string,
+      unknown,
+      { contentType: string },
+    ]
     // path must be u1/<slug>-cover.webp
     expect(path).toMatch(/^u1\/.+-cover\.webp$/)
     expect(opts.contentType).toBe('image/webp')
@@ -131,7 +158,12 @@ describe('useCreatePrompty', () => {
   // Test 5 (CREAT-04): parentId → parent_id in insert payload
   it('CREAT-04: publish() with parentId sets parent_id on insert payload', async () => {
     const { publish } = useCreatePrompty()
-    await publish({ title: 'Variation', beginner_prompt: 'P', category: 'intermediate', parentId: 'parent-uuid' })
+    await publish({
+      title: 'Variation',
+      beginner_prompt: 'P',
+      category: 'intermediate',
+      parentId: 'parent-uuid',
+    })
 
     const payload = insertMock.mock.calls[0][0] as Record<string, unknown>
     expect(payload.parent_id).toBe('parent-uuid')
@@ -172,7 +204,11 @@ describe('useCreatePrompty', () => {
   it('CREAT-01: generateSlug strips diacritics and special chars, produces valid slug', async () => {
     const { publish } = useCreatePrompty()
     // We test the generated slug via the insert payload (slug field)
-    await publish({ title: 'Retrato Cinematográfico !!!', beginner_prompt: 'P', category: 'beginner' })
+    await publish({
+      title: 'Retrato Cinematográfico !!!',
+      beginner_prompt: 'P',
+      category: 'beginner',
+    })
 
     const payload = insertMock.mock.calls[0][0] as Record<string, unknown>
     const slug = payload.slug as string

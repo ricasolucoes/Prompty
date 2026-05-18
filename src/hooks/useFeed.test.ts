@@ -21,8 +21,7 @@ function makeChain() {
       return chain
     })
   }
-  ;(chain as Record<string, unknown>).then = (resolve: (v: typeof lastReturn) => void) =>
-    resolve(lastReturn)
+  chain.then = (resolve: (v: typeof lastReturn) => void) => resolve(lastReturn)
   return chain
 }
 

@@ -9,14 +9,20 @@ interface SavedCardProps {
   result_image_url?: string | null
 }
 
-export function SavedCard({ slug, title, cover_url, cover_gradient, result_image_url }: SavedCardProps) {
+export function SavedCard({
+  slug,
+  title,
+  cover_url,
+  cover_gradient,
+  result_image_url,
+}: Readonly<SavedCardProps>) {
   const isResult = !!result_image_url
   const imageUrl = isResult ? result_image_url : cover_url
   const hasImage = !!imageUrl
   const background = hasImage
     ? undefined
-    : cover_gradient ?? 'linear-gradient(135deg,#7C3AED,#22D3EE)'
-  const backgroundImage = hasImage ? `url(${imageUrl!})` : undefined
+    : (cover_gradient ?? 'linear-gradient(135deg,#7C3AED,#22D3EE)')
+  const backgroundImage = hasImage ? `url(${imageUrl})` : undefined
   const backgroundSize = hasImage ? 'cover' : undefined
   const backgroundPosition = hasImage ? 'center' : undefined
   const backgroundRepeat = hasImage ? 'no-repeat' : undefined

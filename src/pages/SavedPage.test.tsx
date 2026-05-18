@@ -44,8 +44,14 @@ describe('SavedPage', () => {
   it('default active chip is Salvos', () => {
     useSavedMock.mockReturnValue({ saves: [], ratings: [], results: [], loading: false })
     renderPage()
-    expect(screen.getByRole('button', { name: /salvos filtro/i })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: /avaliações filtro/i })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('button', { name: /salvos filtro/i })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: /avaliações filtro/i })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
   })
 
   it('renders empty state for Salvos when saves.length === 0', () => {

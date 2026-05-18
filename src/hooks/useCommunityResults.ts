@@ -61,7 +61,7 @@ export function useCommunityResults(promptyId: string | null) {
         .filter((r) => typeof r.image_url === 'string' && r.image_url.length > 0)
         .map((r) => ({
           id: r.id,
-          image_url: r.image_url as string,
+          image_url: r.image_url,
           rating: r.rating,
           notes: r.notes,
           created_at: r.created_at,

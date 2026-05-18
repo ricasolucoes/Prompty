@@ -22,13 +22,7 @@ export function PrivateRoute({ minLevel, routeLabel }: Props = {}) {
     const currentIdx = LEVEL_ORDER.indexOf(currentLevelId)
     const requiredIdx = LEVEL_ORDER.indexOf(minLevel)
     if (currentIdx < requiredIdx) {
-      return (
-        <Navigate
-          to="/"
-          replace
-          state={{ levelGate: routeLabel ?? 'esta funcionalidade' }}
-        />
-      )
+      return <Navigate to="/" replace state={{ levelGate: routeLabel ?? 'esta funcionalidade' }} />
     }
   }
 

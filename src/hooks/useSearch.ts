@@ -46,7 +46,7 @@ async function fetchSearchPage(
 
   const { data, error } = await q
   if (error) throw error
-  return (data ?? []) as unknown as SearchItem[]
+  return data ?? []
 }
 
 export function useSearch(query: string, category: string | null, model: string | null) {
@@ -75,7 +75,9 @@ export function useSearch(query: string, category: string | null, model: string 
     isLoading: result.isLoading,
     isFetchingNextPage: result.isFetchingNextPage,
     hasNextPage: !!result.hasNextPage,
-    fetchNextPage: () => { void result.fetchNextPage() },
+    fetchNextPage: () => {
+      void result.fetchNextPage()
+    },
     enabled,
   }
 }

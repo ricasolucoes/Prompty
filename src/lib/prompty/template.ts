@@ -6,7 +6,7 @@ export interface InputField {
   type: InputType
   required?: boolean
   default?: string | number
-  value?: string | number  // prototype data.jsx uses 'value' as default seed
+  value?: string | number // prototype data.jsx uses 'value' as default seed
   options?: string[]
   placeholder?: string
   min?: number
@@ -27,7 +27,7 @@ export function resolveBeginner(template: string, inputs: InputField[]): string 
   }, template)
 }
 
-const VARIABLE_REGEX = /\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g
+const VARIABLE_REGEX = /\{\{([a-zA-Z_]\w*)\}\}/g
 
 /**
  * Extracts unique {{variable}} keys from a template string.

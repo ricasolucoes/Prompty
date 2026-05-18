@@ -48,7 +48,11 @@ describe('ProfilePage nudge copy (LEVL-05)', () => {
       profile: null,
       loading: false,
     })
-    return render(<MemoryRouter><ProfilePage /></MemoryRouter>)
+    return render(
+      <MemoryRouter>
+        <ProfilePage />
+      </MemoryRouter>,
+    )
   }
 
   it('L1 user (10p) nudge mentions Buscar', () => {

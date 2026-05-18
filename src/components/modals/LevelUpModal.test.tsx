@@ -35,7 +35,14 @@ describe('LevelUpModal', () => {
 
   it('clicking the backdrop calls onDismiss', () => {
     let dismissed = false
-    const { container } = render(<LevelUpModal level={L2} onDismiss={() => { dismissed = true }} />)
+    const { container } = render(
+      <LevelUpModal
+        level={L2}
+        onDismiss={() => {
+          dismissed = true
+        }}
+      />,
+    )
     const backdrop = container.querySelector('[role="dialog"]') as HTMLElement
     expect(backdrop).toBeTruthy()
     backdrop.click()

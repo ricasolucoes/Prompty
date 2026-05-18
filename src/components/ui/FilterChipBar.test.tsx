@@ -30,12 +30,20 @@ describe('FilterChipBar', () => {
 
   it('active chip has aria-pressed="true"; inactive has aria-pressed="false"', () => {
     render(<FilterChipBar options={OPTIONS} value="Retrato" onChange={() => {}} />)
-    expect(screen.getByRole('button', { name: /retrato filtro/i })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: /paisagem filtro/i })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('button', { name: /retrato filtro/i })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: /paisagem filtro/i })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
   })
 
   it('container has overflowX: auto (horizontal scroll)', () => {
-    const { container } = render(<FilterChipBar options={OPTIONS} value={null} onChange={() => {}} />)
+    const { container } = render(
+      <FilterChipBar options={OPTIONS} value={null} onChange={() => {}} />,
+    )
     const div = container.querySelector('[role="group"]') as HTMLElement
     expect(div.style.overflowX).toBe('auto')
   })

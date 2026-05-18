@@ -7,7 +7,7 @@ interface Props {
   onChange: (patch: Partial<WizardData>) => void
 }
 
-export function WizardStep3Image({ data, onChange }: Props) {
+export function WizardStep3Image({ data, onChange }: Readonly<Props>) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -44,7 +44,8 @@ export function WizardStep3Image({ data, onChange }: Props) {
         >
           Imagem de capa
           <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
-            {' '}· opcional — uma boa amostra ajuda no feed
+            {' '}
+            · opcional — uma boa amostra ajuda no feed
           </span>
         </p>
 

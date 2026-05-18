@@ -27,7 +27,7 @@ type PromptyJoin = {
 function unwrapPrompty(row: { promptys?: PromptyJoin | PromptyJoin[] | null }): PromptyJoin | null {
   const p = row.promptys
   if (!p) return null
-  return Array.isArray(p) ? p[0] ?? null : p
+  return Array.isArray(p) ? (p[0] ?? null) : p
 }
 
 export function useSaved() {
@@ -57,7 +57,9 @@ export function useSaved() {
           .eq('promptys.status', 'published'), // MODR-03: exclude flagged/hidden/removed promptys
         supabase
           .from('prompty_tests')
-          .select('prompty_id, created_at, image_url, rating, promptys(id,title,cover_url,cover_gradient,slug)')
+          .select(
+            'prompty_id, created_at, image_url, rating, promptys(id,title,cover_url,cover_gradient,slug)',
+          )
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .eq('promptys.status', 'published'), // MODR-03: exclude flagged/hidden/removed promptys
@@ -67,7 +69,7 @@ export function useSaved() {
 
       const savedItems: SavedItem[] = (savesRes.data ?? [])
         .map((r) => {
-          const p = unwrapPrompty(r as { promptys?: PromptyJoin | PromptyJoin[] | null })
+          const p = unwrapPrompty(r)
           if (!p) return null
           return {
             prompty_id: (r as { prompty_id: string }).prompty_id,
@@ -82,7 +84,7 @@ export function useSaved() {
 
       const ratingItems: SavedItem[] = (testsRes.data ?? [])
         .map((r) => {
-          const p = unwrapPrompty(r as { promptys?: PromptyJoin | PromptyJoin[] | null })
+          const p = unwrapPrompty(r)
           if (!p) return null
           return {
             prompty_id: (r as { prompty_id: string }).prompty_id,
@@ -101,7 +103,13 @@ export function useSaved() {
           return typeof row.image_url === 'string' && row.image_url.length > 0
         })
         .map((r) => {
-          const row = r as { prompty_id: string; created_at: string; image_url: string; rating?: number | null; promptys?: PromptyJoin | PromptyJoin[] | null }
+          const row = r as {
+            prompty_id: string
+            created_at: string
+            image_url: string
+            rating?: number | null
+            promptys?: PromptyJoin | PromptyJoin[] | null
+          }
           const p = unwrapPrompty({ promptys: row.promptys ?? null })
           if (!p) return null
           return {
@@ -124,7 +132,9 @@ export function useSaved() {
     }
 
     void load()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [user])
 
   return { saves, ratings, results, loading }

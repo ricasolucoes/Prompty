@@ -17,12 +17,6 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number]
 
-export const MODELS = [
-  'Gemini',
-  'Midjourney',
-  'DALL·E',
-  'Stable Diffusion',
-  'Flux',
-] as const
+export const MODELS = ['Gemini', 'Midjourney', 'DALL·E', 'Stable Diffusion', 'Flux'] as const
 
 export type Model = (typeof MODELS)[number]

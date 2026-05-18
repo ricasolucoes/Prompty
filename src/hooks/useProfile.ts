@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore, type Profile } from '@/stores/auth.store'
 
-type RecentItem = { id: string; title: string; cover_url: string | null; cover_gradient: string | null }
+type RecentItem = {
+  id: string
+  title: string
+  cover_url: string | null
+  cover_gradient: string | null
+}
 
 export function useProfile() {
   const user = useAuthStore((s) => s.user)
@@ -15,7 +20,7 @@ export function useProfile() {
   async function refetch() {
     if (!user) return
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle()
-    if (data) setProfile(data as Profile)
+    if (data) setProfile(data)
   }
 
   async function update(
@@ -29,14 +34,17 @@ export function useProfile() {
       .select('*')
       .maybeSingle()
     if (error) return { ok: false, error: error.message }
-    if (data) setProfile(data as Profile)
+    if (data) setProfile(data)
     return { ok: true }
   }
 
   useEffect(() => {
     let cancelled = false
     async function loadRecents() {
-      if (!user) { setRecents([]); return }
+      if (!user) {
+        setRecents([])
+        return
+      }
       setRecentsLoading(true)
       // Recents = union of saves + tests, distinct by prompty_id, ordered desc
       const [{ data: saves }, { data: tests }] = await Promise.all([
@@ -65,8 +73,10 @@ export function useProfile() {
         setRecentsLoading(false)
       }
     }
-    loadRecents()
-    return () => { cancelled = true }
+    void loadRecents()
+    return () => {
+      cancelled = true
+    }
   }, [user, profile?.points])
 
   return { profile, refetch, update, recents, recentsLoading }

@@ -6,6 +6,10 @@ const signInWithPassword = vi.fn()
 const signOut = vi.fn()
 const resetPasswordForEmail = vi.fn()
 
+// Test fixtures — not real credentials
+const TEST_LONG_PW = 'password123'
+const TEST_SHORT_PW = 'pw'
+
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     auth: { signUp, signInWithPassword, signOut, resetPasswordForEmail },
@@ -28,8 +32,8 @@ describe('useAuth', () => {
   it('signUp calls supabase.auth.signUp with email/password', async () => {
     signUp.mockResolvedValue({ data: {}, error: null })
     const { signUp: doSignUp } = useAuth()
-    const r = await doSignUp('a@a.com', 'password123')
-    expect(signUp).toHaveBeenCalledWith({ email: 'a@a.com', password: 'password123' })
+    const r = await doSignUp('a@a.com', TEST_LONG_PW)
+    expect(signUp).toHaveBeenCalledWith({ email: 'a@a.com', password: TEST_LONG_PW })
     expect(r).toEqual({})
   })
 
@@ -43,8 +47,8 @@ describe('useAuth', () => {
   it('signIn calls supabase.auth.signInWithPassword', async () => {
     signInWithPassword.mockResolvedValue({ data: {}, error: null })
     const { signIn } = useAuth()
-    await signIn('a@a.com', 'pw')
-    expect(signInWithPassword).toHaveBeenCalledWith({ email: 'a@a.com', password: 'pw' })
+    await signIn('a@a.com', TEST_SHORT_PW)
+    expect(signInWithPassword).toHaveBeenCalledWith({ email: 'a@a.com', password: TEST_SHORT_PW })
   })
 
   it('signIn returns mapped error for invalid credentials', async () => {

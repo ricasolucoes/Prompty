@@ -22,7 +22,10 @@ async function touchLastActive(userId: string) {
   // transient network issue never blocks UI. RLS allows users to UPDATE their
   // own profile (auth.uid() = id), so this works without elevated privileges.
   try {
-    await supabase.from('profiles').update({ last_active_at: new Date().toISOString() }).eq('id', userId)
+    await supabase
+      .from('profiles')
+      .update({ last_active_at: new Date().toISOString() })
+      .eq('id', userId)
   } catch {
     // ignore
   }

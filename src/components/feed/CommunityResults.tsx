@@ -6,7 +6,7 @@ interface Props {
   promptyId: string
 }
 
-export function CommunityResults({ promptyId }: Props) {
+export function CommunityResults({ promptyId }: Readonly<Props>) {
   const { results } = useCommunityResults(promptyId)
   const [openResult, setOpenResult] = useState<CommunityResult | null>(null)
 

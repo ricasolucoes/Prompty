@@ -1,11 +1,11 @@
 interface Props {
-  value: number   // 0..max
-  max?: number    // default 100
+  value: number // 0..max
+  max?: number // default 100
   height?: number // default 8
   className?: string
 }
 
-export function ProgressBar({ value, max = 100, height = 8, className }: Props) {
+export function ProgressBar({ value, max = 100, height = 8, className }: Readonly<Props>) {
   const pct = Math.max(0, Math.min(100, (value / Math.max(1, max)) * 100))
   return (
     <div

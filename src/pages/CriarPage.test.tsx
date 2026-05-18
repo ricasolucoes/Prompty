@@ -9,7 +9,9 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => mockNavigate }
 })
 
-let mockParentResponse: { data: unknown; error: null } | { data: null; error: { message: string } } = { data: null, error: null }
+let mockParentResponse:
+  | { data: unknown; error: null }
+  | { data: null; error: { message: string } } = { data: null, error: null }
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: () => ({
@@ -65,7 +67,7 @@ describe('CriarPage', () => {
     }
     renderAt('/criar?from=parent-id')
     await waitFor(() => {
-      const titleInput = screen.getByLabelText('Título do Prompty') as HTMLInputElement
+      const titleInput = screen.getByLabelText('Título do Prompty')
       expect(titleInput.value).toBe('Parent Title')
     })
   })
@@ -74,7 +76,7 @@ describe('CriarPage', () => {
     mockParentResponse = { data: null, error: { message: 'not found' } }
     renderAt('/criar?from=missing-id')
     await waitFor(() => {
-      const titleInput = screen.getByLabelText('Título do Prompty') as HTMLInputElement
+      const titleInput = screen.getByLabelText('Título do Prompty')
       expect(titleInput.value).toBe('')
     })
   })

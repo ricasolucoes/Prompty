@@ -26,6 +26,14 @@ export interface PublishResult {
 
 // Slug: kebab(title) trimmed to 40 chars + '-' + 6 random alphanumeric chars.
 // Mirrors regex from 03-RESEARCH.md.
+function randomSlugSuffix(): string {
+  const bytes = new Uint8Array(4)
+  crypto.getRandomValues(bytes)
+  let out = ''
+  for (const b of bytes) out += b.toString(36).padStart(2, '0')
+  return out.slice(0, 6)
+}
+
 export function generateSlug(title: string): string {
   const base = title
     .toLowerCase()
@@ -34,8 +42,7 @@ export function generateSlug(title: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 40)
-  const suffix = Math.random().toString(36).slice(2, 8)
-  return `${base}-${suffix}`
+  return `${base}-${randomSlugSuffix()}`
 }
 
 async function uploadCoverImage(userId: string, slug: string, file: File): Promise<string | null> {
@@ -45,6 +52,7 @@ async function uploadCoverImage(userId: string, slug: string, file: File): Promi
     .from('prompty-covers')
     .upload(path, blob, { contentType: 'image/webp', upsert: true })
   if (error) {
+    // eslint-disable-next-line no-console -- recoverable upload failure, surfaced via warn
     console.warn('Cover upload failed:', error.message)
     return null
   }
@@ -53,6 +61,7 @@ async function uploadCoverImage(userId: string, slug: string, file: File): Promi
 }
 
 export function useCreatePrompty() {
+  // eslint-disable-next-line complexity -- 12 branches across optional flow steps; refactor deferred
   async function publish(form: WizardData): Promise<PublishResult> {
     const user = useAuthStore.getState().user
     if (!user) return { ok: false, error: 'Não autenticado' }

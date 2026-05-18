@@ -3,11 +3,7 @@
  * Defaults: maxKB=200, quality=0.85, maxDim=1200px (longest side).
  * Falls back to lower quality if first pass exceeds maxKB.
  */
-export async function compressToWebP(
-  file: File,
-  maxKB = 200,
-  quality = 0.85,
-): Promise<Blob> {
+export async function compressToWebP(file: File, maxKB = 200, quality = 0.85): Promise<Blob> {
   const bitmap = await createImageBitmap(file)
   const MAX_DIM = 1200
   const scale = Math.min(1, MAX_DIM / Math.max(bitmap.width, bitmap.height))

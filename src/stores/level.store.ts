@@ -14,9 +14,7 @@ export const useLevelStore = create<LevelStore>()(
       hasShown: (id) => get().shownLevelUps.includes(id),
       markShown: (id) =>
         set((s) =>
-          s.shownLevelUps.includes(id)
-            ? s
-            : { shownLevelUps: [...s.shownLevelUps, id] },
+          s.shownLevelUps.includes(id) ? s : { shownLevelUps: [...s.shownLevelUps, id] },
         ),
     }),
     { name: 'promptys-level-store' },

@@ -7,7 +7,8 @@ interface Props {
   onChange: (patch: Partial<WizardData>) => void
 }
 
-export function WizardStep2Prompt({ data, onChange }: Props) {
+// eslint-disable-next-line max-lines-per-function -- step component with prompt textarea; refactor deferred
+export function WizardStep2Prompt({ data, onChange }: Readonly<Props>) {
   const charCount = data.beginner_prompt.length
   const detectedVars = useMemo(() => extractVariables(data.beginner_prompt), [data.beginner_prompt])
 
@@ -111,7 +112,8 @@ export function WizardStep2Prompt({ data, onChange }: Props) {
           lineHeight: 1.5,
         }}
       >
-        Teste o prompt em pelo menos 2 modelos antes de publicar. Promptys que funcionam em vários modelos sobem mais rápido.
+        Teste o prompt em pelo menos 2 modelos antes de publicar. Promptys que funcionam em vários
+        modelos sobem mais rápido.
       </aside>
     </div>
   )

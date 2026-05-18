@@ -14,7 +14,12 @@ export interface OptionsSheetProps {
   ariaLabel?: string
 }
 
-export function OptionsSheet({ open, onClose, options, ariaLabel = 'Opções' }: OptionsSheetProps) {
+export function OptionsSheet({
+  open,
+  onClose,
+  options,
+  ariaLabel = 'Opções',
+}: Readonly<OptionsSheetProps>) {
   if (!open) return null
 
   return (

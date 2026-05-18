@@ -1,10 +1,10 @@
 interface WizardProgressBarProps {
-  step: number       // 0-indexed current step (0..3)
+  step: number // 0-indexed current step (0..3)
   totalSteps: number // 4 for Phase 3 wizard
 }
 
-export function WizardProgressBar({ step, totalSteps }: WizardProgressBarProps) {
-  const completedCount = step + 1  // step 0 displays as "1 de 4"
+export function WizardProgressBar({ step, totalSteps }: Readonly<WizardProgressBarProps>) {
+  const completedCount = step + 1 // step 0 displays as "1 de 4"
   return (
     <div
       style={{
@@ -35,10 +35,7 @@ export function WizardProgressBar({ step, totalSteps }: WizardProgressBarProps) 
             style={{
               height: 4,
               borderRadius: 4,
-              background:
-                i <= step
-                  ? 'linear-gradient(90deg, #7C3AED, #22D3EE)'
-                  : 'var(--line)',
+              background: i <= step ? 'linear-gradient(90deg, #7C3AED, #22D3EE)' : 'var(--line)',
             }}
           />
         ))}

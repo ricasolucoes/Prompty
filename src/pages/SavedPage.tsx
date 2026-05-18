@@ -5,9 +5,9 @@ import { SavedCard } from '@/components/feed/SavedCard'
 import { Icon, type IconName } from '@/components/ui/Icon'
 
 const CHIPS = [
-  { value: 'saves',   label: 'Salvos'      },
-  { value: 'ratings', label: 'Avaliações'  },
-  { value: 'results', label: 'Resultados'  },
+  { value: 'saves', label: 'Salvos' },
+  { value: 'ratings', label: 'Avaliações' },
+  { value: 'results', label: 'Resultados' },
 ] as const
 
 type ChipValue = 'saves' | 'ratings' | 'results'
@@ -48,10 +48,8 @@ export function SavedPage() {
     // Tapping the active chip again toggles off (value === null) — we ignore this to keep always-one-active for SavedPage UX.
   }
 
-  const items =
-    chip === 'saves' ? saves :
-    chip === 'ratings' ? ratings :
-    results
+  const itemsByChip = { saves, ratings, results }
+  const items = itemsByChip[chip]
 
   const isEmpty = !loading && items.length === 0
   const emptyConfig = EMPTY[chip]
@@ -59,7 +57,16 @@ export function SavedPage() {
   return (
     <section className="screen" style={{ paddingBottom: 96 }}>
       {/* Heading (visually hidden but useful for screen readers / parity with UI-SPEC) */}
-      <h1 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', margin: 0 }}>
+      <h1
+        style={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          overflow: 'hidden',
+          clip: 'rect(0 0 0 0)',
+          margin: 0,
+        }}
+      >
         Salvos
       </h1>
 
@@ -121,7 +128,11 @@ export function SavedPage() {
               title={item.title}
               cover_url={item.cover_url}
               cover_gradient={item.cover_gradient}
-              result_image_url={chip === 'results' && 'image_url' in item ? (item as { image_url: string }).image_url : null}
+              result_image_url={
+                chip === 'results' && 'image_url' in item
+                  ? (item as { image_url: string }).image_url
+                  : null
+              }
             />
           ))}
         </div>

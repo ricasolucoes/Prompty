@@ -6,9 +6,7 @@ import { useAuthStore } from '@/stores/auth.store'
 
 function setLevel(level: 'L1' | 'L2' | 'L3' | null, points: number) {
   const fakeProfile =
-    level === null
-      ? null
-      : ({ id: 'u1', level, points, name: 'X', username: 'x' } as never)
+    level === null ? null : ({ id: 'u1', level, points, name: 'X', username: 'x' } as never)
   useAuthStore.setState({ user: { id: 'u1' } as never, profile: fakeProfile, loading: false })
 }
 
@@ -80,7 +78,7 @@ describe('TabBar — progressive disclosure (LEVL-07)', () => {
     expect(screen.getByLabelText('Criar Prompty')).toBeInTheDocument()
     expect(screen.getByLabelText('Ranking')).toBeInTheDocument()
     // New: route correctness — Criar links to /criar (not /create)
-    const criar = screen.getByLabelText('Criar Prompty') as HTMLAnchorElement
+    const criar = screen.getByLabelText('Criar Prompty')
     expect(criar.getAttribute('href')).toBe('/criar')
   })
 

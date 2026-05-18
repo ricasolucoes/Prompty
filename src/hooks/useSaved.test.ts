@@ -79,10 +79,32 @@ describe('useSaved', () => {
     useAuthStore.setState({ user: { id: 'u1' } as never, profile: null, loading: false })
     const savesData: unknown[] = []
     const testsData = [
-      { prompty_id: 'p1', created_at: '2026-05-01T00:00:00Z', image_url: 'https://x/a.webp', rating: 5,
-        promptys: { id: 'p1', title: 'Has image', cover_url: null, cover_gradient: 'linear-gradient(135deg,#000,#fff)', slug: 'has-img' } },
-      { prompty_id: 'p2', created_at: '2026-05-02T00:00:00Z', image_url: null, rating: 4,
-        promptys: { id: 'p2', title: 'No image', cover_url: null, cover_gradient: 'linear-gradient(135deg,#111,#fff)', slug: 'no-img' } },
+      {
+        prompty_id: 'p1',
+        created_at: '2026-05-01T00:00:00Z',
+        image_url: 'https://x/a.webp',
+        rating: 5,
+        promptys: {
+          id: 'p1',
+          title: 'Has image',
+          cover_url: null,
+          cover_gradient: 'linear-gradient(135deg,#000,#fff)',
+          slug: 'has-img',
+        },
+      },
+      {
+        prompty_id: 'p2',
+        created_at: '2026-05-02T00:00:00Z',
+        image_url: null,
+        rating: 4,
+        promptys: {
+          id: 'p2',
+          title: 'No image',
+          cover_url: null,
+          cover_gradient: 'linear-gradient(135deg,#111,#fff)',
+          slug: 'no-img',
+        },
+      },
     ]
     fromMock.mockImplementation((table: string) => {
       if (table === 'prompty_saves') return makeChain({ data: savesData, error: null })

@@ -21,7 +21,7 @@ function colorFromName(name?: string | null): string {
   return palette[h] ?? '#7C3AED'
 }
 
-export function Avatar({ user, size = 40, color, className }: AvatarProps) {
+export function Avatar({ user, size = 40, color, className }: Readonly<AvatarProps>) {
   const initials = getInitials(user.name)
   const bg = color ?? colorFromName(user.name)
   const fontSize = Math.round(size * 0.38)

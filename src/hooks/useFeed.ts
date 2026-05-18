@@ -31,11 +31,17 @@ async function fetchPage(pageParam: Cursor): Promise<FeedItem[]> {
 
   const { data, error } = await q
   if (error) throw error
-  return (data ?? []) as unknown as FeedItem[]
+  return data ?? []
 }
 
 export function useFeed() {
-  const query = useInfiniteQuery<FeedItem[], Error, { pages: FeedItem[][]; pageParams: Cursor[] }, ['feed'], Cursor>({
+  const query = useInfiniteQuery<
+    FeedItem[],
+    Error,
+    { pages: FeedItem[][]; pageParams: Cursor[] },
+    ['feed'],
+    Cursor
+  >({
     queryKey: ['feed'],
     queryFn: ({ pageParam }) => fetchPage(pageParam),
     initialPageParam: undefined,
@@ -52,7 +58,11 @@ export function useFeed() {
     isLoading: query.isLoading,
     isFetchingNextPage: query.isFetchingNextPage,
     hasNextPage: !!query.hasNextPage,
-    fetchNextPage: () => { void query.fetchNextPage() },
-    refetch: () => { void query.refetch() },
+    fetchNextPage: () => {
+      void query.fetchNextPage()
+    },
+    refetch: () => {
+      void query.refetch()
+    },
   }
 }

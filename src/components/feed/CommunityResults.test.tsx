@@ -76,9 +76,13 @@ describe('CommunityResults', () => {
     })
     render(<CommunityResults promptyId="p1" />)
     fireEvent.click(screen.getByRole('button', { name: 'Ver resultado de Alice' }))
-    expect(screen.queryByRole('dialog', { name: 'Resultado enviado por Alice' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('dialog', { name: 'Resultado enviado por Alice' }),
+    ).toBeInTheDocument()
     fireEvent.click(screen.getByLabelText('Fechar imagem'))
-    expect(screen.queryByRole('dialog', { name: 'Resultado enviado por Alice' })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('dialog', { name: 'Resultado enviado por Alice' }),
+    ).not.toBeInTheDocument()
   })
 
   it('FullImageModal closes on backdrop click', () => {
@@ -90,6 +94,8 @@ describe('CommunityResults', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ver resultado de Alice' }))
     const dialog = screen.getByRole('dialog', { name: 'Resultado enviado por Alice' })
     fireEvent.click(dialog)
-    expect(screen.queryByRole('dialog', { name: 'Resultado enviado por Alice' })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('dialog', { name: 'Resultado enviado por Alice' }),
+    ).not.toBeInTheDocument()
   })
 })

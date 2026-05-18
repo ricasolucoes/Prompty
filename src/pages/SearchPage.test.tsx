@@ -17,12 +17,14 @@ function renderPage() {
     React.createElement(
       QueryClientProvider,
       { client: qc },
-      React.createElement(MemoryRouter, null, React.createElement(SearchPage))
-    )
+      React.createElement(MemoryRouter, null, React.createElement(SearchPage)),
+    ),
   )
 }
 
-function mockResult(overrides: Partial<{ pages: unknown[][]; isLoading: boolean; enabled: boolean }> = {}) {
+function mockResult(
+  overrides: Partial<{ pages: unknown[][]; isLoading: boolean; enabled: boolean }> = {},
+) {
   useSearchMock.mockReturnValue({
     pages: [],
     isLoading: false,
@@ -58,7 +60,9 @@ describe('SearchPage', () => {
     fireEvent.change(input, { target: { value: 'astro' } })
     // Immediately useSearch is still called with empty string (debounced)
     expect(useSearchMock).toHaveBeenLastCalledWith('', null, null)
-    act(() => { vi.advanceTimersByTime(300) })
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
     // After 300ms the debouncedQuery updates and useSearch is called with 'astro'
     expect(useSearchMock).toHaveBeenCalledWith('astro', null, null)
   })
@@ -99,6 +103,8 @@ describe('SearchPage', () => {
   it('renders 2 SkeletonCards during initial load', () => {
     mockResult({ enabled: true, isLoading: true })
     const { container } = renderPage()
-    expect(container.querySelectorAll('article[aria-hidden="true"]').length).toBeGreaterThanOrEqual(2)
+    expect(container.querySelectorAll('article[aria-hidden="true"]').length).toBeGreaterThanOrEqual(
+      2,
+    )
   })
 })

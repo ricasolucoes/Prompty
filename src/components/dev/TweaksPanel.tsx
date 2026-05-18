@@ -7,6 +7,7 @@ import { LEVELS } from '@/lib/constants/levels'
  * Dev-only debug panel. Renders ONLY when `import.meta.env.DEV` is true.
  * Allows quick theme toggle and a "force level" preview without earning real points.
  */
+// eslint-disable-next-line max-lines-per-function -- dev-only panel; not shipped to prod
 export function TweaksPanel() {
   const profile = useAuthStore((s) => s.profile)
   const setProfile = useAuthStore((s) => s.setProfile)
@@ -17,18 +18,20 @@ export function TweaksPanel() {
   function setForcedLevel(levelId: 'L1' | 'L2' | 'L3') {
     const level = LEVELS.find((l) => l.id === levelId) ?? { id: levelId, min: 0 }
     // Synthetic profile so the rest of the app renders that level.
-    const base = profile ?? ({
-      id: '__dev__',
-      name: 'Dev',
-      username: 'dev',
-      avatar_url: null,
-      bio: null,
-      level: 'L1',
-      points: 0,
-      streak: 0,
-      verified: false,
-      created_at: new Date().toISOString(),
-    } as never)
+    const base =
+      profile ??
+      ({
+        id: '__dev__',
+        name: 'Dev',
+        username: 'dev',
+        avatar_url: null,
+        bio: null,
+        level: 'L1',
+        points: 0,
+        streak: 0,
+        verified: false,
+        created_at: new Date().toISOString(),
+      } as never)
     setProfile({ ...base, level: level.id, points: level.min })
   }
 

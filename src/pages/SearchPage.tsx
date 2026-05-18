@@ -6,6 +6,9 @@ import { SkeletonCard } from '@/components/feed/SkeletonCard'
 import { Icon } from '@/components/ui/Icon'
 import { CATEGORIES, MODELS } from '@/lib/constants/categories'
 
+const COLOR_TEXT_3 = 'var(--text-3)'
+
+// eslint-disable-next-line max-lines-per-function, complexity -- page-level shell; refactor deferred
 export function SearchPage() {
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
@@ -58,7 +61,7 @@ export function SearchPage() {
               left: 12,
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'var(--text-3)',
+              color: COLOR_TEXT_3,
               pointerEvents: 'none',
             }}
             aria-hidden="true"
@@ -99,7 +102,7 @@ export function SearchPage() {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                color: 'var(--text-3)',
+                color: COLOR_TEXT_3,
                 padding: 4,
               }}
             >
@@ -119,7 +122,7 @@ export function SearchPage() {
             fontWeight: 700,
             letterSpacing: 0.6,
             textTransform: 'uppercase',
-            color: 'var(--text-3)',
+            color: COLOR_TEXT_3,
           }}
         >
           CATEGORIA
@@ -142,7 +145,7 @@ export function SearchPage() {
             fontWeight: 700,
             letterSpacing: 0.6,
             textTransform: 'uppercase',
-            color: 'var(--text-3)',
+            color: COLOR_TEXT_3,
           }}
         >
           MODELO
@@ -159,7 +162,13 @@ export function SearchPage() {
       {items.length > 0 && (debouncedQuery || hasFilters) && (
         <p
           aria-live="polite"
-          style={{ padding: '8px 16px 0', margin: 0, fontSize: 12, fontWeight: 700, color: 'var(--text-3)' }}
+          style={{
+            padding: '8px 16px 0',
+            margin: 0,
+            fontSize: 12,
+            fontWeight: 700,
+            color: COLOR_TEXT_3,
+          }}
         >
           {items.length === 1 ? '1 resultado' : `${items.length} resultados`}
         </p>
@@ -201,7 +210,11 @@ export function SearchPage() {
   )
 }
 
-function EmptyState({ icon, heading, body }: { icon: 'search' | 'x'; heading: string; body: string }) {
+function EmptyState({
+  icon,
+  heading,
+  body,
+}: Readonly<{ icon: 'search' | 'x'; heading: string; body: string }>) {
   return (
     <div
       style={{

@@ -26,7 +26,7 @@ export function SkeletonCard() {
   )
 }
 
-function ShimmerBar({ width, height }: { width: string; height: number }) {
+function ShimmerBar({ width, height }: Readonly<{ width: string; height: number }>) {
   return (
     <div
       style={{
@@ -42,8 +42,7 @@ function ShimmerBar({ width, height }: { width: string; height: number }) {
         style={{
           position: 'absolute',
           inset: 0,
-          background:
-            'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)',
           animation: 'shimmer 1.4s linear infinite',
         }}
       />

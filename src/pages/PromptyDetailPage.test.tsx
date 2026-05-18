@@ -65,8 +65,9 @@ vi.mock('@/lib/supabase', () => {
 let mockUser: { id: string } | null = null
 let mockProfile: { id: string; points: number; level: string } | null = null
 vi.mock('@/stores/auth.store', () => ({
-  useAuthStore: (selector: (s: { user: typeof mockUser; profile: typeof mockProfile }) => unknown) =>
-    selector({ user: mockUser, profile: mockProfile }),
+  useAuthStore: (
+    selector: (s: { user: typeof mockUser; profile: typeof mockProfile }) => unknown,
+  ) => selector({ user: mockUser, profile: mockProfile }),
 }))
 
 function renderDetail() {
@@ -91,7 +92,11 @@ function renderAtSlug(slug: string) {
 }
 
 describe('PromptyDetailPage', () => {
-  beforeEach(() => { mockUser = null; mockProfile = null; mockNavigate.mockClear() })
+  beforeEach(() => {
+    mockUser = null
+    mockProfile = null
+    mockNavigate.mockClear()
+  })
 
   it('FEED-03: renders title, full prompt with resolved variables, and Copiar button (anon)', async () => {
     renderAtSlug('retrato-cinematografico')
@@ -133,7 +138,10 @@ describe('PromptyDetailPage', () => {
 // L2-gated "..." menu + ReportSheet + CategorySuggestSheet
 
 describe('PromptyDetailPage — L2 "..." menu (Phase 2)', () => {
-  beforeEach(() => { mockUser = null; mockProfile = null })
+  beforeEach(() => {
+    mockUser = null
+    mockProfile = null
+  })
 
   it('LEVL-07: anonymous user does NOT see "..." button', async () => {
     mockUser = null
@@ -239,7 +247,11 @@ describe('PromptyDetailPage — CommunityResults section (Phase 2)', () => {
 // ---------- CREAT-04 / LEVL-07: "Criar variação" button (Phase 3 Plan 03-06) ----------
 
 describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', () => {
-  beforeEach(() => { mockUser = null; mockProfile = null; mockNavigate.mockClear() })
+  beforeEach(() => {
+    mockUser = null
+    mockProfile = null
+    mockNavigate.mockClear()
+  })
 
   it('CREAT-04 / LEVL-07: Criar variação button absent for L1 user', async () => {
     mockUser = { id: 'user-1' }
@@ -251,7 +263,7 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 
   it('CREAT-04 / LEVL-07: Criar variação button absent for L2 user', async () => {
     mockUser = { id: 'user-1' }
-    mockProfile = { id: 'user-1', points: 100, level: 'L2' }  // L2 (50-249)
+    mockProfile = { id: 'user-1', points: 100, level: 'L2' } // L2 (50-249)
     renderAtSlug('retrato-cinematografico')
     await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
     expect(screen.queryByRole('button', { name: /Criar variação/i })).not.toBeInTheDocument()
@@ -259,7 +271,7 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 
   it('CREAT-04: Criar variação button present for L3 user', async () => {
     mockUser = { id: 'user-1' }
-    mockProfile = { id: 'user-1', points: 300, level: 'L3' }  // L3 (250+)
+    mockProfile = { id: 'user-1', points: 300, level: 'L3' } // L3 (250+)
     renderAtSlug('retrato-cinematografico')
     await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
     expect(await screen.findByRole('button', { name: /Criar variação/i })).toBeInTheDocument()

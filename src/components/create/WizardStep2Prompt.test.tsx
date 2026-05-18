@@ -17,7 +17,7 @@ describe('WizardStep2Prompt variable detection (CREAT-02)', () => {
       <WizardStep2Prompt
         data={makeData('Hello {{name}}, your order {{order_id}} is ready')}
         onChange={() => {}}
-      />
+      />,
     )
     const hint = screen.getByRole('note', { name: /variáveis detectadas/i })
     expect(hint.textContent).toContain('Detectamos')
@@ -27,10 +27,7 @@ describe('WizardStep2Prompt variable detection (CREAT-02)', () => {
 
   it('hides hint when prompt has no variables', () => {
     render(
-      <WizardStep2Prompt
-        data={makeData('A plain prompt with no variables')}
-        onChange={() => {}}
-      />
+      <WizardStep2Prompt data={makeData('A plain prompt with no variables')} onChange={() => {}} />,
     )
     expect(screen.queryByRole('note', { name: /variáveis detectadas/i })).toBeNull()
   })

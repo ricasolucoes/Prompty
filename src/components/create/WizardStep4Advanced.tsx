@@ -8,9 +8,10 @@ interface Props {
   onChange: (patch: Partial<WizardData>) => void
 }
 
-export function WizardStep4Advanced({ data, onChange }: Props) {
+// eslint-disable-next-line max-lines-per-function -- step component with schema editor; refactor deferred
+export function WizardStep4Advanced({ data, onChange }: Readonly<Props>) {
   const advTemplate = data.advancedTemplate ?? ''
-  const inputs = data.inputs_schema ?? []
+  const inputs = useMemo(() => data.inputs_schema ?? [], [data.inputs_schema])
 
   // Reconcile detected keys with current inputs_schema, preserving label/type/default for keys still present
   const detected = useMemo(() => extractVariables(advTemplate), [advTemplate])
@@ -29,10 +30,7 @@ export function WizardStep4Advanced({ data, onChange }: Props) {
     onChange({ inputs_schema: updated })
   }
 
-  const previewText = useMemo(
-    () => resolveBeginner(advTemplate, inputs),
-    [advTemplate, inputs],
-  )
+  const previewText = useMemo(() => resolveBeginner(advTemplate, inputs), [advTemplate, inputs])
 
   return (
     <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -72,7 +70,8 @@ export function WizardStep4Advanced({ data, onChange }: Props) {
             lineHeight: 1.4,
           }}
         >
-          Escreva {'{{variavel}}'} para criar campos preenchíveis. A definição dos campos aparece abaixo automaticamente.
+          Escreva {'{{variavel}}'} para criar campos preenchíveis. A definição dos campos aparece
+          abaixo automaticamente.
         </p>
       </div>
 

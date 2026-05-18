@@ -12,7 +12,8 @@ const CATEGORY_OPTIONS: { value: 'beginner' | 'intermediate' | 'advanced'; label
   { value: 'advanced', label: 'Avançado' },
 ]
 
-export function WizardStep1Basics({ data, onChange }: Props) {
+// eslint-disable-next-line max-lines-per-function -- step component with form fields; refactor deferred
+export function WizardStep1Basics({ data, onChange }: Readonly<Props>) {
   const [showOptional, setShowOptional] = useState(false)
 
   return (

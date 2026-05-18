@@ -8,7 +8,7 @@ interface Props {
 
 const FALLBACK_GRADIENT = 'linear-gradient(135deg,#3b1d6e 0%,#7C3AED 50%,#FF6B4A 100%)'
 
-export function MyPromptyCard({ prompty }: Props) {
+export function MyPromptyCard({ prompty }: Readonly<Props>) {
   const coverBg = prompty.cover_url
     ? `url(${prompty.cover_url}) center/cover no-repeat`
     : (prompty.cover_gradient ?? FALLBACK_GRADIENT)
@@ -73,7 +73,12 @@ export function MyPromptyCard({ prompty }: Props) {
   )
 }
 
-function StatItem({ icon, color, count, label }: { icon: IconName; color: string; count: number; label: string }) {
+function StatItem({
+  icon,
+  color,
+  count,
+  label,
+}: Readonly<{ icon: IconName; color: string; count: number; label: string }>) {
   return (
     <span
       style={{

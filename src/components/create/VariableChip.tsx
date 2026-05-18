@@ -11,7 +11,7 @@ const TYPE_OPTIONS: { value: InputType; label: string }[] = [
   { value: 'number', label: 'Número' },
 ]
 
-export function VariableChip({ field, onChange }: Props) {
+export function VariableChip({ field, onChange }: Readonly<Props>) {
   return (
     <div
       style={{
@@ -61,7 +61,7 @@ export function VariableChip({ field, onChange }: Props) {
 
       <input
         type="text"
-        value={(field.default as string | undefined) ?? ''}
+        value={field.default ?? ''}
         onChange={(e) => onChange({ default: e.target.value })}
         placeholder="Valor padrão"
         aria-label={`Valor padrão para ${field.key}`}

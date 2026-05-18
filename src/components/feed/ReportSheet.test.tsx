@@ -36,7 +36,13 @@ describe('ReportSheet', () => {
     const options = Array.from(select.querySelectorAll('option'))
     // 1 placeholder + 4 reasons = 5
     expect(options).toHaveLength(5)
-    expect(options.map((o) => (o as HTMLOptionElement).value)).toEqual(['', 'inappropriate', 'spam', 'plagiarism', 'other'])
+    expect(options.map((o) => o.value)).toEqual([
+      '',
+      'inappropriate',
+      'spam',
+      'plagiarism',
+      'other',
+    ])
   })
 
   it("'Denunciar' button is disabled until reason is selected", () => {
@@ -55,11 +61,13 @@ describe('ReportSheet', () => {
     const select = screen.getByRole('combobox', { name: /motivo da denúncia/i })
     fireEvent.change(select, { target: { value: 'spam' } })
     fireEvent.click(screen.getByRole('button', { name: /^denunciar$/i }))
-    await waitFor(() => expect(submitMock).toHaveBeenCalledWith({
-      prompty_id: 'p1',
-      type: 'report',
-      reason: 'spam',
-    }))
+    await waitFor(() =>
+      expect(submitMock).toHaveBeenCalledWith({
+        prompty_id: 'p1',
+        type: 'report',
+        reason: 'spam',
+      }),
+    )
     await waitFor(() => expect(onSubmitted).toHaveBeenCalled())
     await waitFor(() => expect(onClose).toHaveBeenCalled())
   })
@@ -68,9 +76,13 @@ describe('ReportSheet', () => {
     submitMock.mockResolvedValue({ ok: false, error: 'Não foi possível enviar.' })
     const onClose = vi.fn()
     render(<ReportSheet open prompty={PROMPTY} onClose={onClose} onSubmitted={() => {}} />)
-    fireEvent.change(screen.getByRole('combobox', { name: /motivo da denúncia/i }), { target: { value: 'spam' } })
+    fireEvent.change(screen.getByRole('combobox', { name: /motivo da denúncia/i }), {
+      target: { value: 'spam' },
+    })
     fireEvent.click(screen.getByRole('button', { name: /^denunciar$/i }))
-    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível enviar.'))
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível enviar.'),
+    )
     expect(onClose).not.toHaveBeenCalled()
   })
 })

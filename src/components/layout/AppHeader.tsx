@@ -24,9 +24,13 @@ export function AppHeader() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <div
           style={{
-            width: 30, height: 30, borderRadius: 9,
+            width: 30,
+            height: 30,
+            borderRadius: 9,
             background: 'linear-gradient(135deg, #7C3AED, #22D3EE)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
           aria-hidden="true"
         >

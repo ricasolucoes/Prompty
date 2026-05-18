@@ -24,7 +24,8 @@ const DEFAULT_DATA: WizardData = {
   category: 'beginner',
 }
 
-export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardProps) {
+// eslint-disable-next-line max-lines-per-function, complexity -- multi-step wizard controller; refactor deferred
+export function CreateWizard({ initialData, onClose, onPublish }: Readonly<CreateWizardProps>) {
   const [step, setStep] = useState(0)
   const [data, setData] = useState<WizardData>({ ...DEFAULT_DATA, ...initialData })
   const [publishing, setPublishing] = useState(false)
@@ -49,7 +50,7 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
   function isStepValid(s: number): boolean {
     if (s === 0) return data.title.trim().length > 0 && !!data.category
     if (s === 1) return data.beginner_prompt.trim().length > 0
-    return true  // steps 2 (image) and 3 (advanced) have no mandatory fields
+    return true // steps 2 (image) and 3 (advanced) have no mandatory fields
   }
 
   async function handlePublish(overrides?: Partial<WizardData>) {
@@ -68,7 +69,10 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
   const headerTitle = step === 3 ? 'Modo avançado (opcional)' : 'Criar Prompty'
 
   return (
-    <div className="screen" style={{ paddingBottom: 96, maxWidth: 430, margin: '0 auto', minHeight: '100vh' }}>
+    <div
+      className="screen"
+      style={{ paddingBottom: 96, maxWidth: 430, margin: '0 auto', minHeight: '100vh' }}
+    >
       {/* Header: back chevron + title */}
       <header
         style={{
@@ -133,27 +137,46 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
         )}
         {step === 2 && (
           <>
-            <PrimaryButton full disabled={publishing} onClick={() => { void handlePublish() }}>
+            <PrimaryButton
+              full
+              disabled={publishing}
+              onClick={() => {
+                void handlePublish()
+              }}
+            >
               Publicar Prompty
             </PrimaryButton>
             <button
               type="button"
               onClick={next}
               style={{
-                background: 'none', border: 'none', color: 'var(--primary)',
-                fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5,
-                fontWeight: 700, cursor: 'pointer', padding: 8,
+                background: 'none',
+                border: 'none',
+                color: 'var(--primary)',
+                fontFamily: 'var(--font-sans, sans-serif)',
+                fontSize: 13.5,
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: 8,
               }}
             >
               Continuar para modo avançado
             </button>
             <button
               type="button"
-              onClick={() => { patch({ coverFile: undefined as unknown as File }); void handlePublish({ coverFile: undefined as unknown as File }) }}
+              onClick={() => {
+                patch({ coverFile: undefined as unknown as File })
+                void handlePublish({ coverFile: undefined as unknown as File })
+              }}
               style={{
-                background: 'none', border: 'none', color: 'var(--text-3)',
-                fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5,
-                fontWeight: 700, cursor: 'pointer', padding: 8,
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-3)',
+                fontFamily: 'var(--font-sans, sans-serif)',
+                fontSize: 13.5,
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: 8,
               }}
             >
               Pular imagem
@@ -162,20 +185,34 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
         )}
         {step === 3 && (
           <>
-            <PrimaryButton full disabled={publishing} onClick={() => { void handlePublish() }}>
+            <PrimaryButton
+              full
+              disabled={publishing}
+              onClick={() => {
+                void handlePublish()
+              }}
+            >
               Salvar modo avançado e publicar
             </PrimaryButton>
             <button
               type="button"
               onClick={() => {
-                const skipAdv = { advancedTemplate: undefined as unknown as string, inputs_schema: [] as InputField[] }
+                const skipAdv = {
+                  advancedTemplate: undefined as unknown as string,
+                  inputs_schema: [] as InputField[],
+                }
                 patch(skipAdv)
                 void handlePublish(skipAdv)
               }}
               style={{
-                background: 'none', border: 'none', color: 'var(--primary)',
-                fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5,
-                fontWeight: 700, cursor: 'pointer', padding: 8,
+                background: 'none',
+                border: 'none',
+                color: 'var(--primary)',
+                fontFamily: 'var(--font-sans, sans-serif)',
+                fontSize: 13.5,
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: 8,
               }}
             >
               Ignorar e publicar
@@ -184,7 +221,9 @@ export function CreateWizard({ initialData, onClose, onPublish }: CreateWizardPr
         )}
       </div>
 
-      {error && <Toast message={error} icon="x" iconColor="#FF3B6B" onDismiss={() => setError(null)} />}
+      {error && (
+        <Toast message={error} icon="x" iconColor="#FF3B6B" onDismiss={() => setError(null)} />
+      )}
     </div>
   )
 }

@@ -5,12 +5,19 @@ interface ToastProps {
   message: string
   icon?: IconName
   iconColor?: string
-  points?: string  // e.g. "+5p"
+  points?: string // e.g. "+5p"
   durationMs?: number
   onDismiss?: () => void
 }
 
-export function Toast({ message, icon = 'check', iconColor = '#34D399', points, durationMs = 2400, onDismiss }: ToastProps) {
+export function Toast({
+  message,
+  icon = 'check',
+  iconColor = '#34D399',
+  points,
+  durationMs = 2400,
+  onDismiss,
+}: Readonly<ToastProps>) {
   useEffect(() => {
     const t = setTimeout(() => onDismiss?.(), durationMs)
     return () => clearTimeout(t)

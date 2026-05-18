@@ -9,7 +9,10 @@ export function useSave(promptyId: string) {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      if (!user) { setSaved(false); return }
+      if (!user) {
+        setSaved(false)
+        return
+      }
       const { data } = await supabase
         .from('prompty_saves')
         .select('user_id')
@@ -18,8 +21,10 @@ export function useSave(promptyId: string) {
         .maybeSingle()
       if (!cancelled) setSaved(!!data)
     }
-    load()
-    return () => { cancelled = true }
+    void load()
+    return () => {
+      cancelled = true
+    }
   }, [user, promptyId])
 
   async function toggle() {
@@ -28,7 +33,10 @@ export function useSave(promptyId: string) {
     setSaved(next) // optimistic
     const { error } = next
       ? await supabase.from('prompty_saves').insert({ user_id: user.id, prompty_id: promptyId })
-      : await supabase.from('prompty_saves').delete().match({ user_id: user.id, prompty_id: promptyId })
+      : await supabase
+          .from('prompty_saves')
+          .delete()
+          .match({ user_id: user.id, prompty_id: promptyId })
     if (error) setSaved(!next) // revert on error
   }
 

@@ -18,7 +18,9 @@ function fakeItem(overrides: Partial<FeedItem> = {}): FeedItem {
     author_id: 'u1',
     template: 'Hello {{subject}}',
     negative: null,
-    inputs_schema: [{ key: 'subject', label: 'Sujeito', type: 'text', value: 'astrônoma' }] as never,
+    inputs_schema: [
+      { key: 'subject', label: 'Sujeito', type: 'text', value: 'astrônoma' },
+    ] as never,
     models: ['Midjourney', 'Flux'],
     difficulty: 'beginner',
     style_tags: ['retrato'],

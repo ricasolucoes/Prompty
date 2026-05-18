@@ -9,7 +9,14 @@ interface Props {
   className?: string
 }
 
-export function SecondaryButton({ children, onClick, disabled, full, type = 'button', className }: Props) {
+export function SecondaryButton({
+  children,
+  onClick,
+  disabled,
+  full,
+  type = 'button',
+  className,
+}: Readonly<Props>) {
   return (
     <button
       type={type}

@@ -30,9 +30,7 @@ describe('resolveBeginner', () => {
     expect(out).toBe('chaos=20')
   })
   it('substitutes empty string when neither value nor default present', () => {
-    const out = resolveBeginner('img: {{ref}}', [
-      { key: 'ref', label: 'Ref', type: 'image' },
-    ])
+    const out = resolveBeginner('img: {{ref}}', [{ key: 'ref', label: 'Ref', type: 'image' }])
     expect(out).toBe('img: ')
   })
   it('leaves unknown {{key}} placeholders intact', () => {
@@ -51,7 +49,7 @@ describe('resolveBeginner', () => {
     ]
     const out = resolveBeginner(
       'Create portrait of {{subject_description}} in {{environment}}.',
-      inputs
+      inputs,
     )
     expect(out).toBe('Create portrait of uma astrônoma in um observatório.')
   })

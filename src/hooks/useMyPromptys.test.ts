@@ -17,11 +17,12 @@ vi.mock('@/stores/auth.store', () => ({
 }))
 
 // Mutable spy so individual tests can override
-let authStoreSpy = vi.fn(() => ({ user: { id: 'u1' } as { id: string } | null }))
+let authStoreSpy = vi.fn(() => ({ user: { id: 'u1' } }))
 
 // Dynamic import AFTER mocks
 const { useMyPromptys } = await import('./useMyPromptys')
-const { useAuthStore } = await import('@/stores/auth.store')
+// useAuthStore import preserved for module side effects (mock registration timing)
+await import('@/stores/auth.store')
 
 // -----------------------------------------------------------------
 // Helper: make a thenable chain for .select().eq().eq().order()
@@ -54,7 +55,7 @@ function makeCountChain(count: number) {
 describe('useMyPromptys', () => {
   beforeEach(() => {
     fromMock.mockReset()
-    authStoreSpy = vi.fn(() => ({ user: { id: 'u1' } as { id: string } | null }))
+    authStoreSpy = vi.fn(() => ({ user: { id: 'u1' } }))
   })
 
   // Test 1 (CREAT-03): unauthenticated → empty list, not loading
@@ -89,7 +90,16 @@ describe('useMyPromptys', () => {
 
   // Test 3 (CREAT-03): for each prompty, fetches three counts in parallel
   it('CREAT-03: fetches point_events, prompty_saves, prompty_tests counts per prompty', async () => {
-    const promptData = [{ id: 'p1', title: 'My Prompty', cover_url: null, cover_gradient: null, slug: 'my-prompty', created_at: '2026-05-01T00:00:00Z' }]
+    const promptData = [
+      {
+        id: 'p1',
+        title: 'My Prompty',
+        cover_url: null,
+        cover_gradient: null,
+        slug: 'my-prompty',
+        created_at: '2026-05-01T00:00:00Z',
+      },
+    ]
     const promptysChain = makePromptsChain(promptData)
 
     fromMock.mockImplementation((table: string) => {
@@ -111,7 +121,16 @@ describe('useMyPromptys', () => {
 
   // Test 4 (CREAT-03): final shape includes copies, saves, feedbacks fields
   it('CREAT-03: enriched promptys include copies, saves, feedbacks numeric fields', async () => {
-    const promptData = [{ id: 'p1', title: 'My Prompty', cover_url: null, cover_gradient: null, slug: 'my-prompty-abc123', created_at: '2026-05-01T00:00:00Z' }]
+    const promptData = [
+      {
+        id: 'p1',
+        title: 'My Prompty',
+        cover_url: null,
+        cover_gradient: null,
+        slug: 'my-prompty-abc123',
+        created_at: '2026-05-01T00:00:00Z',
+      },
+    ]
     const promptysChain = makePromptsChain(promptData)
 
     fromMock.mockImplementation((table: string) => {

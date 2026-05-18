@@ -12,13 +12,15 @@ async function writeToClipboard(text: string): Promise<void> {
     // fall through to Tauri fallback
   }
 
-  // Tauri 2 fallback: dynamic import so web build doesn't fail.
+  // Tauri 2 fallback: dynamic import resolved via vite-ignore so static
+  // module resolution does not fail when the optional plugin is absent.
   // Plugin (@tauri-apps/plugin-clipboard-manager) may not be installed until plan 09.
-  // Using Function constructor to avoid TS module resolution on optional plugin.
   try {
-    // eslint-disable-next-line no-new-func
-    const dynImport = new Function('specifier', 'return import(specifier)') as (s: string) => Promise<unknown>
-    const mod = await dynImport('@tauri-apps/plugin-clipboard-manager').catch(() => null) as Record<string, unknown> | null
+    const specifier = '@tauri-apps/plugin-clipboard-manager'
+    const mod = (await import(/* @vite-ignore */ specifier).catch(() => null)) as Record<
+      string,
+      unknown
+    > | null
     const writeText = mod?.['writeText']
     if (mod && typeof writeText === 'function') {
       await (writeText as (text: string) => Promise<void>)(text)

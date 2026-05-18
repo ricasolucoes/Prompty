@@ -4,7 +4,17 @@ import { MemoryRouter } from 'react-router-dom'
 import { MyPromptysGrid } from './MyPromptysGrid'
 
 // Mock useMyPromptys to return controllable data per test
-let mockPromptys: { id: string; slug: string; title: string; cover_url: null; cover_gradient: null; created_at: string; copies: number; saves: number; feedbacks: number }[] = []
+let mockPromptys: {
+  id: string
+  slug: string
+  title: string
+  cover_url: null
+  cover_gradient: null
+  created_at: string
+  copies: number
+  saves: number
+  feedbacks: number
+}[] = []
 vi.mock('@/hooks/useMyPromptys', () => ({
   useMyPromptys: () => ({ promptys: mockPromptys, loading: false }),
 }))
@@ -44,7 +54,19 @@ describe('MyPromptysGrid — L3 stats section (CREAT-03 + LEVL-07)', () => {
 
   it('CREAT-03: renders Meus Promptys header for L3 user (300 points)', () => {
     mockProfile = { points: 300 }
-    mockPromptys = [{ id: 'p1', slug: 'first', title: 'Test', cover_url: null, cover_gradient: null, created_at: new Date().toISOString(), copies: 5, saves: 2, feedbacks: 1 }]
+    mockPromptys = [
+      {
+        id: 'p1',
+        slug: 'first',
+        title: 'Test',
+        cover_url: null,
+        cover_gradient: null,
+        created_at: new Date().toISOString(),
+        copies: 5,
+        saves: 2,
+        feedbacks: 1,
+      },
+    ]
     renderGrid()
     expect(screen.getByText('Meus Promptys')).toBeInTheDocument()
   })
@@ -52,8 +74,28 @@ describe('MyPromptysGrid — L3 stats section (CREAT-03 + LEVL-07)', () => {
   it('CREAT-03: renders one MyPromptyCard per owned prompty', () => {
     mockProfile = { points: 300 }
     mockPromptys = [
-      { id: 'p1', slug: 'first', title: 'First', cover_url: null, cover_gradient: null, created_at: new Date().toISOString(), copies: 1, saves: 0, feedbacks: 0 },
-      { id: 'p2', slug: 'second', title: 'Second', cover_url: null, cover_gradient: null, created_at: new Date().toISOString(), copies: 0, saves: 0, feedbacks: 0 },
+      {
+        id: 'p1',
+        slug: 'first',
+        title: 'First',
+        cover_url: null,
+        cover_gradient: null,
+        created_at: new Date().toISOString(),
+        copies: 1,
+        saves: 0,
+        feedbacks: 0,
+      },
+      {
+        id: 'p2',
+        slug: 'second',
+        title: 'Second',
+        cover_url: null,
+        cover_gradient: null,
+        created_at: new Date().toISOString(),
+        copies: 0,
+        saves: 0,
+        feedbacks: 0,
+      },
     ]
     renderGrid()
     expect(screen.getByText('First')).toBeInTheDocument()

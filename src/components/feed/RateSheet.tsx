@@ -11,7 +11,8 @@ interface Props {
   onSubmitted: () => void
 }
 
-export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
+// eslint-disable-next-line max-lines-per-function -- bottom sheet form, refactor deferred
+export function RateSheet({ open, prompty, onClose, onSubmitted }: Readonly<Props>) {
   const { submit } = useTest()
   const [rating, setRating] = useState(0)
   const [notes, setNotes] = useState('')
@@ -22,15 +23,25 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
 
   // Reset on open/close
   useEffect(() => {
-    if (!open) { setRating(0); setNotes(''); setImage(null); setBusy(false); setErr(null) }
+    if (!open) {
+      setRating(0)
+      setNotes('')
+      setImage(null)
+      setBusy(false)
+      setErr(null)
+    }
   }, [open])
 
   if (!open) return null
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (rating < 1) { setErr('Selecione uma nota.'); return }
-    setBusy(true); setErr(null)
+    if (rating < 1) {
+      setErr('Selecione uma nota.')
+      return
+    }
+    setBusy(true)
+    setErr(null)
     const trimmedNotes = notes.trim()
     const r = await submit({
       prompty_id: prompty.id,
@@ -39,7 +50,10 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
       ...(image ? { image } : {}),
     })
     setBusy(false)
-    if (!r.ok) { setErr(r.error ?? 'Erro ao enviar.'); return }
+    if (!r.ok) {
+      setErr(r.error ?? 'Erro ao enviar.')
+      return
+    }
     onSubmitted()
     onClose()
   }
@@ -50,16 +64,26 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
       aria-modal="true"
       aria-label="Avaliar prompty"
       style={{
-        position: 'fixed', inset: 0, zIndex: 100,
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-        background: 'rgba(0,0,0,0.5)', animation: 'fadeIn .2s',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 100,
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.5)',
+        animation: 'fadeIn .2s',
       }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
     >
       <form
-        onSubmit={onSubmit}
+        onSubmit={(e) => {
+          void onSubmit(e)
+        }}
         style={{
-          width: '100%', maxWidth: 430,
+          width: '100%',
+          maxWidth: 430,
           background: 'var(--surface)',
           borderRadius: '24px 24px 0 0',
           padding: '20px 20px 32px',
@@ -67,17 +91,48 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
           fontFamily: 'var(--font-sans, sans-serif)',
         }}
       >
-        <div style={{ width: 32, height: 4, background: 'var(--line-strong)', borderRadius: 2, margin: '0 auto 16px' }} aria-hidden="true" />
+        <div
+          style={{
+            width: 32,
+            height: 4,
+            background: 'var(--line-strong)',
+            borderRadius: 2,
+            margin: '0 auto 16px',
+          }}
+          aria-hidden="true"
+        />
 
-        <h2 style={{ margin: 0, textAlign: 'center', fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 19, letterSpacing: -0.4, color: 'var(--text-1)' }}>
+        <h2
+          style={{
+            margin: 0,
+            textAlign: 'center',
+            fontFamily: 'var(--font-display, sans-serif)',
+            fontWeight: 700,
+            fontSize: 19,
+            letterSpacing: -0.4,
+            color: 'var(--text-1)',
+          }}
+        >
           Como ficou?
         </h2>
-        <p style={{ marginTop: 4, marginBottom: 24, textAlign: 'center', fontSize: 13.5, color: 'var(--text-2)' }}>
+        <p
+          style={{
+            marginTop: 4,
+            marginBottom: 24,
+            textAlign: 'center',
+            fontSize: 13.5,
+            color: 'var(--text-2)',
+          }}
+        >
           {prompty.title}
         </p>
 
         {/* Stars */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 24 }} role="radiogroup" aria-label="Nota">
+        <div
+          style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 24 }}
+          role="radiogroup"
+          aria-label="Nota"
+        >
           {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
@@ -87,11 +142,18 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
               aria-label={`${n} ${n === 1 ? 'estrela' : 'estrelas'}`}
               onClick={() => setRating(n)}
               style={{
-                background: 'none', border: 'none', padding: 4, cursor: 'pointer',
+                background: 'none',
+                border: 'none',
+                padding: 4,
+                cursor: 'pointer',
                 color: n <= rating ? '#FFB020' : 'var(--line-strong)',
               }}
             >
-              <Icon name={n <= rating ? 'starFill' : 'star'} size={36} color={n <= rating ? '#FFB020' : 'currentColor'} />
+              <Icon
+                name={n <= rating ? 'starFill' : 'star'}
+                size={36}
+                color={n <= rating ? '#FFB020' : 'currentColor'}
+              />
             </button>
           ))}
         </div>
@@ -103,9 +165,16 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
           maxLength={500}
           rows={3}
           style={{
-            width: '100%', padding: 12, marginBottom: 12,
-            borderRadius: 12, border: '1px solid var(--line)', background: 'var(--surface-2)',
-            color: 'var(--text-1)', fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5, lineHeight: 1.4,
+            width: '100%',
+            padding: 12,
+            marginBottom: 12,
+            borderRadius: 12,
+            border: '1px solid var(--line)',
+            background: 'var(--surface-2)',
+            color: 'var(--text-1)',
+            fontFamily: 'var(--font-sans, sans-serif)',
+            fontSize: 13.5,
+            lineHeight: 1.4,
             resize: 'vertical',
           }}
           aria-label="Notas (opcional)"
@@ -125,11 +194,18 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             style={{
-              width: '100%', height: 140, borderRadius: 12,
+              width: '100%',
+              height: 140,
+              borderRadius: 12,
               border: '2px dashed var(--line-strong)',
-              background: 'var(--surface-2)', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'var(--text-3)', fontSize: 13.5, fontWeight: 700,
+              background: 'var(--surface-2)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-3)',
+              fontSize: 13.5,
+              fontWeight: 700,
               gap: 8,
             }}
           >
@@ -138,10 +214,16 @@ export function RateSheet({ open, prompty, onClose, onSubmitted }: Props) {
           </button>
         </div>
 
-        {err && <p role="alert" style={{ color: '#FF3B6B', fontSize: 13.5, marginBottom: 12 }}>{err}</p>}
+        {err && (
+          <p role="alert" style={{ color: '#FF3B6B', fontSize: 13.5, marginBottom: 12 }}>
+            {err}
+          </p>
+        )}
 
         <div style={{ display: 'flex', gap: 8 }}>
-          <SecondaryButton onClick={onClose} full>Avaliar depois</SecondaryButton>
+          <SecondaryButton onClick={onClose} full>
+            Avaliar depois
+          </SecondaryButton>
           <PrimaryButton type="submit" full disabled={busy || rating < 1}>
             {busy ? 'Enviando…' : 'Enviar (+5p)'}
           </PrimaryButton>

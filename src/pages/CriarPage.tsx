@@ -57,13 +57,13 @@ export function CriarPage() {
   async function handlePublish(form: WizardData) {
     const r = await publish(form)
     if (r.ok && r.slug) {
-      nav(`/p/${r.slug}`, { replace: true })
+      void nav(`/p/${r.slug}`, { replace: true })
     }
     return r
   }
 
   function handleClose() {
-    nav('/', { replace: true })
+    void nav('/', { replace: true })
   }
 
   if (loading) {
@@ -79,10 +79,6 @@ export function CriarPage() {
 
   // initialData is guaranteed non-null here (loadParent always sets it)
   return (
-    <CreateWizard
-      initialData={initialData ?? {}}
-      onClose={handleClose}
-      onPublish={handlePublish}
-    />
+    <CreateWizard initialData={initialData ?? {}} onClose={handleClose} onPublish={handlePublish} />
   )
 }

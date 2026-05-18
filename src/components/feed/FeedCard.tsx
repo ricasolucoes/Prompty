@@ -15,6 +15,11 @@ interface FeedCardProps {
   onRate?: () => void
 }
 
+const COLOR_TEXT_1 = 'var(--text-1)'
+const COLOR_TEXT_2 = 'var(--text-2)'
+const COLOR_TEXT_3 = 'var(--text-3)'
+const BORDER_LINE = '1px solid var(--line)'
+
 function relativeTime(iso: string): string {
   const then = new Date(iso).getTime()
   const now = Date.now()
@@ -28,6 +33,7 @@ function relativeTime(iso: string): string {
   return `${d} d`
 }
 
+// eslint-disable-next-line max-lines-per-function, complexity -- card with multiple optional handlers; refactor deferred
 export function FeedCard({
   prompty,
   liked = false,
@@ -36,33 +42,45 @@ export function FeedCard({
   onLike,
   onCopy,
   onRate,
-}: FeedCardProps) {
+}: Readonly<FeedCardProps>) {
   const [expanded, setExpanded] = useState(false)
   const author = prompty.profiles
-  const inputs = (Array.isArray(prompty.inputs_schema) ? prompty.inputs_schema : []) as unknown as InputField[]
-  const resolved = useMemo(() => resolveBeginner(prompty.template, inputs), [prompty.template, inputs])
+  const inputs = useMemo(
+    () =>
+      (Array.isArray(prompty.inputs_schema)
+        ? prompty.inputs_schema
+        : []) as unknown as InputField[],
+    [prompty.inputs_schema],
+  )
+  const resolved = useMemo(
+    () => resolveBeginner(prompty.template, inputs),
+    [prompty.template, inputs],
+  )
   const cover = prompty.cover_url
     ? undefined
-    : prompty.cover_gradient ?? 'linear-gradient(135deg,#3b1d6e 0%,#7C3AED 50%,#FF6B4A 100%)'
+    : (prompty.cover_gradient ?? 'linear-gradient(135deg,#3b1d6e 0%,#7C3AED 50%,#FF6B4A 100%)')
 
   return (
     <article
       className="screen"
       style={{
         background: 'var(--surface)',
-        borderTop: '1px solid var(--line)',
-        borderBottom: '1px solid var(--line)',
+        borderTop: BORDER_LINE,
+        borderBottom: BORDER_LINE,
         marginBottom: 8,
       }}
     >
       {/* Author header */}
       <header style={{ padding: '16px 16px 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Avatar user={{ name: author?.name ?? 'Promptys', avatar_url: author?.avatar_url ?? null }} size={42} />
+        <Avatar
+          user={{ name: author?.name ?? 'Promptys', avatar_url: author?.avatar_url ?? null }}
+          size={42}
+        />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)' }}>
+          <div style={{ fontSize: 13.5, fontWeight: 700, color: COLOR_TEXT_1 }}>
             {author?.name ?? 'Promptys'}
           </div>
-          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-3)' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: COLOR_TEXT_3 }}>
             compartilhou um Prompty · {relativeTime(prompty.created_at)}
           </div>
         </div>
@@ -78,13 +96,10 @@ export function FeedCard({
           fontSize: 19,
           letterSpacing: -0.4,
           lineHeight: 1.25,
-          color: 'var(--text-1)',
+          color: COLOR_TEXT_1,
         }}
       >
-        <Link
-          to={`/p/${prompty.slug}`}
-          style={{ color: 'inherit', textDecoration: 'none' }}
-        >
+        <Link to={`/p/${prompty.slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
           {prompty.title}
         </Link>
       </h2>
@@ -99,7 +114,7 @@ export function FeedCard({
             fontWeight: 700,
             letterSpacing: 0.6,
             textTransform: 'uppercase',
-            color: 'var(--text-3)',
+            color: COLOR_TEXT_3,
           }}
         >
           Prompt
@@ -110,7 +125,7 @@ export function FeedCard({
             fontSize: 13.5,
             fontWeight: 400,
             lineHeight: 1.5,
-            color: 'var(--text-2)',
+            color: COLOR_TEXT_2,
             whiteSpace: 'pre-wrap',
             display: expanded ? 'block' : '-webkit-box',
             WebkitLineClamp: expanded ? undefined : 3,
@@ -128,7 +143,7 @@ export function FeedCard({
               padding: 0,
               background: 'none',
               border: 'none',
-              color: 'var(--text-1)',
+              color: COLOR_TEXT_1,
               fontWeight: 700,
               fontSize: 13.5,
               cursor: 'pointer',
@@ -144,7 +159,9 @@ export function FeedCard({
         style={{
           width: '100%',
           aspectRatio: '4/5',
-          background: prompty.cover_url ? `url(${prompty.cover_url}) center/cover no-repeat` : cover,
+          background: prompty.cover_url
+            ? `url(${prompty.cover_url}) center/cover no-repeat`
+            : cover,
         }}
         aria-label={`Imagem de exemplo do Prompty ${prompty.title}`}
         role="img"
@@ -154,15 +171,19 @@ export function FeedCard({
       <div style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 6 }}>
         <span
           style={{
-            width: 18, height: 18, borderRadius: 9,
+            width: 18,
+            height: 18,
+            borderRadius: 9,
             background: 'var(--like)',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
           aria-hidden="true"
         >
           <Icon name="heartFill" size={11} color="#fff" />
         </span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-2)' }}>Curtidas</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: COLOR_TEXT_2 }}>Curtidas</span>
       </div>
 
       {/* Action row — Curtir + Copiar (LEVL-06: NO save, NO remix, NO share) */}
@@ -173,8 +194,8 @@ export function FeedCard({
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: 4,
-          borderTop: '1px solid var(--line)',
-          borderBottom: '1px solid var(--line)',
+          borderTop: BORDER_LINE,
+          borderBottom: BORDER_LINE,
         }}
       >
         <button
@@ -182,14 +203,26 @@ export function FeedCard({
           onClick={onLike}
           aria-label="Curtir"
           style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            padding: '12px 8px', borderRadius: 8,
-            background: 'transparent', border: 'none', cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            padding: '12px 8px',
+            borderRadius: 8,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
             color: liked ? 'var(--like)' : 'var(--text-2)',
-            fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5, fontWeight: 700,
+            fontFamily: 'var(--font-sans, sans-serif)',
+            fontSize: 13.5,
+            fontWeight: 700,
           }}
         >
-          <Icon name={liked ? 'heartFill' : 'heart'} size={20} color={liked ? 'var(--like)' : 'currentColor'} />
+          <Icon
+            name={liked ? 'heartFill' : 'heart'}
+            size={20}
+            color={liked ? 'var(--like)' : 'currentColor'}
+          />
           <span>Curtir</span>
         </button>
         <button
@@ -197,28 +230,38 @@ export function FeedCard({
           onClick={onCopy}
           aria-label={copied ? 'Copiado' : 'Copiar prompt'}
           style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            padding: '12px 8px', borderRadius: 8,
-            background: 'transparent', border: 'none', cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            padding: '12px 8px',
+            borderRadius: 8,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
             color: copied ? '#34D399' : 'var(--text-2)',
-            fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5, fontWeight: 700,
+            fontFamily: 'var(--font-sans, sans-serif)',
+            fontSize: 13.5,
+            fontWeight: 700,
           }}
         >
-          <Icon name={copied ? 'check' : 'copy'} size={20} color={copied ? '#34D399' : 'currentColor'} />
+          <Icon
+            name={copied ? 'check' : 'copy'}
+            size={20}
+            color={copied ? '#34D399' : 'currentColor'}
+          />
           <span>{copied ? 'Copiado!' : 'Copiar prompt'}</span>
         </button>
       </div>
 
       {/* Post-copy banner appears below action row when copied=true and rated=false (plan 07 wires the rate flow) */}
-      {copied && !rated && (
-        <PostCopyBanner {...(onRate ? { onRate } : {})} />
-      )}
+      {copied && !rated && <PostCopyBanner {...(onRate ? { onRate } : {})} />}
       {rated && <PostRateConfirmation />}
     </article>
   )
 }
 
-function PostCopyBanner({ onRate }: { onRate?: () => void }) {
+function PostCopyBanner({ onRate }: Readonly<{ onRate?: () => void }>) {
   return (
     <div
       role="region"
@@ -228,17 +271,25 @@ function PostCopyBanner({ onRate }: { onRate?: () => void }) {
         padding: 16,
         borderRadius: 14,
         background: 'linear-gradient(135deg, rgba(124,58,237,0.12), rgba(34,211,238,0.06))',
-        border: '1px solid var(--line)',
+        border: BORDER_LINE,
         animation: 'fadeIn .25s',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
         <Icon name="sparkle" size={16} color="var(--primary)" />
-        <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)' }}>
+        <span style={{ fontSize: 13.5, fontWeight: 700, color: COLOR_TEXT_1 }}>
           Cole no Gemini, ChatGPT ou Midjourney
         </span>
       </div>
-      <p style={{ margin: 0, marginBottom: 12, fontSize: 13.5, lineHeight: 1.4, color: 'var(--text-2)' }}>
+      <p
+        style={{
+          margin: 0,
+          marginBottom: 12,
+          fontSize: 13.5,
+          lineHeight: 1.4,
+          color: COLOR_TEXT_2,
+        }}
+      >
         Quando voltar com a imagem pronta, conte para a comunidade como ficou.
       </p>
       <button
@@ -278,11 +329,13 @@ function PostRateConfirmation() {
         borderRadius: 12,
         background: 'rgba(52,211,153,0.10)',
         border: '1px solid rgba(52,211,153,0.25)',
-        display: 'flex', alignItems: 'center', gap: 8,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
       }}
     >
       <Icon name="check" size={16} color="#34D399" />
-      <span style={{ fontSize: 13.5, color: 'var(--text-1)' }}>
+      <span style={{ fontSize: 13.5, color: COLOR_TEXT_1 }}>
         Você já avaliou este Prompty. Obrigada!
       </span>
     </div>

@@ -11,12 +11,13 @@ interface Props {
 
 const REASONS = [
   { value: 'inappropriate', label: 'Conteúdo impróprio' },
-  { value: 'spam',          label: 'Spam' },
-  { value: 'plagiarism',    label: 'Plagiado' },
-  { value: 'other',         label: 'Outro' },
+  { value: 'spam', label: 'Spam' },
+  { value: 'plagiarism', label: 'Plagiado' },
+  { value: 'other', label: 'Outro' },
 ] as const
 
-export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
+// eslint-disable-next-line max-lines-per-function -- bottom sheet form, refactor deferred
+export function ReportSheet({ open, prompty, onClose, onSubmitted }: Readonly<Props>) {
   const { submit } = useReport()
   const [reason, setReason] = useState<string>('')
   const [notes, setNotes] = useState('')
@@ -24,15 +25,24 @@ export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
   const [err, setErr] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!open) { setReason(''); setNotes(''); setBusy(false); setErr(null) }
+    if (!open) {
+      setReason('')
+      setNotes('')
+      setBusy(false)
+      setErr(null)
+    }
   }, [open])
 
   if (!open) return null
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!reason) { setErr('Selecione um motivo para denunciar.'); return }
-    setBusy(true); setErr(null)
+    if (!reason) {
+      setErr('Selecione um motivo para denunciar.')
+      return
+    }
+    setBusy(true)
+    setErr(null)
     const trimmed = notes.trim()
     const r = await submit({
       prompty_id: prompty.id,
@@ -41,7 +51,10 @@ export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
       ...(trimmed ? { notes: trimmed } : {}),
     })
     setBusy(false)
-    if (!r.ok) { setErr(r.error ?? 'Não foi possível enviar.'); return }
+    if (!r.ok) {
+      setErr(r.error ?? 'Não foi possível enviar.')
+      return
+    }
     onSubmitted()
     onClose()
   }
@@ -52,16 +65,26 @@ export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
       aria-modal="true"
       aria-label="Denunciar Prompty"
       style={{
-        position: 'fixed', inset: 0, zIndex: 100,
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-        background: 'rgba(0,0,0,0.5)', animation: 'fadeIn .2s',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 100,
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.5)',
+        animation: 'fadeIn .2s',
       }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
     >
       <form
-        onSubmit={onSubmit}
+        onSubmit={(e) => {
+          void onSubmit(e)
+        }}
         style={{
-          width: '100%', maxWidth: 430,
+          width: '100%',
+          maxWidth: 430,
           background: 'var(--surface)',
           borderRadius: '24px 24px 0 0',
           padding: '20px 20px 32px',
@@ -69,16 +92,51 @@ export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
           fontFamily: 'var(--font-sans, sans-serif)',
         }}
       >
-        <div style={{ width: 32, height: 4, background: 'var(--line-strong)', borderRadius: 2, margin: '0 auto 16px' }} aria-hidden="true" />
+        <div
+          style={{
+            width: 32,
+            height: 4,
+            background: 'var(--line-strong)',
+            borderRadius: 2,
+            margin: '0 auto 16px',
+          }}
+          aria-hidden="true"
+        />
 
-        <h2 style={{ margin: 0, textAlign: 'center', fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 19, letterSpacing: -0.4, color: 'var(--text-1)' }}>
+        <h2
+          style={{
+            margin: 0,
+            textAlign: 'center',
+            fontFamily: 'var(--font-display, sans-serif)',
+            fontWeight: 700,
+            fontSize: 19,
+            letterSpacing: -0.4,
+            color: 'var(--text-1)',
+          }}
+        >
           Denunciar Prompty
         </h2>
-        <p style={{ marginTop: 4, marginBottom: 24, textAlign: 'center', fontSize: 13.5, color: 'var(--text-2)' }}>
+        <p
+          style={{
+            marginTop: 4,
+            marginBottom: 24,
+            textAlign: 'center',
+            fontSize: 13.5,
+            color: 'var(--text-2)',
+          }}
+        >
           {prompty.title}
         </p>
 
-        <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-3)', marginBottom: 8 }}>
+        <label
+          style={{
+            display: 'block',
+            fontSize: 12,
+            fontWeight: 700,
+            color: 'var(--text-3)',
+            marginBottom: 8,
+          }}
+        >
           Motivo
         </label>
         <select
@@ -98,13 +156,25 @@ export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
             marginBottom: 16,
           }}
         >
-          <option value="" disabled>Selecione um motivo</option>
+          <option value="" disabled>
+            Selecione um motivo
+          </option>
           {REASONS.map((r) => (
-            <option key={r.value} value={r.value}>{r.label}</option>
+            <option key={r.value} value={r.value}>
+              {r.label}
+            </option>
           ))}
         </select>
 
-        <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-3)', marginBottom: 8 }}>
+        <label
+          style={{
+            display: 'block',
+            fontSize: 12,
+            fontWeight: 700,
+            color: 'var(--text-3)',
+            marginBottom: 8,
+          }}
+        >
           Detalhes (opcional)
         </label>
         <textarea
@@ -115,17 +185,30 @@ export function ReportSheet({ open, prompty, onClose, onSubmitted }: Props) {
           rows={3}
           aria-label="Detalhes (opcional)"
           style={{
-            width: '100%', padding: 12, marginBottom: 16,
-            borderRadius: 12, border: '1px solid var(--line)', background: 'var(--surface-2)',
-            color: 'var(--text-1)', fontFamily: 'var(--font-sans, sans-serif)', fontSize: 13.5, lineHeight: 1.4,
+            width: '100%',
+            padding: 12,
+            marginBottom: 16,
+            borderRadius: 12,
+            border: '1px solid var(--line)',
+            background: 'var(--surface-2)',
+            color: 'var(--text-1)',
+            fontFamily: 'var(--font-sans, sans-serif)',
+            fontSize: 13.5,
+            lineHeight: 1.4,
             resize: 'vertical',
           }}
         />
 
-        {err && <p role="alert" style={{ color: '#FF3B6B', fontSize: 13.5, marginBottom: 12 }}>{err}</p>}
+        {err && (
+          <p role="alert" style={{ color: '#FF3B6B', fontSize: 13.5, marginBottom: 12 }}>
+            {err}
+          </p>
+        )}
 
         <div style={{ display: 'flex', gap: 8 }}>
-          <SecondaryButton onClick={onClose} full>Fechar</SecondaryButton>
+          <SecondaryButton onClick={onClose} full>
+            Fechar
+          </SecondaryButton>
           <button
             type="submit"
             disabled={busy || !reason}

@@ -20,6 +20,12 @@ type Prompty = Database['public']['Tables']['promptys']['Row'] & {
   profiles: { name: string | null; username: string | null; avatar_url: string | null } | null
 }
 
+const LEVEL_ID_L2 = 'L2'
+const LEVEL_ID_L3 = 'L3'
+const LEVEL_ID_L4 = 'L4'
+const LEVEL_ID_L5 = 'L5'
+
+// eslint-disable-next-line max-lines-per-function, complexity, max-statements -- page shell; refactor deferred
 export function PromptyDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   const nav = useNavigate()
@@ -29,16 +35,26 @@ export function PromptyDetailPage() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [toast, setToast] = useState<{ message: string; icon: 'check' | 'copy' | 'bookmark'; iconColor?: string } | null>(null)
+  const [toast, setToast] = useState<{
+    message: string
+    icon: 'check' | 'copy' | 'bookmark'
+    iconColor?: string
+  } | null>(null)
 
   // LEVL-07: "..." menu only for L2+ users
-  const LEVEL_ORDER: ReadonlyArray<string> = ['L1', 'L2', 'L3', 'L4', 'L5']
+  const LEVEL_ORDER: ReadonlyArray<string> = [
+    'L1',
+    LEVEL_ID_L2,
+    LEVEL_ID_L3,
+    LEVEL_ID_L4,
+    LEVEL_ID_L5,
+  ]
   const isL2 = profile
-    ? LEVEL_ORDER.indexOf(levelOf(profile.points ?? 0).id) >= LEVEL_ORDER.indexOf('L2')
+    ? LEVEL_ORDER.indexOf(levelOf(profile.points ?? 0).id) >= LEVEL_ORDER.indexOf(LEVEL_ID_L2)
     : false
   // CREAT-04 / LEVL-07: "Criar variação" only for L3+ users — hidden (not disabled) for L1/L2
   const lvl = levelOf(profile?.points ?? 0)
-  const isL3OrAbove = lvl.id === 'L3' || lvl.id === 'L4' || lvl.id === 'L5'
+  const isL3OrAbove = lvl.id === LEVEL_ID_L3 || lvl.id === LEVEL_ID_L4 || lvl.id === LEVEL_ID_L5
   const [showOptions, setShowOptions] = useState(false)
   const [showReport, setShowReport] = useState(false)
   const [showCategorySuggest, setShowCategorySuggest] = useState(false)
@@ -59,12 +75,14 @@ export function PromptyDetailPage() {
       if (error || !data) {
         setNotFound(true)
       } else {
-        setPrompty(data as unknown as Prompty)
+        setPrompty(data)
       }
       setLoading(false)
     }
     void load()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [slug])
 
   // Save hook — call unconditionally (Rules of Hooks). Empty id when prompty
@@ -73,9 +91,11 @@ export function PromptyDetailPage() {
   const promptyIdForSave = prompty?.id ?? ''
   const { saved, toggle: toggleSave } = useSave(promptyIdForSave)
 
-  const inputs = (Array.isArray(prompty?.inputs_schema) ? prompty?.inputs_schema : []) as unknown as InputField[]
+  const inputs = (Array.isArray(prompty?.inputs_schema)
+    ? prompty?.inputs_schema
+    : []) as unknown as InputField[]
   const resolved = useMemo(
-    () => prompty ? resolveBeginner(prompty.template, inputs) : '',
+    () => (prompty ? resolveBeginner(prompty.template, inputs) : ''),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [prompty?.template, inputs],
   )
@@ -95,7 +115,7 @@ export function PromptyDetailPage() {
 
   async function handleSave() {
     if (!user) {
-      nav('/login')
+      void nav('/login')
       return
     }
     const wasSaved = saved
@@ -109,13 +129,16 @@ export function PromptyDetailPage() {
 
   function handleVariation() {
     if (!prompty) return
-    nav(`/criar?from=${prompty.id}`)
+    void nav(`/criar?from=${prompty.id}`)
   }
 
   // Loading state
   if (loading) {
     return (
-      <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
+      <main
+        className="screen"
+        style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}
+      >
         <p style={{ color: 'var(--text-3)', fontSize: 13.5 }}>Carregando…</p>
       </main>
     )
@@ -124,13 +147,20 @@ export function PromptyDetailPage() {
   // Not found state
   if (notFound || !prompty) {
     return (
-      <main className="screen" style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}>
-        <h1 style={{ fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 22 }}>
+      <main
+        className="screen"
+        style={{ padding: 32, textAlign: 'center', maxWidth: 430, margin: '0 auto' }}
+      >
+        <h1
+          style={{ fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 22 }}
+        >
           Prompty não encontrado
         </h1>
         <p style={{ marginTop: 8, color: 'var(--text-2)', fontSize: 13.5 }}>
           Este Prompty não existe ou foi removido.{' '}
-          <Link to="/" style={{ color: 'var(--primary)', fontWeight: 700 }}>Voltar ao feed</Link>
+          <Link to="/" style={{ color: 'var(--primary)', fontWeight: 700 }}>
+            Voltar ao feed
+          </Link>
         </p>
       </main>
     )
@@ -148,7 +178,15 @@ export function PromptyDetailPage() {
         <Link
           to="/"
           aria-label="Voltar ao feed"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--text-2)', fontSize: 13.5, fontWeight: 700, textDecoration: 'none' }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            color: 'var(--text-2)',
+            fontSize: 13.5,
+            fontWeight: 700,
+            textDecoration: 'none',
+          }}
         >
           <Icon name="chevronL" size={20} />
           <span>Feed</span>
@@ -157,7 +195,10 @@ export function PromptyDetailPage() {
 
       {/* Author header */}
       <header style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Avatar user={{ name: author?.name ?? 'Promptys', avatar_url: author?.avatar_url ?? null }} size={42} />
+        <Avatar
+          user={{ name: author?.name ?? 'Promptys', avatar_url: author?.avatar_url ?? null }}
+          size={42}
+        />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)' }}>
             {author?.name ?? 'Promptys'}
@@ -191,9 +232,14 @@ export function PromptyDetailPage() {
       {/* Title */}
       <h1
         style={{
-          margin: 0, padding: '8px 16px',
-          fontFamily: 'var(--font-display, sans-serif)', fontWeight: 700, fontSize: 22,
-          letterSpacing: -0.5, lineHeight: 1.2, color: 'var(--text-1)',
+          margin: 0,
+          padding: '8px 16px',
+          fontFamily: 'var(--font-display, sans-serif)',
+          fontWeight: 700,
+          fontSize: 22,
+          letterSpacing: -0.5,
+          lineHeight: 1.2,
+          color: 'var(--text-1)',
         }}
       >
         {prompty.title}
@@ -202,8 +248,11 @@ export function PromptyDetailPage() {
       {/* Cover image */}
       <div
         style={{
-          width: '100%', aspectRatio: '4/5',
-          background: prompty.cover_url ? `url(${prompty.cover_url}) center/cover no-repeat` : cover,
+          width: '100%',
+          aspectRatio: '4/5',
+          background: prompty.cover_url
+            ? `url(${prompty.cover_url}) center/cover no-repeat`
+            : cover,
         }}
         aria-label={`Imagem de exemplo do Prompty ${prompty.title}`}
         role="img"
@@ -213,9 +262,13 @@ export function PromptyDetailPage() {
       <section style={{ padding: '16px' }}>
         <p
           style={{
-            margin: 0, marginBottom: 4,
-            fontSize: 12, fontWeight: 700, letterSpacing: 0.6,
-            textTransform: 'uppercase', color: 'var(--text-3)',
+            margin: 0,
+            marginBottom: 4,
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: 0.6,
+            textTransform: 'uppercase',
+            color: 'var(--text-3)',
           }}
         >
           Prompt
@@ -223,8 +276,11 @@ export function PromptyDetailPage() {
         <div
           data-testid="prompt-text-full"
           style={{
-            fontSize: 13.5, fontWeight: 400, lineHeight: 1.5,
-            color: 'var(--text-2)', whiteSpace: 'pre-wrap',
+            fontSize: 13.5,
+            fontWeight: 400,
+            lineHeight: 1.5,
+            color: 'var(--text-2)',
+            whiteSpace: 'pre-wrap',
           }}
         >
           {resolved}
@@ -233,7 +289,13 @@ export function PromptyDetailPage() {
 
       {/* Action buttons — Copiar prompt always; Salvar only for authenticated users */}
       <div style={{ padding: '0 16px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <PrimaryButton full icon={copied ? 'check' : 'copy'} onClick={handleCopy}>
+        <PrimaryButton
+          full
+          icon={copied ? 'check' : 'copy'}
+          onClick={() => {
+            void handleCopy()
+          }}
+        >
           {copied ? 'Copiado!' : 'Copiar prompt'}
         </PrimaryButton>
 
@@ -244,7 +306,9 @@ export function PromptyDetailPage() {
         {user && (
           <button
             type="button"
-            onClick={handleSave}
+            onClick={() => {
+              void handleSave()
+            }}
             aria-label={saved ? 'Remover dos salvos' : 'Salvar na biblioteca'}
             className="inline-flex w-full items-center justify-center rounded-[14px] px-4 py-3 font-bold"
             style={{
@@ -315,20 +379,23 @@ export function PromptyDetailPage() {
             open={showReport}
             prompty={{ id: prompty.id, title: prompty.title }}
             onClose={() => setShowReport(false)}
-            onSubmitted={() => setToast({ message: 'Denúncia enviada', icon: 'check', iconColor: '#34D399' })}
+            onSubmitted={() =>
+              setToast({ message: 'Denúncia enviada', icon: 'check', iconColor: '#34D399' })
+            }
           />
           <CategorySuggestSheet
             open={showCategorySuggest}
             prompty={{ id: prompty.id, title: prompty.title }}
             onClose={() => setShowCategorySuggest(false)}
-            onSubmitted={() => setToast({ message: 'Sugestão enviada', icon: 'check', iconColor: '#34D399' })}
+            onSubmitted={() =>
+              setToast({ message: 'Sugestão enviada', icon: 'check', iconColor: '#34D399' })
+            }
           />
         </>
       )}
 
       {toast && (
         <Toast
-          key={toast.message + Date.now()}
           message={toast.message}
           icon={toast.icon}
           {...(toast.iconColor ? { iconColor: toast.iconColor } : {})}

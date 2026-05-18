@@ -10,17 +10,26 @@ export function useLike(promptyId: string) {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      if (!user) { setLiked(false); setHydrated(true); return }
+      if (!user) {
+        setLiked(false)
+        setHydrated(true)
+        return
+      }
       const { data } = await supabase
         .from('prompty_likes')
         .select('user_id')
         .eq('user_id', user.id)
         .eq('prompty_id', promptyId)
         .maybeSingle()
-      if (!cancelled) { setLiked(!!data); setHydrated(true) }
+      if (!cancelled) {
+        setLiked(!!data)
+        setHydrated(true)
+      }
     }
-    load()
-    return () => { cancelled = true }
+    void load()
+    return () => {
+      cancelled = true
+    }
   }, [user, promptyId])
 
   async function toggle() {
@@ -29,7 +38,10 @@ export function useLike(promptyId: string) {
     setLiked(next) // optimistic
     const { error } = next
       ? await supabase.from('prompty_likes').insert({ user_id: user.id, prompty_id: promptyId })
-      : await supabase.from('prompty_likes').delete().match({ user_id: user.id, prompty_id: promptyId })
+      : await supabase
+          .from('prompty_likes')
+          .delete()
+          .match({ user_id: user.id, prompty_id: promptyId })
     if (error) {
       setLiked(!next) // revert on error
     }

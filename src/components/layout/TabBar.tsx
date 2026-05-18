@@ -11,12 +11,12 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { to: '/',        icon: 'home',     label: 'Feed',    minLevel: 'L1' },
-  { to: '/saved',   icon: 'bookmark', label: 'Salvos',  minLevel: 'L2' },
-  { to: '/search',  icon: 'search',   label: 'Buscar',  minLevel: 'L2' },
-  { to: '/criar',   icon: 'sparkle',  label: 'Criar',   minLevel: 'L3' },
+  { to: '/', icon: 'home', label: 'Feed', minLevel: 'L1' },
+  { to: '/saved', icon: 'bookmark', label: 'Salvos', minLevel: 'L2' },
+  { to: '/search', icon: 'search', label: 'Buscar', minLevel: 'L2' },
+  { to: '/criar', icon: 'sparkle', label: 'Criar', minLevel: 'L3' },
   { to: '/ranking', icon: 'starFill', label: 'Ranking', minLevel: 'L3' },
-  { to: '/profile', icon: 'user',     label: 'Perfil',  minLevel: 'L1' },
+  { to: '/profile', icon: 'user', label: 'Perfil', minLevel: 'L1' },
 ]
 
 const LEVEL_ORDER = ['L1', 'L2', 'L3', 'L4', 'L5']
@@ -84,7 +84,7 @@ export function TabBar() {
                       color: '#fff',
                       boxShadow: '0 8px 24px rgba(124,58,237,0.35)',
                       textDecoration: 'none',
-                      fontSize: 0,  // hide label visually; aria-label preserves a11y
+                      fontSize: 0, // hide label visually; aria-label preserves a11y
                     }
                   : {
                       flex: 1,

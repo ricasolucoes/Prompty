@@ -12,19 +12,15 @@ import { useCopy } from '@/hooks/useCopy'
 import { useLike } from '@/hooks/useLike'
 import { resolveBeginner, type InputField } from '@/lib/prompty/template'
 
-function FeedCardWithLike({
-  p,
-  copied,
-  rated,
-  onCopy,
-  onRate,
-}: {
+interface FeedCardWithLikeProps {
   p: FeedItem
   copied: boolean
   rated: boolean
   onCopy: () => void
   onRate: () => void
-}) {
+}
+
+function FeedCardWithLike({ p, copied, rated, onCopy, onRate }: Readonly<FeedCardWithLikeProps>) {
   const { liked, toggle, isAuthenticated } = useLike(p.id)
   return (
     <FeedCard
@@ -32,7 +28,13 @@ function FeedCardWithLike({
       liked={liked}
       copied={copied}
       rated={rated}
-      {...(isAuthenticated ? { onLike: toggle } : {})}
+      {...(isAuthenticated
+        ? {
+            onLike: () => {
+              void toggle()
+            },
+          }
+        : {})}
       onCopy={onCopy}
       onRate={onRate}
     />
@@ -46,6 +48,7 @@ interface ToastState {
   points?: string
 }
 
+// eslint-disable-next-line max-lines-per-function, complexity -- page shell with infinite scroll; refactor deferred
 export function FeedPage() {
   const { pages, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useFeed()
   const user = useAuthStore((s) => s.user)
@@ -57,7 +60,7 @@ export function FeedPage() {
   const [rateOpenFor, setRateOpenFor] = useState<FeedItem | null>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
   const [levelGateMsg, setLevelGateMsg] = useState<string | null>(
-    (location.state as { levelGate?: string } | null)?.levelGate ?? null
+    (location.state as { levelGate?: string } | null)?.levelGate ?? null,
   )
 
   const { copy } = useCopy()
@@ -74,7 +77,9 @@ export function FeedPage() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   async function handleCopy(p: FeedItem) {
-    const inputs = (Array.isArray(p.inputs_schema) ? p.inputs_schema : []) as unknown as InputField[]
+    const inputs = (Array.isArray(p.inputs_schema)
+      ? p.inputs_schema
+      : []) as unknown as InputField[]
     const text = resolveBeginner(p.template, inputs)
     const r = await copy(text, p.id)
     if (r.ok) {
@@ -124,7 +129,9 @@ export function FeedPage() {
           p={p}
           copied={copiedIds.has(p.id)}
           rated={ratedIds.has(p.id)}
-          onCopy={() => handleCopy(p)}
+          onCopy={() => {
+            void handleCopy(p)
+          }}
           onRate={() => handleRate(p)}
         />
       ))}
@@ -143,7 +150,6 @@ export function FeedPage() {
 
       {toast && (
         <Toast
-          key={toast.message + Date.now()}
           message={toast.message}
           icon={toast.icon ?? 'check'}
           {...(toast.iconColor ? { iconColor: toast.iconColor } : {})}
