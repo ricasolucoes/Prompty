@@ -29,6 +29,12 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "publisher": "Rica Soluções",
+    "category": "Productivity",
+    "shortDescription": "Biblioteca visual de prompts de IA",
+    "longDescription": "Promptys é uma biblioteca visual e gratuita de prompts prontos para geração de imagens com IA. Copie um prompt, gere a imagem no Gemini ou outro modelo, e volte para contar como ficou.",
+    "homepage": "https://github.com/ricasolucoes/Prompty",
+    "license": "AGPL-3.0-only",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

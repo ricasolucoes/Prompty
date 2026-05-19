@@ -3,6 +3,30 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "Biblioteca visual de prompts prontos para geração de imagens com IA. Progressão L1 → L2 → L3.",
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "Rica Soluções",
+    "email": "sierra.csi@gmail.com"
+  },
+  "homepage": "https://github.com/ricasolucoes/Prompty",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ricasolucoes/Prompty.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ricasolucoes/Prompty/issues"
+  },
+  "keywords": [
+    "ai",
+    "prompts",
+    "image-generation",
+    "gemini",
+    "tauri",
+    "react",
+    "supabase",
+    "open-source"
+  ],
   "scripts": {
     "dev": "vite",
     "dev:tauri": "tauri dev",
