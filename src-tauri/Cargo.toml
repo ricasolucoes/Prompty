@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "1.0.0"
+version = "0.2.0"
 description = "Promptys — Biblioteca visual de prompts prontos para geração de imagens com IA"
 authors = ["Rica Soluções <sierra.csi@gmail.com>"]
 license = "AGPL-3.0-only"

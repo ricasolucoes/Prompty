@@ -1,6 +1,6 @@
 {
   "name": "promptys",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Biblioteca visual de prompts prontos para geração de imagens com IA. Progressão L1 → L2 → L3.",

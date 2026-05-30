@@ -138,11 +138,14 @@ Detalhes em [CLAUDE.md](CLAUDE.md) e [AGENTS.md](AGENTS.md).
 
 ## Roadmap
 
-v1.0 — MVP entregue (L1 + L2 + L3). Próximas direções:
+v0.1.0 — MVP entregue (L1 + L2 + L3).
+v0.2.0 — Ranking real por pontos da comunidade.
 
-- v1.1 — Ranking real (atualmente placeholder), badges, gamificação visível em área separada
-- v1.2 — Modo avançado completo (presets, prompt negativo, testes comparativos lado-a-lado)
-- v1.3 — Marketplace / monetização para criadores top
+Próximas direções:
+
+- v0.3.0 — Badges e ranking semanal; modo avançado (presets, prompt negativo, testes comparativos lado-a-lado)
+- v0.4.0 — Marketplace / monetização para criadores top
+- v1.0.0 — marco reservado para produção com muitos usuários
 
 Veja [issues abertas](https://github.com/ricasolucoes/Prompty/issues) e [CHANGELOG.md](CHANGELOG.md).
 

@@ -2,9 +2,21 @@
 
 ---
 
-## [Unreleased](https://github.com/ricasolucoes/Prompty/compare/v1.0.0...develop)
+## [Unreleased](https://github.com/ricasolucoes/Prompty/compare/v0.2.0...develop)
 
-## [v1.0.0 (2026-05-18)](https://github.com/ricasolucoes/Prompty/releases/tag/v1.0.0)
+## [v0.2.0 (2026-05-29)](https://github.com/ricasolucoes/Prompty/compare/v0.1.0...v0.2.0)
+
+### ✨ Novidades
+
+- [x] **Ranking da comunidade** — `RankingPage` real substitui o placeholder "Em breve": leaderboard por pontos (top 100), pódio 🥇🥈🥉, nível e selo de verificado, link para o perfil público e indicador da sua posição quando fora do top (GAME2-01)
+
+### 🔧 Técnico
+
+- [x] **`useRanking`** — hook RLS-safe que lê `profiles` ordenado por `points` (nunca expõe `is_admin`); `myRank` resolvido pela lista visível ou por contagem de quem está à frente quando o usuário fica fora do top
+- [x] **Cobertura de testes** — 3 `it.todo` de `RateSheet` substituídos por testes reais (estrelas, upload de imagem, submit) + testes de `useRanking` e `RankingPage`; a suíte passa de 193 → **207 testes**, zero `todo`
+- [x] **Build** — `manualChunks` isola o vendor `@supabase` em chunk próprio; o chunk principal cai de 611 kB → 404 kB e o aviso de chunk >500 kB desaparece
+
+## [v0.1.0 (2026-05-18)](https://github.com/ricasolucoes/Prompty/releases/tag/v0.1.0)
 
 Primeiro release público do Promptys — MVP com progressão L1 → L2 → L3 completa.
 
@@ -35,11 +47,11 @@ Primeiro release público do Promptys — MVP com progressão L1 → L2 → L3 c
 
 ### 🔧 Técnico
 
-**Release v1.0.0 — code health & CI green:**
+**Release v0.1.0 — code health & CI green:**
 
 - [x] **ESLint v9 migração** — `.eslintrc.json` → `eslint.config.js` (flat config). Adiciona `@eslint/js`, `globals`, `tsconfig.eslint.json` para type-aware linting de testes
 - [x] **Lint zero erros** — bugs (`no-floating-promises`, `no-misused-promises`, `no-uniq-key`, `no-implied-eval`, `pseudo-random`) corrigidos; `Readonly<Props>` aplicado em todos componentes React; constantes extraídas para `var(--text-*)` reutilizadas
-- [x] **Versão bumped** — `0.1.0` → `1.0.0` em `package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`
+- [x] **Versão** — projeto fixado em `0.1.0` (`package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`)
 - [x] **Clippy doc** — `lib.rs:run()` ganhou doc `# Panics`; `build.rs` semicolon
 - [x] **Prettier** — 40+ arquivos reformatados (CI `format:check` agora passa)
 - [x] **Cargo fmt** — Rust formatado com padrão 4-space (era 2-space)
