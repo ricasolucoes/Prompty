@@ -165,7 +165,7 @@ Objetivo: criar, publicar e melhorar promptys.
 | 3 níveis (L1/L2/L3) em vez de 7 | Mais simples de entender e implementar; "3 níveis são suficientes, mais vira imposto de renda gamificado" | ✓ Confirmado (v1.0) |
 | Gamificação invisível no L1 | Usuário L1 só quer copiar e colar; exibir pontos/badges cria distração e complexidade desnecessária | ✓ Confirmado (v1.0) |
 | `beginner_prompt` separado de `advanced_template` | Permite exibir prompt simples para L1 sem expor a sintaxe `{{variável}}` | ✓ Confirmado (v1.0) |
-| Ranking apenas em área separada para L3 | Home inicial nunca mostra ranking; experiência L1 não é competitiva | ✓ Confirmado (v1.0) — RankingPage é placeholder, leaderboard em v1.1 |
+| Ranking apenas em área separada para L3 | Home inicial nunca mostra ranking; experiência L1 não é competitiva | ✓ Confirmado (v1.0) — leaderboard real por pontos entregue pós-v1.0 (GAME2-01) |
 | Tauri 2.0 + React como frontend (não Next.js/Flutter) | App nativo mobile com React; Supabase direto do cliente; Rust (Tauri core) disponível para features nativas futuras | ✓ Confirmado |
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | ✓ Confirmado (v1.0) |
 | Inline styles em vez de Tailwind class-based | Estabelecido em Phase 1 e mantido por consistência; tokens via CSS vars no `:root` | ✓ Confirmado (v1.0) |
@@ -177,14 +177,14 @@ Promptys MVP entregue: a progressão completa **L1 (Iniciante) → L2 (Curador) 
 
 **Stats:** 4 phases · 26 plans · 193 tests · 9.274 LOC TypeScript · 7 migrations · 1 semana de execução
 
-**Surfaces:** Feed público, PromptyDetailPage com copy/save/rate/results, ProfilePage (com MyPromptysGrid L3), SearchPage (FTS + chips), SavedPage (3 chips), CriarPage (wizard 4 passos com advanced template + variações), RankingPage (placeholder), OptionsSheet/ReportSheet/CategorySuggestSheet.
+**Surfaces:** Feed público, PromptyDetailPage com copy/save/rate/results, ProfilePage (com MyPromptysGrid L3), SearchPage (FTS + chips), SavedPage (3 chips), CriarPage (wizard 4 passos com advanced template + variações), RankingPage (leaderboard por pontos), OptionsSheet/ReportSheet/CategorySuggestSheet.
 
 **Integrações cross-phase verificadas:** Gamification refetch within-session, route-level guards via PrivateRoute, MODR-03 status filter em useSaved, ProfilePage nudge level-aware, variable detection em Step 2.
 
 ## Next Milestone Goals (v1.1 — TBD)
 
 A definir via `/gsd:new-milestone`. Candidatos baseados em PROJECT.md `Out of Scope` revisitado e backlog v2:
-- RankingPage real (leaderboard + badges)
+- Badges e ranking semanal (GAME2-03, requer view server-side sobre `point_events`) — leaderboard por pontos já entregue
 - Admin moderation UI (sair do Supabase Dashboard)
 - Notificações (saves/results/feedback)
 - OAuth (Google/GitHub)
