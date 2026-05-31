@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-02-PLAN.md (credits ledger migration authored)
-last_updated: "2026-05-31T19:47:27.706Z"
+stopped_at: "Completed 04-03-PLAN.md (frontend credits UI: useCredits, AppHeader badge, CreditHistorySheet)"
+last_updated: "2026-05-31T20:02:55.229Z"
 progress:
   total_phases: 3
-  completed_phases: 0
-  total_plans: 4
-  completed_plans: 2
+  completed_phases: 1
+  total_plans: 5
+  completed_plans: 3
 ---
 
 # Project State
@@ -72,6 +72,7 @@ Plan: 1 of 3
 | Phase 03.1-milestone-gap-closure P02 | 4min | 2 tasks | 6 files |
 | Phase 04-ledger-creditos-bonus P01 | 3 | 2 tasks | 7 files |
 | Phase 04-ledger-creditos-bonus P02 | 5 | 2 tasks | 1 files |
+| Phase 04-ledger-creditos-bonus P03 | 5min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -165,6 +166,9 @@ Recent decisions affecting current work:
 - [Phase 04-02]: credit_events UNIQUE (user_id, event_type, ref_id) plus partial index credit_events_signup_once WHERE event_type='signup_bonus' — both coexist, partial index handles NULL ref_id case that standard UNIQUE misses
 - [Phase 04-02]: guard_profiles_financial_columns BEFORE UPDATE trigger uses current_user='authenticated' (not session_user) — PostgREST SET LOCAL role changes current_user; SECURITY DEFINER functions run as postgres and bypass the guard
 - [Phase 04-02]: spend_credit requires both pg_advisory_xact_lock AND SELECT FOR UPDATE — advisory lock serializes sessions starting concurrently; FOR UPDATE blocks concurrent update_profile_credits
+- [Phase 04-03]: database.types.ts hand-edited (not gen:types) in sandbox — orchestrator must regenerate after DB is live
+- [Phase 04-03]: CreditHistorySheet as bottom sheet not dedicated route — consistent with OptionsSheet/ReportSheet pattern
+- [Phase 04-03]: useCreditHistory has no .eq(user_id) filter — RLS auth.uid() policy scopes rows automatically
 
 ### Pending Todos
 
@@ -178,6 +182,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-31T19:47:19.884Z
-Stopped at: Completed 04-02-PLAN.md (credits ledger migration authored)
+Last session: 2026-05-31T20:02:55.226Z
+Stopped at: Completed 04-03-PLAN.md (frontend credits UI: useCredits, AppHeader badge, CreditHistorySheet)
 Resume file: None

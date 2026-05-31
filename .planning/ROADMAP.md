@@ -25,7 +25,7 @@ Full detail: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 ### v0.3.0 — Créditos + Geração de Imagem in-app
 
-- [ ] **Phase 4: Ledger de Créditos + Bônus de Cadastro** — Infraestrutura imutável de créditos com bônus automático no signup
+- [x] **Phase 4: Ledger de Créditos + Bônus de Cadastro** — Infraestrutura imutável de créditos com bônus automático no signup (completed 2026-05-31)
 - [ ] **Phase 5: Ganhar Créditos Contribuindo** — Triggers de earn (nível, publicação, resultado aprovado) com tetos anti-abuso
 - [ ] **Phase 6: Geração de Imagem in-app** — Edge Function provider-agnostic com débito atômico, refund e UX completo
 
@@ -78,15 +78,20 @@ Plans:
   4. Nenhum dos três triggers modifica ou conflita com as triggers existentes de `point_events` — o histórico de pontos de gamificação permanece intacto
 
 **Implementation notes**:
-  - Três novos `AFTER INSERT` triggers SECURITY DEFINER sobre tabelas existentes:
-    - `award_credit_on_level_up` em `unlock_events` (teto lifetime: 5 eventos por nível × +2)
-    - `award_credit_on_publish` em `promptys` onde `status = 'published'` (lifetime cap: 20)
-    - `award_credit_on_approved_result` em `prompty_results` onde `approved = true` (diário cap: 10)
+  - Migration única `20260531000009_phase5_earn_credits.sql` (próxima após a da Phase 4).
+  - Schema: `ALTER prompty_tests ADD COLUMN approved BOOLEAN NOT NULL DEFAULT true` + estende o CHECK de `credit_events.event_type` com `level_up`, `publish_prompty`, `approved_result`.
+  - Três triggers SECURITY DEFINER sobre tabelas existentes (irmãos das triggers de pontos):
+    - `award_credit_on_level_up` em `unlock_events` AFTER INSERT (+2, uma vez por novo nível)
+    - `award_credit_on_publish` em `promptys` AFTER INSERT OR UPDATE onde `status = 'published'` (+1, lifetime cap 20)
+    - `award_credit_on_approved_result` em `prompty_tests` AFTER INSERT OR UPDATE onde `approved = true` (+1, diário cap 10)
   - `ON CONFLICT (user_id, event_type, ref_id) DO NOTHING` em cada insert de earn
   - Tetos verificados com `COUNT(*)` dentro da função trigger — nunca no client
   - Zero alteração nas funções e triggers de `point_events` existentes
+  - Reconciliações: tabela de resultados é `prompty_tests` (não `prompty_results`); coluna `approved` é adicionada nesta migration (auto-aprovação)
 
-**Plans**: TBD
+**Plans**: 2 plans (2 waves)
+  - [ ] 05-01-PLAN.md — Wave 0: smoke scripts earn01..earn04 (RED) em supabase/tests/
+  - [ ] 05-02-PLAN.md — migration (approved + CHECK + 3 triggers), aplica e roda earn0*/cred0* GREEN
 
 ---
 
@@ -133,6 +138,6 @@ Milestone v1.0 complete. Milestone v0.3.0 in progress — Phases 4–6.
 | 2. L2 Curador + Descoberta | v1.0 | 7/7 | Complete | 2026-05-12 |
 | 3. L3 Criador | v1.0 | 6/6 | Complete | 2026-05-13 |
 | 3.1. Milestone Gap Closure | v1.0 | 2/2 | Complete | 2026-05-13 |
-| 4. Ledger de Créditos + Bônus de Cadastro | 2/3 | In Progress|  | - |
+| 4. Ledger de Créditos + Bônus de Cadastro | 3/3 | Complete   | 2026-05-31 | - |
 | 5. Ganhar Créditos Contribuindo | v0.3.0 | 0/? | Not started | - |
 | 6. Geração de Imagem in-app | v0.3.0 | 0/? | Not started | - |
