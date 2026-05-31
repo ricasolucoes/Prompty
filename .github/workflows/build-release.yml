@@ -204,6 +204,10 @@ jobs:
   ios:
     name: iOS
     runs-on: macos-15
+    # iOS desativado por ora — vamos só de Android. Reative removendo este `if: false`
+    # + configure APPLE_CERTIFICATE_BASE64, APPLE_CERTIFICATE_PASSWORD,
+    # APPLE_PROVISIONING_PROFILE_BASE64, APPLE_TEAM_ID.
+    if: false
     timeout-minutes: 60
     env:
       APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}

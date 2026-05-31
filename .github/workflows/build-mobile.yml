@@ -109,10 +109,14 @@ jobs:
   ios:
     name: iOS Build
     runs-on: macos-15
-    if: |
-      github.event_name == 'push' ||
-      inputs.platform == 'ios' ||
-      inputs.platform == 'both'
+    # iOS desativado por ora — vamos só de Android (faltam os secrets de assinatura Apple).
+    # Reative: troque `false` pela condição comentada abaixo + configure os secrets
+    # IOS_P12_BASE64, IOS_P12_PASSWORD, APPSTORE_ISSUER_ID, APPSTORE_API_KEY_ID, APPSTORE_API_PRIVATE_KEY.
+    if: false
+    # if: |
+    #   github.event_name == 'push' ||
+    #   inputs.platform == 'ios' ||
+    #   inputs.platform == 'both'
     timeout-minutes: 90
 
     steps:
