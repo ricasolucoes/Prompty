@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-01-PLAN.md (test scaffolds Wave 0)
-last_updated: "2026-05-31T19:43:21.538Z"
+stopped_at: Completed 04-02-PLAN.md (credits ledger migration authored)
+last_updated: "2026-05-31T19:47:27.706Z"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 3
-  completed_plans: 1
+  total_plans: 4
+  completed_plans: 2
 ---
 
 # Project State
@@ -71,6 +71,7 @@ Plan: 1 of 3
 | Phase 03.1-milestone-gap-closure P01 | 4min | 3 tasks | 9 files |
 | Phase 03.1-milestone-gap-closure P02 | 4min | 2 tasks | 6 files |
 | Phase 04-ledger-creditos-bonus P01 | 3 | 2 tasks | 7 files |
+| Phase 04-ledger-creditos-bonus P02 | 5 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -161,6 +162,9 @@ Recent decisions affecting current work:
 - [Roadmap v0.3.0]: CORS headers must use @supabase/supabase-js/cors import (v2.95.0+) — 2025 Supabase bug truncates manual Access-Control-Allow-Headers to first 4 entries in OPTIONS response
 - [Phase 04-01]: cred03_double_spend.sh uses TRUE two-session concurrency (two backgrounded psql processes + wait) — not sequential, per 04-CONTEXT.md explicit requirement
 - [Phase 04-01]: RTL Wave 0 stubs use no imports of non-existent modules — Vite static module resolution fails even in catch(), consistent with Phase 02 decision
+- [Phase 04-02]: credit_events UNIQUE (user_id, event_type, ref_id) plus partial index credit_events_signup_once WHERE event_type='signup_bonus' — both coexist, partial index handles NULL ref_id case that standard UNIQUE misses
+- [Phase 04-02]: guard_profiles_financial_columns BEFORE UPDATE trigger uses current_user='authenticated' (not session_user) — PostgREST SET LOCAL role changes current_user; SECURITY DEFINER functions run as postgres and bypass the guard
+- [Phase 04-02]: spend_credit requires both pg_advisory_xact_lock AND SELECT FOR UPDATE — advisory lock serializes sessions starting concurrently; FOR UPDATE blocks concurrent update_profile_credits
 
 ### Pending Todos
 
@@ -174,6 +178,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-31T19:43:21.535Z
-Stopped at: Completed 04-01-PLAN.md (test scaffolds Wave 0)
+Last session: 2026-05-31T19:47:19.884Z
+Stopped at: Completed 04-02-PLAN.md (credits ledger migration authored)
 Resume file: None
