@@ -2,6 +2,10 @@ import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/auth.store'
 import { compressToWebP } from '@/lib/images/compress'
 import type { InputField } from '@/lib/prompty/template'
+import type { Database } from '@/types/database.types'
+
+type PromptyInsert = Database['public']['Tables']['promptys']['Insert']
+type Json = Database['public']['Tables']['promptys']['Row']['inputs_schema']
 
 export interface WizardData {
   title: string
@@ -73,7 +77,7 @@ export function useCreatePrompty() {
       cover_url = await uploadCoverImage(user.id, slug, form.coverFile)
     }
 
-    const insertPayload = {
+    const insertPayload: PromptyInsert = {
       author_id: user.id,
       slug,
       title: form.title,
@@ -81,7 +85,7 @@ export function useCreatePrompty() {
       difficulty: form.category, // category → difficulty column
       models: form.recommendedModel ? [form.recommendedModel] : [],
       style_tags: form.styleTags ?? [],
-      inputs_schema: (form.inputs_schema ?? []) as never,
+      inputs_schema: (form.inputs_schema ?? []) as unknown as Json,
       cover_url,
       status: 'published',
       parent_id: form.parentId ?? null,

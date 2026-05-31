@@ -6,68 +6,8 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '14.5'
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
-      point_events: {
-        Row: {
-          created_at: string
-          event_type: string
-          id: string
-          points: number
-          ref_id: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          event_type: string
-          id?: string
-          points: number
-          ref_id?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          event_type?: string
-          id?: string
-          points?: number
-          ref_id?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'point_events_user_id_fkey'
-            columns: ['user_id']
-            isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
-          },
-        ]
-      }
       credit_events: {
         Row: {
           created_at: string
@@ -133,7 +73,56 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: 'generations_credit_event_id_fkey'
+            columns: ['credit_event_id']
+            isOneToOne: false
+            referencedRelation: 'credit_events'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'generations_prompty_id_fkey'
+            columns: ['prompty_id']
+            isOneToOne: false
+            referencedRelation: 'promptys'
+            referencedColumns: ['id']
+          },
+          {
             foreignKeyName: 'generations_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      point_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          points: number
+          ref_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          points: number
+          ref_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          points?: number
+          ref_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'point_events_user_id_fkey'
             columns: ['user_id']
             isOneToOne: false
             referencedRelation: 'profiles'
@@ -506,6 +495,13 @@ export type Database = {
             referencedRelation: 'profiles'
             referencedColumns: ['id']
           },
+          {
+            foreignKeyName: 'promptys_parent_id_fkey'
+            columns: ['parent_id']
+            isOneToOne: false
+            referencedRelation: 'promptys'
+            referencedColumns: ['id']
+          },
         ]
       }
       reports: {
@@ -593,12 +589,18 @@ export type Database = {
       level_from_points: { Args: { p: number }; Returns: string }
       record_copy: { Args: { p_prompty_id: string }; Returns: undefined }
       refund_credit: {
-        Args: { p_ref: string }
-        Returns: { ok: boolean; balance: number }[]
+        Args: { p_ref?: string }
+        Returns: {
+          balance: number
+          ok: boolean
+        }[]
       }
       spend_credit: {
-        Args: { p_ref: string }
-        Returns: { ok: boolean; balance: number }[]
+        Args: { p_ref?: string }
+        Returns: {
+          balance: number
+          ok: boolean
+        }[]
       }
       tags_to_text: { Args: { tags: string[] }; Returns: string }
       update_profile_credits: {
@@ -735,9 +737,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },
