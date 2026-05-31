@@ -3,7 +3,9 @@
 -- Run: psql "$SUPABASE_DB_URL" -f supabase/tests/cred03_rls_block.sql
 \set ON_ERROR_STOP on
 BEGIN;
-INSERT INTO profiles (id, name) VALUES ('00000000-0000-0000-0000-0000000c0003', 'cred03-test')
+-- Seed via auth.users so the FK + handle_new_user create the profile (and signup_bonus).
+INSERT INTO auth.users (id, instance_id, email, encrypted_password, raw_user_meta_data, email_confirmed_at, created_at, updated_at, aud, role)
+  VALUES ('00000000-0000-0000-0000-0000000c0003','00000000-0000-0000-0000-000000000000','cred03@test.local',crypt('x',gen_salt('bf')),'{"name":"cred03-test"}'::jsonb,NOW(),NOW(),NOW(),'authenticated','authenticated')
   ON CONFLICT (id) DO NOTHING;
 SELECT update_profile_credits('00000000-0000-0000-0000-0000000c0003');
 

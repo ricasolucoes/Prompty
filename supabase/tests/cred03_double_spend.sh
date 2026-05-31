@@ -20,7 +20,9 @@ trap 'rm -rf "$TMP"' EXIT
 #    balance is always 1 at start, regardless of prior test runs.
 # ---------------------------------------------------------------------------
 psql "$DB" -v ON_ERROR_STOP=1 <<SQL
-INSERT INTO profiles (id, name) VALUES ('${TEST_USER}', 'cred03-double-spend-test')
+-- profiles.id FKs to auth.users; seed there (fires handle_new_user → creates profile).
+INSERT INTO auth.users (id, instance_id, email, encrypted_password, raw_user_meta_data, email_confirmed_at, created_at, updated_at, aud, role)
+  VALUES ('${TEST_USER}','00000000-0000-0000-0000-000000000000','cred03ds@test.local',crypt('x',gen_salt('bf')),'{"name":"cred03-double-spend-test"}'::jsonb,NOW(),NOW(),NOW(),'authenticated','authenticated')
   ON CONFLICT (id) DO NOTHING;
 
 -- Remove any prior spend/bonus rows for this test user to guarantee clean state
@@ -47,7 +49,8 @@ fi
 #    pg_advisory_xact_lock inside spend_credit serializes the two sessions.
 # ---------------------------------------------------------------------------
 run_spend() {
-  psql "$DB" -At -v ON_ERROR_STOP=1 <<SQL
+  # -q suppresses command tags (the "SET" lines) so stdout is only the SELECT result.
+  psql "$DB" -Atq -v ON_ERROR_STOP=1 <<SQL
 SET role = 'authenticated';
 SET request.jwt.claim.sub = '${TEST_USER}';
 SELECT ok FROM spend_credit(NULL);

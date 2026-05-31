@@ -2,9 +2,12 @@
 -- Run: psql "$SUPABASE_DB_URL" -f supabase/tests/cred04_rls_isolation.sql
 \set ON_ERROR_STOP on
 BEGIN;
-INSERT INTO profiles (id, name) VALUES
-  ('00000000-0000-0000-0000-0000000c04a1', 'cred04-A'),
-  ('00000000-0000-0000-0000-0000000c04b2', 'cred04-B')
+-- Seed both users via auth.users; handle_new_user gives each a signup_bonus row, so user B
+-- genuinely has credit_events rows that RLS must hide from user A.
+INSERT INTO auth.users (id, instance_id, email, encrypted_password, raw_user_meta_data, email_confirmed_at, created_at, updated_at, aud, role)
+  VALUES
+    ('00000000-0000-0000-0000-0000000c04a1','00000000-0000-0000-0000-000000000000','cred04a@test.local',crypt('x',gen_salt('bf')),'{"name":"cred04-A"}'::jsonb,NOW(),NOW(),NOW(),'authenticated','authenticated'),
+    ('00000000-0000-0000-0000-0000000c04b2','00000000-0000-0000-0000-000000000000','cred04b@test.local',crypt('x',gen_salt('bf')),'{"name":"cred04-B"}'::jsonb,NOW(),NOW(),NOW(),'authenticated','authenticated')
   ON CONFLICT (id) DO NOTHING;
 SELECT update_profile_credits('00000000-0000-0000-0000-0000000c04a1');
 SELECT update_profile_credits('00000000-0000-0000-0000-0000000c04b2');

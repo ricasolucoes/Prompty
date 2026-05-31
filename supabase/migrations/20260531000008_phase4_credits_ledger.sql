@@ -82,12 +82,16 @@ $$;
 -- column changes AND current_user = 'authenticated'.
 --
 -- Why current_user (not session_user): PostgREST sets SET LOCAL role = 'authenticated'
--- which changes current_user for the transaction. SECURITY DEFINER functions run under
--- the function owner (postgres), so current_user inside them will NOT be 'authenticated'.
--- See RESEARCH.md Pitfall 3 for full explanation.
+-- which changes current_user for the transaction.
+-- CRITICAL: this function MUST be SECURITY INVOKER (the default). A SECURITY DEFINER
+-- trigger runs under the function owner (postgres), so current_user inside it would be
+-- 'postgres' and the 'authenticated' check would NEVER match — the guard would never fire,
+-- leaving the profiles_update_own hole wide open. SECURITY INVOKER makes current_user
+-- reflect the real caller. The function only inspects NEW/OLD and raises — it needs no
+-- elevated privileges. See RESEARCH.md Pitfall 3.
 -- -----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION guard_profiles_financial_columns()
-RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY INVOKER SET search_path = public AS $$
 BEGIN
   IF current_user = 'authenticated' THEN
     IF NEW.credits IS DISTINCT FROM OLD.credits THEN
@@ -267,12 +271,29 @@ CREATE POLICY "prompty-generations read own"
   USING (bucket_id = 'prompty-generations'
          AND auth.uid()::text = (storage.foldername(name))[1]);
 
+-- -----------------------------------------------------------------------------
+-- 11. Backfill: grant the signup bonus to users who already existed before this
+-- migration. handle_new_user only fires on NEW auth.users inserts, so without this
+-- pre-existing accounts would be stuck at 0 credits. Idempotent via the partial
+-- unique index credit_events_signup_once — safe to replay (no-op on a fresh DB
+-- where there are no pre-existing users).
+-- -----------------------------------------------------------------------------
+INSERT INTO credit_events (user_id, event_type, delta, ref_id)
+SELECT id, 'signup_bonus', 1, NULL FROM profiles
+ON CONFLICT DO NOTHING;
+
+DO $$
+DECLARE r RECORD;
+BEGIN
+  FOR r IN SELECT id FROM profiles LOOP
+    PERFORM update_profile_credits(r.id);
+  END LOOP;
+END $$;
+
 -- =============================================================================
--- VERIFY: SELECT current_user;
--- The guard trigger checks current_user = 'authenticated' (not session_user).
--- In Supabase PostgREST, client requests run with SET LOCAL role = 'authenticated'
--- which sets current_user. SECURITY DEFINER functions run as the function owner
--- (postgres), so current_user inside them will NOT be 'authenticated'.
--- Smoke-test locally after applying: run cred03_rls_block.sql to confirm.
--- See RESEARCH.md Open Question 2 for full context.
+-- VERIFY: run supabase/tests/cred03_rls_block.sql after applying.
+-- The guard trigger checks current_user = 'authenticated' and MUST be SECURITY
+-- INVOKER so current_user reflects the real caller (PostgREST sets
+-- SET LOCAL role = 'authenticated'). A SECURITY DEFINER guard would run as
+-- postgres and never fire. See RESEARCH.md Open Question 2.
 -- =============================================================================
