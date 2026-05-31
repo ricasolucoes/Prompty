@@ -1,8 +1,8 @@
 ---
 phase: 5
 slug: ganhar-creditos-contribuindo
-status: draft
-nyquist_compliant: false
+status: approved
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-05-31
 ---
