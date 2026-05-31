@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: creditos-geracao-imagem
-status: defining_requirements
-stopped_at: Milestone v0.3.0 started
+status: roadmap_ready
+stopped_at: Roadmap v0.3.0 created — Phase 4 ready for planning
 last_updated: "2026-05-31T00:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -16,23 +16,27 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-06)
+See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O usuário copia um prompt pronto, gera uma imagem, e volta para contar como ficou.
-**Current focus:** Milestone v0.3.0 — Créditos + Geração de Imagem (defining requirements)
+**Current focus:** Milestone v0.3.0 — Créditos + Geração de Imagem — roadmap criado, Phase 4 pronta para planejamento
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Phase 4 — Ledger de Créditos + Bônus de Cadastro (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-31 — Milestone v0.3.0 started
+Status: Roadmap ready — awaiting `/gsd:plan-phase 4`
+Last activity: 2026-05-31 — Roadmap v0.3.0 created (Phases 4–6)
+
+```
+v0.3.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0% (0/3 phases)
+```
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
+- Total plans completed: 0 (this milestone)
 - Average duration: —
 - Total execution time: —
 
@@ -155,17 +159,24 @@ Recent decisions affecting current work:
 - [Phase 03.1-02]: NEXT_LEVEL_COPY defined as module-level Partial<Record> in ProfilePage — static data, no constants import needed
 - [Phase 03.1-02]: WizardStep2Prompt variable hint is informational-only (no Step 4 link) — keeps Step 2 lean per CONTEXT.md decision
 - [Phase 03.1-02]: extractVariables canonical home is template.ts — imported by both Step2 and Step4; no local duplicates
+- [Roadmap v0.3.0]: credit_events INSERT blocked via WITH CHECK (false) + BEFORE UPDATE trigger guard on profiles.credits — two complementary layers, not either/or
+- [Roadmap v0.3.0]: generations table + prompty-generations bucket created in Phase 4 migration (FK ready early); Edge Function that writes to it arrives in Phase 6
+- [Roadmap v0.3.0]: spend_credit() atomicity requires both SELECT FOR UPDATE AND pg_advisory_xact_lock — advisory lock prevents race condition when two sessions begin transaction simultaneously before the row lock is acquired
+- [Roadmap v0.3.0]: Phase 6 blocked on provider decision + secrets setup; Phases 4–5 fully provider-independent and can proceed immediately
+- [Roadmap v0.3.0]: CORS headers must use @supabase/supabase-js/cors import (v2.95.0+) — 2025 Supabase bug truncates manual Access-Control-Allow-Headers to first 4 entries in OPTIONS response
 
 ### Pending Todos
 
-None yet.
+- Provider decision (Gemini/OpenAI/Replicate) needed before Phase 6 starts
+- Set billing alert on chosen provider before Phase 6 deploy
 
 ### Blockers/Concerns
 
-None yet.
+- Phase 6 blocked on: (1) provider choice, (2) `supabase secrets set ACTIVE_PROVIDER=... GEMINI_API_KEY=...`
+- Free tier storage quota (1 GB total): generated images must be WebP < 200KB; not persisted unless submitted as community result
 
 ## Session Continuity
 
-Last session: 2026-05-13T14:32:17.687Z
-Stopped at: Completed 03.1-02-PLAN.md
-Resume file: None
+Last session: 2026-05-31T00:00:00.000Z
+Stopped at: Roadmap v0.3.0 created — ROADMAP.md, STATE.md, REQUIREMENTS.md updated
+Resume file: None — next step is `/gsd:plan-phase 4`
