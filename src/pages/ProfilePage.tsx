@@ -12,6 +12,7 @@ import { SecondaryButton } from '@/components/ui/SecondaryButton'
 import { Icon } from '@/components/ui/Icon'
 import { LevelUpModal } from '@/components/modals/LevelUpModal'
 import { MyPromptysGrid } from '@/components/profile/MyPromptysGrid'
+import { CreditHistorySheet } from '@/components/profile/CreditHistorySheet'
 
 // Unlock description by next level id — what the user is unlocking at each threshold
 type UnlockableLevel = 'L2' | 'L3' | 'L4' | 'L5'
@@ -44,6 +45,9 @@ export function ProfilePage() {
 
   // "Você usou X Promptys" — count of distinct promptys from recents (saves + tests)
   const usedCount = recents.length
+
+  // Credit history sheet state
+  const [historyOpen, setHistoryOpen] = useState(false)
 
   // Edit form state
   const [editing, setEditing] = useState(false)
@@ -274,6 +278,9 @@ export function ProfilePage() {
           <MyPromptysGrid />
 
           <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <SecondaryButton full onClick={() => setHistoryOpen(true)}>
+              Histórico de créditos
+            </SecondaryButton>
             <SecondaryButton full onClick={() => setEditing(true)}>
               Editar perfil
             </SecondaryButton>
@@ -339,6 +346,8 @@ export function ProfilePage() {
           </div>
         </form>
       )}
+
+      <CreditHistorySheet open={historyOpen} onClose={() => setHistoryOpen(false)} />
 
       {showLevelUp && (
         <LevelUpModal
