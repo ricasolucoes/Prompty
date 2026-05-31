@@ -8,6 +8,18 @@ Promptys é uma biblioteca visual e gratuita de prompts prontos para geração d
 
 O usuário copia um prompt pronto, gera uma imagem no Gemini, e volta para contar como ficou — essa é a única coisa que precisa funcionar no começo.
 
+## Current Milestone: v0.3.0 Créditos + Geração de Imagem in-app
+
+**Goal:** Transformar o cadastro em recompensa concreta — ao se cadastrar, o usuário ganha 1 crédito para gerar uma imagem **dentro do app**, e ganha mais créditos contribuindo com o sistema (gamificação). Ver e copiar promptys continua 100% público e sem login.
+
+**Target features:**
+- Ledger de créditos (`credit_events`) + saldo cacheado (`profiles.credits`), espelhando o padrão append-only de `point_events`.
+- Bônus de cadastro: +1 crédito automático no signup (idempotente, via `handle_new_user`).
+- Ganhar créditos contribuindo: subir de nível, publicar prompty, enviar resultado de qualidade (com tetos anti-abuso).
+- Geração de imagem in-app via Supabase Edge Function (provider-agnostic; provedor escolhido depois), com débito atômico de 1 crédito e refund em caso de falha do provedor.
+
+**Provedor de imagem:** decisão adiada — arquitetura projetada com adapter plugável (Gemini/OpenAI/Replicate trocáveis por secret). Fases 4–5 não dependem do provedor; Fase 6 sim.
+
 ## Modelo de Progressão (3 Níveis)
 
 ### L1 Iniciante — Consumir
@@ -89,7 +101,13 @@ Objetivo: criar, publicar e melhorar promptys.
 
 ### Active
 
-— Nenhuma fase ativa. Milestone v1.0 completo. —
+**Milestone v0.3.0 — Créditos + Geração de Imagem** *(em definição)*
+- [ ] Usuário ganha 1 crédito automaticamente ao se cadastrar
+- [ ] Usuário vê seu saldo de créditos na UI
+- [ ] Usuário ganha créditos contribuindo (subir de nível, publicar, enviar resultado)
+- [ ] Usuário logado pode gerar uma imagem in-app gastando 1 crédito
+- [ ] Anônimo vê CTA "Cadastre-se e ganhe 1 crédito" no lugar do botão gerar
+- [ ] Crédito é devolvido (refund) se a geração falhar no provedor
 
 ### Out of Scope
 
@@ -170,6 +188,10 @@ Objetivo: criar, publicar e melhorar promptys.
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | ✓ Confirmado (v1.0) |
 | Inline styles em vez de Tailwind class-based | Estabelecido em Phase 1 e mantido por consistência; tokens via CSS vars no `:root` | ✓ Confirmado (v1.0) |
 | Phase 3.1 gap closure como decimal phase | 5 cross-phase integration gaps fechados sem expandir escopo do v1.0 | ✓ Confirmado (v1.0) |
+| Geração de imagem in-app via créditos (supersede deferral) | A decisão antiga (deferir geração in-app, mandar gerar no Gemini por fora) é substituída: cadastro → 1 crédito → gera dentro do app. Vira o gancho de conversão do produto | — Pending (v0.3.0) |
+| Créditos = ledger imutável `credit_events` + cache `profiles.credits` | Espelha o padrão já validado de `point_events`; mantém "nunca update direto do frontend"; dá auditoria de cada crédito | — Pending (v0.3.0) |
+| Geração via Supabase Edge Function (exceção à regra "sem backend") | API key do provedor é secreta e não pode ir pro client anon-key; Edge Function guarda o secret e debita crédito atomicamente. Continua dentro do Supabase | — Pending (v0.3.0) |
+| Provider-agnostic com adapter | Permite escolher Gemini/OpenAI/Replicate depois sem reescrever créditos/UI; troca = 1 implementação + 1 secret | — Pending (v0.3.0) |
 
 ## Current State (v1.0 — shipped 2026-05-13)
 
@@ -192,4 +214,4 @@ A definir via `/gsd:new-milestone`. Candidatos baseados em PROJECT.md `Out of Sc
 - Trending feed (hot-score algorithm)
 
 ---
-*Last updated: 2026-05-13 — Milestone v1.0 shipped (4 phases, 26 plans, 193 tests, full L1→L2→L3 + gap closure complete)*
+*Last updated: 2026-05-31 — Milestone v0.3.0 started (Créditos + Geração de Imagem in-app); phases continue from Phase 4*

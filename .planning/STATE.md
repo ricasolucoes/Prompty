@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: unknown
-stopped_at: Completed 03.1-02-PLAN.md
-last_updated: "2026-05-13T19:41:36.657Z"
+milestone: v0.3.0
+milestone_name: creditos-geracao-imagem
+status: defining_requirements
+stopped_at: Milestone v0.3.0 started
+last_updated: "2026-05-31T00:00:00.000Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 26
-  completed_plans: 26
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -18,13 +18,15 @@ progress:
 
 See: .planning/PROJECT.md (updated 2026-05-06)
 
-**Core value:** Um Prompty é mais que texto — é um template versionado com variáveis, testes reais e ranking comunitário que prova quais prompts funcionam em diferentes modelos de IA.
-**Current focus:** Phase 03 — l3-criador
+**Core value:** O usuário copia um prompt pronto, gera uma imagem, e volta para contar como ficou.
+**Current focus:** Milestone v0.3.0 — Créditos + Geração de Imagem (defining requirements)
 
 ## Current Position
 
-Phase: 03 (l3-criador) — COMPLETE
-Plan: 6 of 6
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-31 — Milestone v0.3.0 started
 
 ## Performance Metrics
 
