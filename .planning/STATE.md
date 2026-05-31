@@ -4,11 +4,11 @@ milestone: v1.0
 milestone_name: milestone
 status: unknown
 stopped_at: "Completed 04-03-PLAN.md (frontend credits UI: useCredits, AppHeader badge, CreditHistorySheet)"
-last_updated: "2026-05-31T20:02:55.229Z"
+last_updated: "2026-05-31T20:11:29.732Z"
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 5
+  total_plans: 8
   completed_plans: 3
 ---
 
