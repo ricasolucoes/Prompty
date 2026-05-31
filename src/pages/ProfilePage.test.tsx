@@ -35,6 +35,9 @@ vi.mock('@/stores/level.store', () => ({
 vi.mock('@/components/profile/MyPromptysGrid', () => ({
   MyPromptysGrid: () => null,
 }))
+vi.mock('@/components/profile/CreditHistorySheet', () => ({
+  CreditHistorySheet: () => null,
+}))
 
 import { useAuthStore } from '@/stores/auth.store'
 import { ProfilePage } from '@/pages/ProfilePage'
