@@ -1,8 +1,8 @@
 ---
 phase: 4
 slug: ledger-creditos-bonus
-status: draft
-nyquist_compliant: false
+status: approved
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-05-31
 ---
@@ -46,7 +46,7 @@ created: 2026-05-31
 | CRED-03 | client `credit_events.insert(...)` → RLS error | SQL/RLS smoke | same `cred03_rls_block.sql` | ❌ W0 | ⬜ pending |
 | CRED-03 | two concurrent `spend_credit()` w/ 1 credit → 1 success, balance never < 0 | Concurrency SQL | `bash supabase/tests/cred03_double_spend.sh` | ❌ W0 | ⬜ pending |
 | CRED-04 | authenticated user reads `credit_events` → only own rows | SQL smoke | `psql $DATABASE_URL -f supabase/tests/cred04_rls_isolation.sql` | ❌ W0 | ⬜ pending |
-| CRED-04 | credit history view renders events sorted desc | RTL unit | `pnpm test:run src/pages/CreditHistoryPage.test.tsx` | ❌ W0 | ⬜ pending |
+| CRED-04 | credit history view renders events sorted desc | RTL unit | `pnpm test:run src/components/profile/CreditHistorySheet.test.tsx` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -61,7 +61,7 @@ created: 2026-05-31
 - [ ] `supabase/tests/cred04_rls_isolation.sql` — cross-user isolation (CRED-04)
 - [ ] `src/components/layout/AppHeader.test.tsx` — credit badge (CRED-02)
 - [ ] `src/hooks/useCredits.test.ts` — selector null-safety (CRED-02)
-- [ ] `src/pages/CreditHistoryPage.test.tsx` (or sheet test) — history rendering (CRED-04)
+- [ ] `src/components/profile/CreditHistorySheet.test.tsx` — history rendering (CRED-04)
 
 ---
 
