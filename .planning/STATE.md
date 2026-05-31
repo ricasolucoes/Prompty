@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.3.0
-milestone_name: creditos-geracao-imagem
-status: roadmap_ready
-stopped_at: Roadmap v0.3.0 created — Phase 4 ready for planning
-last_updated: "2026-05-31T00:00:00.000Z"
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+stopped_at: Completed 04-01-PLAN.md (test scaffolds Wave 0)
+last_updated: "2026-05-31T19:43:21.538Z"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 3
+  completed_plans: 1
 ---
 
 # Project State
@@ -19,18 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O usuário copia um prompt pronto, gera uma imagem, e volta para contar como ficou.
-**Current focus:** Milestone v0.3.0 — Créditos + Geração de Imagem — roadmap criado, Phase 4 pronta para planejamento
+**Current focus:** Phase 04 — ledger-creditos-bonus
 
 ## Current Position
 
-Phase: Phase 4 — Ledger de Créditos + Bônus de Cadastro (not started)
-Plan: —
-Status: Roadmap ready — awaiting `/gsd:plan-phase 4`
-Last activity: 2026-05-31 — Roadmap v0.3.0 created (Phases 4–6)
-
-```
-v0.3.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0% (0/3 phases)
-```
+Phase: 04 (ledger-creditos-bonus) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -76,6 +70,7 @@ v0.3.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 
 | Phase 03 P06 | 30min | 3 tasks | 5 files |
 | Phase 03.1-milestone-gap-closure P01 | 4min | 3 tasks | 9 files |
 | Phase 03.1-milestone-gap-closure P02 | 4min | 2 tasks | 6 files |
+| Phase 04-ledger-creditos-bonus P01 | 3 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -164,6 +159,8 @@ Recent decisions affecting current work:
 - [Roadmap v0.3.0]: spend_credit() atomicity requires both SELECT FOR UPDATE AND pg_advisory_xact_lock — advisory lock prevents race condition when two sessions begin transaction simultaneously before the row lock is acquired
 - [Roadmap v0.3.0]: Phase 6 blocked on provider decision + secrets setup; Phases 4–5 fully provider-independent and can proceed immediately
 - [Roadmap v0.3.0]: CORS headers must use @supabase/supabase-js/cors import (v2.95.0+) — 2025 Supabase bug truncates manual Access-Control-Allow-Headers to first 4 entries in OPTIONS response
+- [Phase 04-01]: cred03_double_spend.sh uses TRUE two-session concurrency (two backgrounded psql processes + wait) — not sequential, per 04-CONTEXT.md explicit requirement
+- [Phase 04-01]: RTL Wave 0 stubs use no imports of non-existent modules — Vite static module resolution fails even in catch(), consistent with Phase 02 decision
 
 ### Pending Todos
 
@@ -177,6 +174,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-31T00:00:00.000Z
-Stopped at: Roadmap v0.3.0 created — ROADMAP.md, STATE.md, REQUIREMENTS.md updated
-Resume file: None — next step is `/gsd:plan-phase 4`
+Last session: 2026-05-31T19:43:21.535Z
+Stopped at: Completed 04-01-PLAN.md (test scaffolds Wave 0)
+Resume file: None

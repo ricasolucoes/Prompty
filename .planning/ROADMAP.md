@@ -53,7 +53,13 @@ Full detail: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   - `refund_credit()` e `generations` table criados aqui (FK pronto), mesmo que a Edge Function só chegue na Phase 6
   - `prompty-generations` bucket privado criado aqui com RLS de acesso por signed URL
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Wave 0 test scaffolds (supabase/tests/ SQL smoke + RTL stubs)
+- [ ] 04-02-PLAN.md — Migration: credit_events ledger, RLS, guard trigger, signup bonus, spend/refund, generations table + private bucket
+- [ ] 04-03-PLAN.md — Frontend: useCredits selector, AppHeader credit badge, credit history sheet on ProfilePage
+
 
 ---
 
@@ -127,6 +133,6 @@ Milestone v1.0 complete. Milestone v0.3.0 in progress — Phases 4–6.
 | 2. L2 Curador + Descoberta | v1.0 | 7/7 | Complete | 2026-05-12 |
 | 3. L3 Criador | v1.0 | 6/6 | Complete | 2026-05-13 |
 | 3.1. Milestone Gap Closure | v1.0 | 2/2 | Complete | 2026-05-13 |
-| 4. Ledger de Créditos + Bônus de Cadastro | v0.3.0 | 0/? | Not started | - |
+| 4. Ledger de Créditos + Bônus de Cadastro | 1/3 | In Progress|  | - |
 | 5. Ganhar Créditos Contribuindo | v0.3.0 | 0/? | Not started | - |
 | 6. Geração de Imagem in-app | v0.3.0 | 0/? | Not started | - |

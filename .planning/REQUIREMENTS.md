@@ -9,10 +9,10 @@ Requirements deste milestone. Cada um mapeia para uma fase do roadmap.
 
 ### Créditos — Ledger e Saldo (CRED)
 
-- [ ] **CRED-01**: Usuário ganha 1 crédito automaticamente ao se cadastrar (exatamente uma vez, idempotente)
-- [ ] **CRED-02**: Usuário vê seu saldo de créditos na UI (badge no AppHeader)
-- [ ] **CRED-03**: Saldo de créditos nunca fica negativo e não pode ser alterado diretamente pelo client — só via ledger imutável + triggers/RPC server-side
-- [ ] **CRED-04**: Usuário pode ver o próprio histórico de eventos de crédito (ganhos e gastos), e apenas o seu (RLS select-own)
+- [x] **CRED-01**: Usuário ganha 1 crédito automaticamente ao se cadastrar (exatamente uma vez, idempotente)
+- [x] **CRED-02**: Usuário vê seu saldo de créditos na UI (badge no AppHeader)
+- [x] **CRED-03**: Saldo de créditos nunca fica negativo e não pode ser alterado diretamente pelo client — só via ledger imutável + triggers/RPC server-side
+- [x] **CRED-04**: Usuário pode ver o próprio histórico de eventos de crédito (ganhos e gastos), e apenas o seu (RLS select-own)
 
 ### Ganhar Créditos Contribuindo (EARN)
 
@@ -63,10 +63,10 @@ Excluído explicitamente deste milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CRED-01 | Phase 4 | Pending |
-| CRED-02 | Phase 4 | Pending |
-| CRED-03 | Phase 4 | Pending |
-| CRED-04 | Phase 4 | Pending |
+| CRED-01 | Phase 4 | Complete |
+| CRED-02 | Phase 4 | Complete |
+| CRED-03 | Phase 4 | Complete |
+| CRED-04 | Phase 4 | Complete |
 | EARN-01 | Phase 5 | Pending |
 | EARN-02 | Phase 5 | Pending |
 | EARN-03 | Phase 5 | Pending |
