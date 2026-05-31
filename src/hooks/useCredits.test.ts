@@ -1,9 +1,29 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { renderHook } from '@testing-library/react'
 
-// STUB (Wave 0): real assertions added by plan 04-03 once src/hooks/useCredits.ts exists.
-// Will assert: useCredits() returns profile.credits ?? 0 (null-safe when profile is null).
+const { useCredits } = await import('./useCredits')
+const { useAuthStore } = await import('@/stores/auth.store')
+
 describe('useCredits', () => {
-  it('placeholder anchor — replaced by plan 04-03', () => {
-    expect(true).toBe(true)
+  beforeEach(() => {
+    useAuthStore.setState({ user: null, profile: null, loading: false })
+  })
+
+  it('returns 0 when profile is null (null-safe default)', () => {
+    useAuthStore.setState({ profile: null })
+    const { result } = renderHook(() => useCredits())
+    expect(result.current.credits).toBe(0)
+  })
+
+  it('returns profile.credits when profile has credits', () => {
+    useAuthStore.setState({ profile: { credits: 3 } as never })
+    const { result } = renderHook(() => useCredits())
+    expect(result.current.credits).toBe(3)
+  })
+
+  it('returns 0 when profile.credits is 0', () => {
+    useAuthStore.setState({ profile: { credits: 0 } as never })
+    const { result } = renderHook(() => useCredits())
+    expect(result.current.credits).toBe(0)
   })
 })

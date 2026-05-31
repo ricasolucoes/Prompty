@@ -68,11 +68,85 @@ export type Database = {
           },
         ]
       }
+      credit_events: {
+        Row: {
+          created_at: string
+          delta: number
+          event_type: string
+          id: string
+          ref_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delta: number
+          event_type: string
+          id?: string
+          ref_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delta?: number
+          event_type?: string
+          id?: string
+          ref_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'credit_events_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      generations: {
+        Row: {
+          created_at: string
+          credit_event_id: string | null
+          id: string
+          image_path: string | null
+          prompty_id: string | null
+          provider: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credit_event_id?: string | null
+          id?: string
+          image_path?: string | null
+          prompty_id?: string | null
+          provider?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credit_event_id?: string | null
+          id?: string
+          image_path?: string | null
+          prompty_id?: string | null
+          provider?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'generations_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          credits: number
           id: string
           is_admin: boolean
           last_active_at: string | null
@@ -87,6 +161,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          credits?: number
           id: string
           is_admin?: boolean
           last_active_at?: string | null
@@ -101,6 +176,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          credits?: number
           id?: string
           is_admin?: boolean
           last_active_at?: string | null
@@ -516,7 +592,19 @@ export type Database = {
     Functions: {
       level_from_points: { Args: { p: number }; Returns: string }
       record_copy: { Args: { p_prompty_id: string }; Returns: undefined }
+      refund_credit: {
+        Args: { p_ref: string }
+        Returns: { ok: boolean; balance: number }[]
+      }
+      spend_credit: {
+        Args: { p_ref: string }
+        Returns: { ok: boolean; balance: number }[]
+      }
       tags_to_text: { Args: { tags: string[] }; Returns: string }
+      update_profile_credits: {
+        Args: { target_user: string }
+        Returns: undefined
+      }
       update_profile_points: {
         Args: { target_user: string }
         Returns: undefined
