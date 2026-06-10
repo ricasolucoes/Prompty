@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Promptys Android adaptive icon — FOREGROUND (mark only, transparent).
+     Mark sits inside the center safe zone; gradient lives in the background layer. -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- "P" monogram -->
+  <path d="M406 716 V356 H552 A92 92 0 0 1 552 540 H406"
+        fill="none" stroke="#FFFFFF" stroke-width="98"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Prompt sparkle (Solar Coral) -->
+  <path d="M672 296
+           C672 352 690 370 746 370
+           C690 370 672 388 672 444
+           C672 388 654 370 598 370
+           C654 370 672 352 672 296 Z"
+        fill="#FF6B4A"/>
+</svg>

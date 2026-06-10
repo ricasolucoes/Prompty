@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Promptys — app icon (master source)
+  Brand: Electric Violet #7C3AED → Prompt Cyan #22D3EE squircle,
+  white "P" monogram + Solar Coral #FF6B4A prompt sparkle.
+  Render at 1024x1024 → src-tauri/icons via `tauri icon`.
+-->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="120" x2="904" y2="904" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="0.5" stop-color="#5B4BE8"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.32" cy="0.26" r="0.85">
+      <stop offset="0" stop-color="#A98BFF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#090A14" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sheen" x1="512" y1="40" x2="512" y2="984" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="0.4" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle background -->
+  <rect x="40" y="40" width="944" height="944" rx="224" fill="url(#bg)"/>
+  <rect x="40" y="40" width="944" height="944" rx="224" fill="url(#glow)"/>
+  <rect x="40" y="40" width="944" height="944" rx="224" fill="url(#sheen)"/>
+
+  <!-- "P" monogram (stroked, prompt-mark) -->
+  <path d="M406 716 V356 H552 A92 92 0 0 1 552 540 H406"
+        fill="none" stroke="#FFFFFF" stroke-width="98"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Prompt sparkle (Solar Coral) -->
+  <path d="M672 296
+           C672 352 690 370 746 370
+           C690 370 672 388 672 444
+           C672 388 654 370 598 370
+           C654 370 672 352 672 296 Z"
+        fill="#FF6B4A"/>
+</svg>
