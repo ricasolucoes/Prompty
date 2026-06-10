@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: unknown
 stopped_at: "Completed 04-03-PLAN.md (frontend credits UI: useCredits, AppHeader badge, CreditHistorySheet)"
-last_updated: "2026-05-31T20:11:29.732Z"
+last_updated: "2026-05-31T20:12:26.868Z"
 progress:
   total_phases: 3
   completed_phases: 1
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O usuário copia um prompt pronto, gera uma imagem, e volta para contar como ficou.
-**Current focus:** Phase 04 — ledger-creditos-bonus
+**Current focus:** Phase 05 — ganhar-creditos-contribuindo
 
 ## Current Position
 
-Phase: 04 (ledger-creditos-bonus) — EXECUTING
-Plan: 1 of 3
+Phase: 05 (ganhar-creditos-contribuindo) — EXECUTING
+Plan: 1 of 2
 
 ## Performance Metrics
 

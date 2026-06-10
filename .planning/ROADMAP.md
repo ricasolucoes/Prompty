@@ -123,7 +123,12 @@ Plans:
   - Usuário com saldo 0 vê nudge "contribua para ganhar mais" com ações específicas listadas — não paywall de compra
   - **Prerequisite secrets**: `supabase secrets set ACTIVE_PROVIDER=gemini && supabase secrets set GEMINI_API_KEY=<key>`
 
-**Plans**: TBD
+**Plans**: 3 plans (3 waves)
+
+Plans:
+- [ ] 06-01-PLAN.md — Wave 0 scaffolds: config.toml [functions.generate-image], app_settings circuit-breaker migration, RED test scaffolds (useGenerate + PromptyDetailPage GEN cases), gen01/gen04 integration scripts, keep-alive cron
+- [ ] 06-02-PLAN.md — Edge Function generate-image: provider adapter interface + mock (default) + gemini/openai/replicate stubs; orchestrator (JWT → breaker/cap → spend via userClient → provider → upload/insert via adminClient → signed URL → refund-on-fail)
+- [ ] 06-03-PLAN.md — Frontend: useGenerate hook + PromptyDetailPage states (anon CTA / zero-credit nudge / generate button / inline image / error+refund) + CLAUDE.md & AGENTS.md Edge Function secret exception
 
 ---
 
