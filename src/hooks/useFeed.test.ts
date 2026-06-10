@@ -59,10 +59,12 @@ describe('useFeed', () => {
     expect(calls.some((c) => c[0] === 'status' && c[1] === 'published')).toBe(true)
   })
 
-  it('joins profiles for author info', async () => {
+  it('joins profiles for author info via the author_id FK (disambiguated embed)', async () => {
     renderHook(() => useFeed(), { wrapper })
     await waitFor(() => expect(chainCalls.select).toHaveBeenCalled())
     const selectArg = chainCalls.select.mock.calls[0]?.[0] as string
-    expect(selectArg).toContain('profiles(name, username, avatar_url)')
+    // Must name the FK: promptys relates to profiles via author_id, likes and saves —
+    // an unqualified `profiles(...)` embed is ambiguous (PGRST201) and breaks the feed.
+    expect(selectArg).toContain('profiles!promptys_author_id_fkey(name, username, avatar_url)')
   })
 })

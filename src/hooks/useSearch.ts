@@ -21,7 +21,7 @@ async function fetchSearchPage(
 ): Promise<SearchItem[]> {
   let q = supabase
     .from('promptys')
-    .select('*, profiles(name, username, avatar_url)')
+    .select('*, profiles!promptys_author_id_fkey(name, username, avatar_url)')
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     .order('id', { ascending: false })

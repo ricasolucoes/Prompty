@@ -67,7 +67,7 @@ export function PromptyDetailPage() {
       setLoading(true)
       const { data, error } = await supabase
         .from('promptys')
-        .select('*, profiles(name, username, avatar_url)')
+        .select('*, profiles!promptys_author_id_fkey(name, username, avatar_url)')
         .eq('slug', slug)
         .eq('status', 'published')
         .maybeSingle()

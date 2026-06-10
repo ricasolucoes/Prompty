@@ -16,7 +16,7 @@ const PAGE_SIZE = 10
 async function fetchPage(pageParam: Cursor): Promise<FeedItem[]> {
   let q = supabase
     .from('promptys')
-    .select('*, profiles(name, username, avatar_url)')
+    .select('*, profiles!promptys_author_id_fkey(name, username, avatar_url)')
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     .order('id', { ascending: false })
