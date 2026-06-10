@@ -22,6 +22,49 @@ const UNLOCKS: Partial<Record<Level['id'], string[]>> = {
   L3: ['Criar e publicar Promptys', 'Ver estatísticas dos seus Promptys', 'Variações simples'],
 }
 
+function UnlockList({ items }: Readonly<{ items: string[] }>) {
+  if (items.length === 0) return null
+  return (
+    <ul
+      style={{
+        textAlign: 'left',
+        marginTop: 16,
+        padding: 12,
+        borderRadius: 12,
+        background: 'var(--surface-2)',
+        border: '1px solid var(--line)',
+        fontSize: 13.5,
+        lineHeight: 1.55,
+        color: 'var(--text-2)',
+        listStylePosition: 'inside',
+      }}
+    >
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  )
+}
+
+// Every level reached grants 1 AI credit (migration 009)
+function CreditBanner() {
+  return (
+    <p
+      style={{
+        marginTop: 12,
+        padding: '8px 12px',
+        borderRadius: 12,
+        background: 'var(--primary-soft)',
+        color: 'var(--primary)',
+        fontSize: 13.5,
+        fontWeight: 700,
+      }}
+    >
+      🎁 Você ganhou +1 Crédito de IA
+    </p>
+  )
+}
+
 export function LevelUpModal({ level, onDismiss }: Readonly<Props>) {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -32,7 +75,6 @@ export function LevelUpModal({ level, onDismiss }: Readonly<Props>) {
   }, [onDismiss])
 
   const unlockedItems = UNLOCKS[level.id] ?? []
-
   return (
     <div
       role="dialog"
@@ -96,26 +138,9 @@ export function LevelUpModal({ level, onDismiss }: Readonly<Props>) {
           {level.desc}
         </p>
 
-        {unlockedItems.length > 0 && (
-          <ul
-            style={{
-              textAlign: 'left',
-              marginTop: 16,
-              padding: 12,
-              borderRadius: 12,
-              background: 'var(--surface-2)',
-              border: '1px solid var(--line)',
-              fontSize: 13.5,
-              lineHeight: 1.55,
-              color: 'var(--text-2)',
-              listStylePosition: 'inside',
-            }}
-          >
-            {unlockedItems.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        )}
+        <CreditBanner />
+
+        <UnlockList items={unlockedItems} />
 
         <div style={{ marginTop: 16 }}>
           <PrimaryButton full icon="sparkle" color={level.color} onClick={onDismiss}>

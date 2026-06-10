@@ -23,6 +23,7 @@ vi.mock('@/hooks/useProfile', () => ({
     },
     update: vi.fn(),
     recents: [],
+    usedCount: 0,
   }),
 }))
 vi.mock('@/hooks/useAuth', () => ({

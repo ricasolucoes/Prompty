@@ -11,7 +11,7 @@ type LogoProps = {
   radius?: number
 }
 
-export function Logo({ size = 30, radius }: LogoProps) {
+export function Logo({ size = 30, radius }: Readonly<LogoProps>) {
   const rx = radius ?? Math.round(size * 0.3)
   return (
     <svg
@@ -23,13 +23,27 @@ export function Logo({ size = 30, radius }: LogoProps) {
       style={{ display: 'block', flexShrink: 0 }}
     >
       <defs>
-        <linearGradient id="promptys-bg" x1="120" y1="120" x2="904" y2="904" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="promptys-bg"
+          x1="120"
+          y1="120"
+          x2="904"
+          y2="904"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0" stopColor="#7C3AED" />
           <stop offset="0.5" stopColor="#5B4BE8" />
           <stop offset="1" stopColor="#22D3EE" />
         </linearGradient>
       </defs>
-      <rect x="40" y="40" width="944" height="944" rx={(rx / size) * 1024} fill="url(#promptys-bg)" />
+      <rect
+        x="40"
+        y="40"
+        width="944"
+        height="944"
+        rx={(rx / size) * 1024}
+        fill="url(#promptys-bg)"
+      />
       <path
         d="M406 716 V356 H552 A92 92 0 0 1 552 540 H406"
         fill="none"

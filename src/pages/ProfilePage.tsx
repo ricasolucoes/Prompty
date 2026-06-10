@@ -25,7 +25,7 @@ const NEXT_LEVEL_COPY: Partial<Record<UnlockableLevel, string>> = {
 
 // eslint-disable-next-line max-lines-per-function, complexity -- page-level shell with edit form; refactor deferred
 export function ProfilePage() {
-  const { profile, update, recents } = useProfile()
+  const { profile, update, recents, usedCount } = useProfile()
   const { signOut } = useAuth()
   const user = useAuthStore((s) => s.user)
   const nav = useNavigate()
@@ -42,9 +42,6 @@ export function ProfilePage() {
       setShowLevelUp(lvl)
     }
   }, [lvl, hasShown])
-
-  // "Você usou X Promptys" — count of distinct promptys from recents (saves + tests)
-  const usedCount = recents.length
 
   // Credit history sheet state
   const [historyOpen, setHistoryOpen] = useState(false)

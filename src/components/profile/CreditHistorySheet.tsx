@@ -11,6 +11,7 @@ const EVENT_TYPE_LABELS: Record<string, string> = {
   spent_generation: 'Geração de imagem',
   refund: 'Estorno',
   admin_grant: 'Concedido pelo time',
+  level_up: 'Crédito por novo nível',
 }
 
 function formatDate(iso: string): string {
@@ -19,6 +20,42 @@ function formatDate(iso: string): string {
     month: '2-digit',
     year: 'numeric',
   })
+}
+
+function EventRow({
+  event,
+  isLast,
+}: Readonly<{
+  event: { id: string; event_type: string; delta: number; created_at: string }
+  isLast: boolean
+}>) {
+  const label = EVENT_TYPE_LABELS[event.event_type] ?? event.event_type
+  const deltaPositive = event.delta > 0
+  const deltaColor = deltaPositive ? '#34D399' : '#FF6B4A'
+  const deltaText = deltaPositive ? `+${event.delta}` : `−${Math.abs(event.delta)}`
+  return (
+    <li
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '12px 0',
+        borderBottom: isLast ? 'none' : '1px solid var(--line)',
+      }}
+    >
+      <div>
+        <p style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color: 'var(--text-1)' }}>
+          {label}
+        </p>
+        <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-3)' }}>
+          {formatDate(event.created_at)}
+        </p>
+      </div>
+      <span style={{ fontSize: 15, fontWeight: 700, color: deltaColor, letterSpacing: 0.2 }}>
+        {deltaText}
+      </span>
+    </li>
+  )
 }
 
 export function CreditHistorySheet({ open, onClose }: Readonly<CreditHistorySheetProps>) {
@@ -82,9 +119,7 @@ export function CreditHistorySheet({ open, onClose }: Readonly<CreditHistoryShee
           Histórico de créditos
         </h2>
 
-        {isLoading && (
-          <p style={{ color: 'var(--text-2)', fontSize: 13.5 }}>Carregando…</p>
-        )}
+        {isLoading && <p style={{ color: 'var(--text-2)', fontSize: 13.5 }}>Carregando…</p>}
 
         {!isLoading && (!events || events.length === 0) && (
           <p style={{ color: 'var(--text-2)', fontSize: 13.5 }}>Nenhum evento ainda.</p>
@@ -92,58 +127,9 @@ export function CreditHistorySheet({ open, onClose }: Readonly<CreditHistoryShee
 
         {!isLoading && events && events.length > 0 && (
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-            {events.map((event, idx) => {
-              const isLast = idx === events.length - 1
-              const label = EVENT_TYPE_LABELS[event.event_type] ?? event.event_type
-              const deltaPositive = event.delta > 0
-              const deltaColor = deltaPositive ? '#34D399' : '#FF6B4A'
-              const deltaText = deltaPositive ? `+${event.delta}` : `−${Math.abs(event.delta)}`
-
-              return (
-                <li
-                  key={event.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 0',
-                    borderBottom: isLast ? 'none' : '1px solid var(--line)',
-                  }}
-                >
-                  <div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize: 13.5,
-                        fontWeight: 600,
-                        color: 'var(--text-1)',
-                      }}
-                    >
-                      {label}
-                    </p>
-                    <p
-                      style={{
-                        margin: '2px 0 0',
-                        fontSize: 12,
-                        color: 'var(--text-3)',
-                      }}
-                    >
-                      {formatDate(event.created_at)}
-                    </p>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 700,
-                      color: deltaColor,
-                      letterSpacing: 0.2,
-                    }}
-                  >
-                    {deltaText}
-                  </span>
-                </li>
-              )
-            })}
+            {events.map((event, idx) => (
+              <EventRow key={event.id} event={event} isLast={idx === events.length - 1} />
+            ))}
           </ul>
         )}
       </div>
