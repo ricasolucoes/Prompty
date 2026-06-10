@@ -34,7 +34,7 @@ export function Avatar({ user, size = 40, color, className }: Readonly<AvatarPro
         width={size}
         height={size}
         className={cn('rounded-full object-cover', className)}
-        style={{ width: size, height: size }}
+        style={{ width: size, height: size, flexShrink: 0 }}
       />
     )
   }
@@ -49,6 +49,8 @@ export function Avatar({ user, size = 40, color, className }: Readonly<AvatarPro
         fontFamily: 'var(--font-display, sans-serif)',
         fontWeight: 700,
         fontSize,
+        flexShrink: 0,
+        userSelect: 'none',
       }}
       aria-label={user.name ?? 'User'}
     >

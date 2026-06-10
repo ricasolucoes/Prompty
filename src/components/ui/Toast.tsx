@@ -29,7 +29,7 @@ export function Toast({
         position: 'fixed',
         left: '50%',
         transform: 'translateX(-50%)',
-        bottom: 112,
+        bottom: 'calc(112px + env(safe-area-inset-bottom, 0px))',
         zIndex: 90,
         display: 'inline-flex',
         alignItems: 'center',
@@ -41,6 +41,7 @@ export function Toast({
         fontSize: 13.5,
         fontWeight: 700,
         fontFamily: 'var(--font-sans, sans-serif)',
+        boxShadow: 'var(--shadow-lg)',
         animation: 'fadeIn .2s',
       }}
     >

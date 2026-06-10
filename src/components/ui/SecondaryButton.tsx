@@ -23,7 +23,7 @@ export function SecondaryButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'inline-flex items-center justify-center rounded-[14px] px-4 py-3 font-bold',
+        'pressable inline-flex items-center justify-center rounded-[14px] px-4 py-3 font-bold',
         full && 'w-full',
         disabled && 'cursor-not-allowed opacity-60',
         className,

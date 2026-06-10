@@ -53,7 +53,7 @@ export function TabBar() {
           background: 'var(--surface)',
           border: '1px solid var(--line)',
           borderRadius: 22,
-          boxShadow: '0 12px 40px rgba(0,0,0,0.10)',
+          boxShadow: 'var(--shadow-lg)',
           backdropFilter: 'blur(20px)',
           maxWidth: 430,
           width: '100%',
@@ -98,6 +98,7 @@ export function TabBar() {
                       fontSize: 12,
                       fontWeight: 700,
                       textDecoration: 'none',
+                      transition: 'color 0.15s ease',
                     }
               }
             >

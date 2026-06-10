@@ -28,7 +28,7 @@ export function PrimaryButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-[14px] px-4 py-4 font-bold tracking-tight text-white',
+        'pressable inline-flex items-center justify-center gap-2 rounded-[14px] px-4 py-4 font-bold tracking-tight text-white',
         full && 'w-full',
         disabled && 'cursor-not-allowed',
         className,
