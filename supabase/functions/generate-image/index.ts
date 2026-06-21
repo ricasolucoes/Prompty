@@ -100,6 +100,16 @@ Deno.serve(async (req: Request) => {
   const spendRow = Array.isArray(spend) ? spend[0] : spend
   if (spendErr || !spendRow?.ok) return json({ error: 'no_credits', balance: spendRow?.balance ?? 0 }, 402)
 
+  // Resolve the spend ledger row (ref_id = generationId) for the generations audit FK.
+  const { data: spendEvent } = await adminClient
+    .from('credit_events')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('event_type', 'spent_generation')
+    .eq('ref_id', generationId)
+    .maybeSingle()
+  const creditEventId = spendEvent?.id ?? null
+
   // 7..9 — any failure AFTER spend must refund before returning
   try {
     const provider = pickProvider()
@@ -117,6 +127,7 @@ Deno.serve(async (req: Request) => {
       id: generationId,
       user_id: user.id,
       prompty_id: promptyId,
+      credit_event_id: creditEventId,
       image_path: path,
       provider: Deno.env.get('ACTIVE_PROVIDER') ?? 'mock',
     })
