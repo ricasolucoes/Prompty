@@ -27,6 +27,12 @@ ALTER TABLE credit_events
       'level_up','publish_prompty','approved_result'));
 
 -- 3. EARN-01: award_credit_on_level_up
+--    Migration 009 created a trg_award_credit_on_level_up trigger on profiles
+--    that calls award_credit_on_level_up(). We supersede that approach: drop
+--    the profiles trigger and replace the function with the unlock_events version.
+DROP TRIGGER IF EXISTS trg_award_credit_on_level_up ON profiles;
+
+-- EARN-01: award_credit_on_level_up
 --    Fires AFTER INSERT on unlock_events.
 --    Awards +2 credits per level transition, idempotent per unlock_events row
 --    via ON CONFLICT (user_id, event_type, ref_id) DO NOTHING.
