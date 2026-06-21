@@ -56,6 +56,9 @@ vi.mock('@/lib/supabase', () => {
         return chainable({ data: null, error: null })
       },
       rpc: () => Promise.resolve({ data: null, error: null }),
+      functions: {
+        invoke: () => Promise.resolve({ data: { signed_url: 'https://x/y.webp' }, error: null }),
+      },
       auth: { getSession: () => Promise.resolve({ data: { session: null } }) },
     },
   }
@@ -63,11 +66,14 @@ vi.mock('@/lib/supabase', () => {
 
 // Mock auth store — default to anonymous; per-test override of mockUser/mockProfile changes behavior
 let mockUser: { id: string } | null = null
-let mockProfile: { id: string; points: number; level: string } | null = null
+let mockProfile: { id: string; points: number; level: string; credits: number } | null = null
+const mockRefetchProfile = vi.fn()
 vi.mock('@/stores/auth.store', () => ({
-  useAuthStore: (
-    selector: (s: { user: typeof mockUser; profile: typeof mockProfile }) => unknown,
-  ) => selector({ user: mockUser, profile: mockProfile }),
+  useAuthStore: Object.assign(
+    (selector: (s: { user: typeof mockUser; profile: typeof mockProfile }) => unknown) =>
+      selector({ user: mockUser, profile: mockProfile }),
+    { getState: () => ({ refetchProfile: mockRefetchProfile }) },
+  ),
 }))
 
 function renderDetail() {
@@ -161,14 +167,14 @@ describe('PromptyDetailPage — L2 "..." menu (Phase 2)', () => {
 
   it('L2 user sees "..." button', async () => {
     mockUser = { id: 'u1' }
-    mockProfile = { id: 'u1', points: 100, level: 'L2' }
+    mockProfile = { id: 'u1', points: 100, level: 'L2', credits: 0 }
     renderDetail()
     await waitFor(() => expect(screen.getByLabelText('Mais opções')).toBeInTheDocument())
   })
 
   it('tapping "..." opens OptionsSheet with two options', async () => {
     mockUser = { id: 'u1' }
-    mockProfile = { id: 'u1', points: 100, level: 'L2' }
+    mockProfile = { id: 'u1', points: 100, level: 'L2', credits: 0 }
     renderDetail()
     await waitFor(() => expect(screen.getByLabelText('Mais opções')).toBeInTheDocument())
     fireEvent.click(screen.getByLabelText('Mais opções'))
@@ -179,7 +185,7 @@ describe('PromptyDetailPage — L2 "..." menu (Phase 2)', () => {
 
   it('CUR-05: tapping Denunciar option opens ReportSheet', async () => {
     mockUser = { id: 'u1' }
-    mockProfile = { id: 'u1', points: 100, level: 'L2' }
+    mockProfile = { id: 'u1', points: 100, level: 'L2', credits: 0 }
     renderDetail()
     await waitFor(() => expect(screen.getByLabelText('Mais opções')).toBeInTheDocument())
     fireEvent.click(screen.getByLabelText('Mais opções'))
@@ -191,7 +197,7 @@ describe('PromptyDetailPage — L2 "..." menu (Phase 2)', () => {
 
   it('CUR-04: tapping Sugerir categoria opens CategorySuggestSheet', async () => {
     mockUser = { id: 'u1' }
-    mockProfile = { id: 'u1', points: 100, level: 'L2' }
+    mockProfile = { id: 'u1', points: 100, level: 'L2', credits: 0 }
     renderDetail()
     await waitFor(() => expect(screen.getByLabelText('Mais opções')).toBeInTheDocument())
     fireEvent.click(screen.getByLabelText('Mais opções'))
@@ -227,7 +233,7 @@ describe('PromptyDetailPage — CommunityResults section (Phase 2)', () => {
 
   it('CUR-01 surface: L2 user sees the section container even before results load', async () => {
     mockUser = { id: 'u1' }
-    mockProfile = { id: 'u1', points: 100, level: 'L2' }
+    mockProfile = { id: 'u1', points: 100, level: 'L2', credits: 0 }
     renderDetail()
     // CommunityResults itself returns null when results.length === 0, so we
     // assert the OPPOSITE: the gating means it COULD render but currently doesn't
@@ -255,7 +261,7 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 
   it('CREAT-04 / LEVL-07: Criar variação button absent for L1 user', async () => {
     mockUser = { id: 'user-1' }
-    mockProfile = { id: 'user-1', points: 0, level: 'L1' }
+    mockProfile = { id: 'user-1', points: 0, level: 'L1', credits: 0 }
     renderAtSlug('retrato-cinematografico')
     await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
     expect(screen.queryByRole('button', { name: /Criar variação/i })).not.toBeInTheDocument()
@@ -263,7 +269,7 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 
   it('CREAT-04 / LEVL-07: Criar variação button absent for L2 user', async () => {
     mockUser = { id: 'user-1' }
-    mockProfile = { id: 'user-1', points: 100, level: 'L2' } // L2 (50-249)
+    mockProfile = { id: 'user-1', points: 100, level: 'L2', credits: 0 } // L2 (50-249)
     renderAtSlug('retrato-cinematografico')
     await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
     expect(screen.queryByRole('button', { name: /Criar variação/i })).not.toBeInTheDocument()
@@ -271,7 +277,7 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 
   it('CREAT-04: Criar variação button present for L3 user', async () => {
     mockUser = { id: 'user-1' }
-    mockProfile = { id: 'user-1', points: 300, level: 'L3' } // L3 (250+)
+    mockProfile = { id: 'user-1', points: 300, level: 'L3', credits: 0 } // L3 (250+)
     renderAtSlug('retrato-cinematografico')
     await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
     expect(await screen.findByRole('button', { name: /Criar variação/i })).toBeInTheDocument()
@@ -279,7 +285,7 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 
   it('CREAT-04: clicking Criar variação navigates to /criar?from=<promptyId>', async () => {
     mockUser = { id: 'user-1' }
-    mockProfile = { id: 'user-1', points: 300, level: 'L3' }
+    mockProfile = { id: 'user-1', points: 300, level: 'L3', credits: 0 }
     renderAtSlug('retrato-cinematografico')
     const btn = await screen.findByRole('button', { name: /Criar variação/i })
     await userEvent.click(btn)
@@ -292,9 +298,42 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
 //   { user, profile, getState: () => ({ refetchProfile: vi.fn() }) }
 
 describe('Geração de imagem (GEN-06, GEN-07)', () => {
-  // Implemented by plan 06-03. The mockUser/mockProfile let-bindings already exist
-  // at the top of this file — 06-03 will set them per-test and flip these to real assertions.
-  it.todo('GEN-06: anonymous user (mockUser=null) sees CTA "Cadastre-se e ganhe 1 crédito para gerar"')
-  it.todo('GEN-07: logged-in user with profile.credits===0 sees the earn nudge (publicar / contribuir / subir de nível) and NO purchase paywall')
-  it.todo('GEN-01: logged-in user with credits>=1 sees an enabled "Gerar imagem (1 crédito)" button')
+  beforeEach(() => {
+    mockUser = null
+    mockProfile = null
+    mockNavigate.mockClear()
+  })
+
+  it('GEN-06: anonymous user (mockUser=null) sees CTA "Cadastre-se e ganhe 1 crédito para gerar"', async () => {
+    mockUser = null
+    mockProfile = null
+    renderDetail()
+    await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
+    expect(
+      await screen.findByText('Cadastre-se e ganhe 1 crédito para gerar'),
+    ).toBeInTheDocument()
+    // Clicking it navigates to /signup
+    fireEvent.click(screen.getByText('Cadastre-se e ganhe 1 crédito para gerar'))
+    expect(mockNavigate).toHaveBeenCalledWith('/signup')
+  })
+
+  it('GEN-07: logged-in user with profile.credits===0 sees the earn nudge and NO purchase paywall', async () => {
+    mockUser = { id: 'u1' }
+    mockProfile = { id: 'u1', points: 0, level: 'L1', credits: 0 }
+    renderDetail()
+    await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
+    expect(screen.getByText(/Contribua para ganhar mais/i)).toBeInTheDocument()
+    // No purchase wording
+    expect(screen.queryByText(/comprar|compra|R\$/i)).toBeNull()
+  })
+
+  it('GEN-01: logged-in user with credits>=1 sees an enabled "Gerar imagem (1 crédito)" button', async () => {
+    mockUser = { id: 'u1' }
+    mockProfile = { id: 'u1', points: 0, level: 'L1', credits: 1 }
+    renderDetail()
+    await waitFor(() => expect(screen.getByText('Retrato Cinematográfico')).toBeInTheDocument())
+    const btn = await screen.findByRole('button', { name: /Gerar imagem \(1 crédito\)/i })
+    expect(btn).toBeInTheDocument()
+    expect(btn).not.toBeDisabled()
+  })
 })
