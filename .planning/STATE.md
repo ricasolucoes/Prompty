@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 06-01-PLAN.md (Phase 6 Wave 0 scaffolding)
-last_updated: "2026-06-21T16:13:59.291Z"
+stopped_at: Completed 06-02-PLAN.md (generate-image Edge Function)
+last_updated: "2026-06-21T16:20:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-05-31)
 ## Current Position
 
 Phase: 06 (geracao-imagem) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Plan: 1 of 3
 | Phase 04-ledger-creditos-bonus P03 | 5min | 2 tasks | 9 files |
 | Phase 05 P02 | 15min | 2 tasks | 2 files |
 | Phase 06-geracao-imagem P01 | 15 | 3 tasks | 7 files |
+| Phase 06-geracao-imagem P02 | 8min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -177,6 +178,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Drop trg_award_credit_on_level_up on profiles (migration 009) before redefining award_credit_on_level_up for unlock_events AFTER INSERT
 - [Phase 06-geracao-imagem]: [Phase 06-01]: app_settings RLS allows SELECT to anon+authenticated; INSERT/UPDATE blocked via WITH CHECK (false) — Edge Function uses service-role key to write
 - [Phase 06-geracao-imagem]: [Phase 06-01]: Wave 0 test scaffolds use anchor + it.todo pattern (no static import of useGenerate.ts) — consistent with Phase 02 decision
+- [Phase 06-02]: Dual-client pattern in Edge Function: userClient for spend_credit/refund_credit (auth.uid() resolves), adminClient for storage + generations INSERT only — service-role key never reaches src/
+- [Phase 06-02]: DAILY_CAP=5 per user/day; ACTIVE_PROVIDER=mock default; generationId pre-minted before spend for complete audit trail; single try/catch guarantees refund on ALL post-spend failure paths (GEN-04)
+- [Phase 06-02]: Prompt sanitization (≤1500 chars + injection denylist) runs before spend_credit to avoid wasting credits on rejected input
 
 ### Pending Todos
 
