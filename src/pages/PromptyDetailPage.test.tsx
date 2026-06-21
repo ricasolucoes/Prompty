@@ -286,3 +286,15 @@ describe('PromptyDetailPage — Criar variação button (CREAT-04 / LEVL-07)', (
     expect(mockNavigate).toHaveBeenCalledWith(expect.stringMatching(/^\/criar\?from=p1$/))
   })
 })
+
+// ---------- Geração de imagem (Phase 6 Plan 06-01 scaffold / Plan 06-03 implementation) ----------
+// Note: if 06-03 needs getState().refetchProfile, extend the auth.store mock above to:
+//   { user, profile, getState: () => ({ refetchProfile: vi.fn() }) }
+
+describe('Geração de imagem (GEN-06, GEN-07)', () => {
+  // Implemented by plan 06-03. The mockUser/mockProfile let-bindings already exist
+  // at the top of this file — 06-03 will set them per-test and flip these to real assertions.
+  it.todo('GEN-06: anonymous user (mockUser=null) sees CTA "Cadastre-se e ganhe 1 crédito para gerar"')
+  it.todo('GEN-07: logged-in user with profile.credits===0 sees the earn nudge (publicar / contribuir / subir de nível) and NO purchase paywall')
+  it.todo('GEN-01: logged-in user with credits>=1 sees an enabled "Gerar imagem (1 crédito)" button')
+})
