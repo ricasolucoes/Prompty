@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 06-02-PLAN.md (generate-image Edge Function)
-last_updated: "2026-06-21T16:20:00.000Z"
+stopped_at: Completed 06-03-PLAN.md (frontend generate UI)
+last_updated: "2026-06-21T16:22:28.486Z"
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -76,6 +76,7 @@ Plan: 2 of 3
 | Phase 05 P02 | 15min | 2 tasks | 2 files |
 | Phase 06-geracao-imagem P01 | 15 | 3 tasks | 7 files |
 | Phase 06-geracao-imagem P02 | 8min | 2 tasks | 6 files |
+| Phase 06-geracao-imagem P03 | 20min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -181,6 +182,8 @@ Recent decisions affecting current work:
 - [Phase 06-02]: Dual-client pattern in Edge Function: userClient for spend_credit/refund_credit (auth.uid() resolves), adminClient for storage + generations INSERT only — service-role key never reaches src/
 - [Phase 06-02]: DAILY_CAP=5 per user/day; ACTIVE_PROVIDER=mock default; generationId pre-minted before spend for complete audit trail; single try/catch guarantees refund on ALL post-spend failure paths (GEN-04)
 - [Phase 06-02]: Prompt sanitization (≤1500 chars + injection denylist) runs before spend_credit to avoid wasting credits on rejected input
+- [Phase 06-geracao-imagem]: useGenerate uses inFlight useRef (not state) for GEN-03 double-invoke guard — synchronous early-return
+- [Phase 06-geracao-imagem]: Edge Function exception documented in both CLAUDE.md and AGENTS.md same commit per rule-sync clause
 
 ### Pending Todos
 
@@ -194,6 +197,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-21T16:13:59.289Z
-Stopped at: Completed 06-01-PLAN.md (Phase 6 Wave 0 scaffolding)
+Last session: 2026-06-21T16:22:28.484Z
+Stopped at: Completed 06-03-PLAN.md (frontend generate UI)
 Resume file: None
