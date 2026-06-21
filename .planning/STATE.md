@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-02-PLAN.md (Phase 5 earn credits migration + all earn0* GREEN)
-last_updated: "2026-06-21T14:20:10.510Z"
+stopped_at: Completed 06-01-PLAN.md (Phase 6 Wave 0 scaffolding)
+last_updated: "2026-06-21T16:13:59.291Z"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O usuário copia um prompt pronto, gera uma imagem, e volta para contar como ficou.
-**Current focus:** Phase 05 — ganhar-creditos-contribuindo
+**Current focus:** Phase 06 — geracao-imagem
 
 ## Current Position
 
-Phase: 05 (ganhar-creditos-contribuindo) — EXECUTING
-Plan: 1 of 2
+Phase: 06 (geracao-imagem) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -74,6 +74,7 @@ Plan: 1 of 2
 | Phase 04-ledger-creditos-bonus P02 | 5 | 2 tasks | 1 files |
 | Phase 04-ledger-creditos-bonus P03 | 5min | 2 tasks | 9 files |
 | Phase 05 P02 | 15min | 2 tasks | 2 files |
+| Phase 06-geracao-imagem P01 | 15 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -174,6 +175,8 @@ Recent decisions affecting current work:
 - [Phase 05]: earn04 asserts no credit-typed event_type rows in point_events (not count=0) — award_points_on_publish/award_points_on_test legitimately fire in the same transaction
 - [Phase 05]: Migration filename changed from 20260531000009 to 20260621000010 — sequence 009 taken by earlier levelup_ai_credit migration
 - [Phase 05]: Drop trg_award_credit_on_level_up on profiles (migration 009) before redefining award_credit_on_level_up for unlock_events AFTER INSERT
+- [Phase 06-geracao-imagem]: [Phase 06-01]: app_settings RLS allows SELECT to anon+authenticated; INSERT/UPDATE blocked via WITH CHECK (false) — Edge Function uses service-role key to write
+- [Phase 06-geracao-imagem]: [Phase 06-01]: Wave 0 test scaffolds use anchor + it.todo pattern (no static import of useGenerate.ts) — consistent with Phase 02 decision
 
 ### Pending Todos
 
@@ -187,6 +190,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-21T13:42:38.360Z
-Stopped at: Completed 05-02-PLAN.md (Phase 5 earn credits migration + all earn0* GREEN)
+Last session: 2026-06-21T16:13:59.289Z
+Stopped at: Completed 06-01-PLAN.md (Phase 6 Wave 0 scaffolding)
 Resume file: None

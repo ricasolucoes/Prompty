@@ -23,14 +23,14 @@ Requirements deste milestone. Cada um mapeia para uma fase do roadmap.
 
 ### Geração de Imagem in-app (GEN)
 
-- [ ] **GEN-01**: Usuário logado com saldo ≥1 pode gerar uma imagem dentro do app, gastando 1 crédito
-- [ ] **GEN-02**: A geração roda via Supabase Edge Function segura — a chave do provedor nunca chega ao frontend
-- [ ] **GEN-03**: O débito de 1 crédito é atômico — cliques concorrentes não causam double-spend (lock por usuário)
-- [ ] **GEN-04**: Se a geração falhar no provedor (ou no storage/DB), o crédito é devolvido automaticamente (refund)
-- [ ] **GEN-05**: Usuário vê estado de carregamento com estimativa (~10s) e o resultado exibido inline, com erro claro + confirmação de refund quando falha
-- [ ] **GEN-06**: Usuário anônimo vê o CTA "Cadastre-se e ganhe 1 crédito para gerar" no lugar do botão de geração (gancho de conversão)
-- [ ] **GEN-07**: Usuário logado sem créditos vê um nudge específico "contribua para ganhar mais" — não um paywall de compra
-- [ ] **GEN-08**: A geração é provider-agnostic — o provedor (Gemini/OpenAI/Replicate) é trocável por configuração/secret sem reescrever créditos ou UI
+- [x] **GEN-01**: Usuário logado com saldo ≥1 pode gerar uma imagem dentro do app, gastando 1 crédito
+- [x] **GEN-02**: A geração roda via Supabase Edge Function segura — a chave do provedor nunca chega ao frontend
+- [x] **GEN-03**: O débito de 1 crédito é atômico — cliques concorrentes não causam double-spend (lock por usuário)
+- [x] **GEN-04**: Se a geração falhar no provedor (ou no storage/DB), o crédito é devolvido automaticamente (refund)
+- [x] **GEN-05**: Usuário vê estado de carregamento com estimativa (~10s) e o resultado exibido inline, com erro claro + confirmação de refund quando falha
+- [x] **GEN-06**: Usuário anônimo vê o CTA "Cadastre-se e ganhe 1 crédito para gerar" no lugar do botão de geração (gancho de conversão)
+- [x] **GEN-07**: Usuário logado sem créditos vê um nudge específico "contribua para ganhar mais" — não um paywall de compra
+- [x] **GEN-08**: A geração é provider-agnostic — o provedor (Gemini/OpenAI/Replicate) é trocável por configuração/secret sem reescrever créditos ou UI
 
 ## Future Requirements (v2+)
 
@@ -71,14 +71,14 @@ Excluído explicitamente deste milestone.
 | EARN-02 | Phase 5 | Complete |
 | EARN-03 | Phase 5 | Complete |
 | EARN-04 | Phase 5 | Complete |
-| GEN-01 | Phase 6 | Pending |
-| GEN-02 | Phase 6 | Pending |
-| GEN-03 | Phase 6 | Pending |
-| GEN-04 | Phase 6 | Pending |
-| GEN-05 | Phase 6 | Pending |
-| GEN-06 | Phase 6 | Pending |
-| GEN-07 | Phase 6 | Pending |
-| GEN-08 | Phase 6 | Pending |
+| GEN-01 | Phase 6 | Complete |
+| GEN-02 | Phase 6 | Complete |
+| GEN-03 | Phase 6 | Complete |
+| GEN-04 | Phase 6 | Complete |
+| GEN-05 | Phase 6 | Complete |
+| GEN-06 | Phase 6 | Complete |
+| GEN-07 | Phase 6 | Complete |
+| GEN-08 | Phase 6 | Complete |
 
 **Coverage:**
 - v0.3.0 requirements: 16 total
