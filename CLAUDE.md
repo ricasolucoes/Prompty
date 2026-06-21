@@ -36,6 +36,7 @@
 - Sem SSR, sem Server Components, sem Server Actions — este é um SPA puro.
 - Acesso a APIs nativas (share, notificações, keychain, deep links) deve usar `tauri invoke` — Tauri commands são a única forma de acessar funcionalidades nativas do dispositivo.
 - Sem `window.fetch` direto para APIs externas — use o supabase client ou Tauri invoke.
-- Sem backend próprio no MVP — Supabase é a única infraestrutura de backend.
+- Sem backend próprio no MVP — Supabase é a única infraestrutura de backend — exceto Edge Functions seguras para segredos de terceiros, ver abaixo.
+- **Exceção Edge Function (Supabase):** Edge Functions (Deno) são permitidas para guardar segredos de terceiros (ex.: API key de geração de imagem) e orquestrar gasto/refund de crédito server-side. O frontend continua anon-key client-side only e NUNCA recebe segredos. A única Edge Function do projeto é `supabase/functions/generate-image/`. Chaves de provedor vivem apenas em `Deno.env` (via `supabase secrets set`), nunca em `VITE_*` nem no bundle.
 - Moderação e conteúdo: nunca exponha dados de denúncias ou status de moderação para usuários não-admin.
 - Quando estas regras mudarem, atualize `AGENTS.md` e `CLAUDE.md` no mesmo commit.

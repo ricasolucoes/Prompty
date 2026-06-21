@@ -9,7 +9,7 @@ Mantido em sincronia com `CLAUDE.md` — atualize os dois no mesmo commit.
 
 - **Stack:** Vite + React (SPA) + Tauri 2.0 (desktop + Android + iOS) + Supabase (Auth, Postgres, Storage, Realtime, RLS)
 - **Deploy:** Tauri bundles nativos (.dmg, .exe, .AppImage, APK/AAB, IPA). Sem Vercel.
-- **MVP:** Sem backend próprio, sem geração de imagens inline
+- **MVP:** Sem backend próprio — geração de imagens via Edge Function segura (`generate-image`)
 
 ---
 
@@ -34,6 +34,7 @@ Mantido em sincronia com `CLAUDE.md` — atualize os dois no mesmo commit.
 - **Nunca** use `service_role` key no frontend.
 - **Nunca** modifique `point_events` diretamente — pontos são gerenciados por triggers SQL.
 - RLS está ativo em todas as tabelas; testes devem respeitar isso.
+- **Exceção Edge Function:** Edge Functions (Deno) podem guardar segredos de terceiros server-side e orquestrar operações de crédito. O frontend continua anon-key client-side only; a única Edge Function do projeto é `supabase/functions/generate-image/`. Chaves de provedor vivem apenas em `Deno.env` (via `supabase secrets set`), nunca em `VITE_*` nem no bundle.
 
 ### Templates
 - Parse e render de `{{variavel}}` têm fonte única em `src/lib/prompty/template.ts`.
