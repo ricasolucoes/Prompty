@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-01-PLAN.md (Wave 0 earn smoke scripts)
-last_updated: "2026-06-21T13:34:46.892Z"
+stopped_at: Completed 05-02-PLAN.md (Phase 5 earn credits migration + all earn0* GREEN)
+last_updated: "2026-06-21T13:42:38.366Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -73,6 +73,7 @@ Plan: 1 of 2
 | Phase 04-ledger-creditos-bonus P01 | 3 | 2 tasks | 7 files |
 | Phase 04-ledger-creditos-bonus P02 | 5 | 2 tasks | 1 files |
 | Phase 04-ledger-creditos-bonus P03 | 5min | 2 tasks | 9 files |
+| Phase 05 P02 | 15min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -171,6 +172,8 @@ Recent decisions affecting current work:
 - [Phase 04-03]: useCreditHistory has no .eq(user_id) filter — RLS auth.uid() policy scopes rows automatically
 - [Phase 05]: earn scripts seed via auth.users (not profiles directly) so handle_new_user fires and FK-dependent inserts (unlock_events, promptys, prompty_tests) succeed
 - [Phase 05]: earn04 asserts no credit-typed event_type rows in point_events (not count=0) — award_points_on_publish/award_points_on_test legitimately fire in the same transaction
+- [Phase 05]: Migration filename changed from 20260531000009 to 20260621000010 — sequence 009 taken by earlier levelup_ai_credit migration
+- [Phase 05]: Drop trg_award_credit_on_level_up on profiles (migration 009) before redefining award_credit_on_level_up for unlock_events AFTER INSERT
 
 ### Pending Todos
 
@@ -184,6 +187,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-21T13:34:42.398Z
-Stopped at: Completed 05-01-PLAN.md (Wave 0 earn smoke scripts)
+Last session: 2026-06-21T13:42:38.360Z
+Stopped at: Completed 05-02-PLAN.md (Phase 5 earn credits migration + all earn0* GREEN)
 Resume file: None

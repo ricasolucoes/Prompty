@@ -26,7 +26,7 @@ Full detail: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 ### v0.3.0 — Créditos + Geração de Imagem in-app
 
 - [x] **Phase 4: Ledger de Créditos + Bônus de Cadastro** — Infraestrutura imutável de créditos com bônus automático no signup (completed 2026-05-31)
-- [ ] **Phase 5: Ganhar Créditos Contribuindo** — Triggers de earn (nível, publicação, resultado aprovado) com tetos anti-abuso
+- [x] **Phase 5: Ganhar Créditos Contribuindo** — Triggers de earn (nível, publicação, resultado aprovado) com tetos anti-abuso (completed 2026-06-21)
 - [ ] **Phase 6: Geração de Imagem in-app** — Edge Function provider-agnostic com débito atômico, refund e UX completo
 
 ## Phase Details
@@ -144,5 +144,5 @@ Milestone v1.0 complete. Milestone v0.3.0 in progress — Phases 4–6.
 | 3. L3 Criador | v1.0 | 6/6 | Complete | 2026-05-13 |
 | 3.1. Milestone Gap Closure | v1.0 | 2/2 | Complete | 2026-05-13 |
 | 4. Ledger de Créditos + Bônus de Cadastro | 3/3 | Complete   | 2026-05-31 | - |
-| 5. Ganhar Créditos Contribuindo | 1/2 | In Progress|  | - |
+| 5. Ganhar Créditos Contribuindo | 2/2 | Complete   | 2026-06-21 | - |
 | 6. Geração de Imagem in-app | v0.3.0 | 0/? | Not started | - |
