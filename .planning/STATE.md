@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 06-03-PLAN.md (frontend generate UI)
-last_updated: "2026-06-21T16:25:19.298Z"
+stopped_at: Phase 6 context updated (OpenAI provider, replan required)
+last_updated: "2026-06-21T22:01:32.522Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -197,6 +197,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-21T16:22:28.484Z
-Stopped at: Completed 06-03-PLAN.md (frontend generate UI)
-Resume file: None
+Last session: 2026-06-21T22:01:32.519Z
+Stopped at: Phase 6 context updated (OpenAI provider, replan required)
+Resume file: .planning/phases/06-geracao-imagem/06-CONTEXT.md
