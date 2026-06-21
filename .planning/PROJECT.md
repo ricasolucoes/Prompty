@@ -188,10 +188,10 @@ Objetivo: criar, publicar e melhorar promptys.
 | Supabase como única infraestrutura de backend no MVP | Reduz custo, complexidade operacional e time-to-market | ✓ Confirmado (v1.0) |
 | Inline styles em vez de Tailwind class-based | Estabelecido em Phase 1 e mantido por consistência; tokens via CSS vars no `:root` | ✓ Confirmado (v1.0) |
 | Phase 3.1 gap closure como decimal phase | 5 cross-phase integration gaps fechados sem expandir escopo do v1.0 | ✓ Confirmado (v1.0) |
-| Geração de imagem in-app via créditos (supersede deferral) | A decisão antiga (deferir geração in-app, mandar gerar no Gemini por fora) é substituída: cadastro → 1 crédito → gera dentro do app. Vira o gancho de conversão do produto | — Pending (v0.3.0) |
-| Créditos = ledger imutável `credit_events` + cache `profiles.credits` | Espelha o padrão já validado de `point_events`; mantém "nunca update direto do frontend"; dá auditoria de cada crédito | — Pending (v0.3.0) |
-| Geração via Supabase Edge Function (exceção à regra "sem backend") | API key do provedor é secreta e não pode ir pro client anon-key; Edge Function guarda o secret e debita crédito atomicamente. Continua dentro do Supabase | — Pending (v0.3.0) |
-| Provider-agnostic com adapter | Permite escolher Gemini/OpenAI/Replicate depois sem reescrever créditos/UI; troca = 1 implementação + 1 secret | — Pending (v0.3.0) |
+| Geração de imagem in-app via créditos (supersede deferral) | A decisão antiga (deferir geração in-app, mandar gerar no Gemini por fora) é substituída: cadastro → 1 crédito → gera dentro do app. Vira o gancho de conversão do produto | ✓ Confirmado (v0.3.0) |
+| Créditos = ledger imutável `credit_events` + cache `profiles.credits` | Espelha o padrão já validado de `point_events`; mantém "nunca update direto do frontend"; dá auditoria de cada crédito | ✓ Confirmado (v0.3.0) |
+| Geração via Supabase Edge Function (exceção à regra "sem backend") | API key do provedor é secreta e não pode ir pro client anon-key; Edge Function guarda o secret e debita crédito atomicamente. Continua dentro do Supabase | ✓ Confirmado (v0.3.0) |
+| Provider-agnostic com adapter | Permite escolher Gemini/OpenAI/Replicate depois sem reescrever créditos/UI; troca = 1 implementação + 1 secret | ✓ Confirmado (v0.3.0) |
 
 ## Current State (v1.0 — shipped 2026-05-13)
 
@@ -203,15 +203,29 @@ Promptys MVP entregue: a progressão completa **L1 (Iniciante) → L2 (Curador) 
 
 **Integrações cross-phase verificadas:** Gamification refetch within-session, route-level guards via PrivateRoute, MODR-03 status filter em useSaved, ProfilePage nudge level-aware, variable detection em Step 2.
 
-## Next Milestone Goals (v1.1 — TBD)
+## Current State (v0.3.0 — shipped 2026-06-21)
 
-A definir via `/gsd:new-milestone`. Candidatos baseados em PROJECT.md `Out of Scope` revisitado e backlog v2:
-- Badges e ranking semanal (GAME2-03, requer view server-side sobre `point_events`) — leaderboard por pontos já entregue
+Economia de créditos + geração de imagem in-app ao vivo, sobre o MVP v1.0.
+
+**Stats:** 3 phases · 8 plans · 16/16 requisitos satisfeitos · 229 frontend tests · 2 novas migrations + 1 Edge Function (Deno)
+
+**Entregue:**
+- Ledger imutável `credit_events` com saldo não-negativo server-side; bônus de 1 crédito idempotente no signup (CRED-01..04)
+- Earn por contribuição: triggers SECURITY DEFINER (level-up, publish, approved-result) com tetos anti-farming (EARN-01..04)
+- Edge Function `generate-image` provider-agnostic: débito atômico, refund automático em falha, segredo nunca no bundle; mock default + stubs Gemini/OpenAI/Replicate (GEN-01..08)
+- UX completo: anon CTA, zero-credit nudge, imagem inline, erro+refund; circuit breaker `app_settings` e cron keep-alive
+
+**Pendente de deploy:** `supabase secrets set ACTIVE_PROVIDER` + chave do provedor para geração ao vivo (mock funciona sem chave).
+
+## Next Milestone Goals (TBD)
+
+A definir via `/gsd:new-milestone`. Candidatos baseados em PROJECT.md `Out of Scope` revisitado e backlog:
+- Configurar provedor real de geração (Gemini) e validar end-to-end em produção
+- Badges e ranking semanal (GAME2-03, requer view server-side sobre `point_events`)
 - Admin moderation UI (sair do Supabase Dashboard)
 - Notificações (saves/results/feedback)
 - OAuth (Google/GitHub)
 - Otimizações de performance (lazy load, image CDN)
-- Trending feed (hot-score algorithm)
 
 ---
-*Last updated: 2026-05-31 — Milestone v0.3.0 started (Créditos + Geração de Imagem in-app); phases continue from Phase 4*
+*Last updated: 2026-06-21 — Milestone v0.3.0 shipped (Créditos + Geração de Imagem in-app)*

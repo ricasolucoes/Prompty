@@ -2,7 +2,26 @@
 
 ---
 
-## [Unreleased](https://github.com/ricasolucoes/Prompty/compare/v0.2.0...develop)
+## [Unreleased](https://github.com/ricasolucoes/Prompty/compare/v0.3.0...develop)
+
+## [v0.3.0 (2026-06-21)](https://github.com/ricasolucoes/Prompty/compare/v0.2.0...v0.3.0)
+
+### ✨ Novidades
+
+- [x] **Créditos** — saldo auditável via ledger imutável `credit_events` + cache `profiles.credits`; bônus de 1 crédito concedido automaticamente no cadastro (idempotente), histórico próprio visível e saldo nunca negativo (CRED-01..04)
+- [x] **Ganhar créditos contribuindo** — triggers server-side concedem crédito ao subir de nível, publicar prompty e enviar resultado aprovado, com tetos anti-farming (EARN-01..04)
+- [x] **Geração de imagem in-app** — usuário logado gera uma imagem a partir do prompt gastando 1 crédito, com skeleton/estimativa, imagem inline, CTA de cadastro para anônimos e nudge de contribuição para saldo zero (GEN-01, GEN-05..07)
+
+### 🎨 Melhorias
+
+- [x] **Refund automático** — falha do provedor/storage/DB devolve o crédito automaticamente e o usuário vê erro + confirmação de refund (GEN-04)
+- [x] **Débito atômico** — `spend_credit` com advisory lock evita double-spend em cliques concorrentes; guard de `inFlight` no frontend (GEN-03)
+
+### 🔧 Técnico
+
+- [x] **Edge Function `generate-image`** — orquestrador Deno seguro (JWT → circuit breaker/cap → spend → provider → upload → insert → signed URL → refund-on-fail); chave do provedor vive só em `Deno.env`, nunca no bundle (GEN-02)
+- [x] **Provider-agnostic** — adapter trocável por secret `ACTIVE_PROVIDER`: mock default + stubs Gemini/OpenAI/Replicate (GEN-08)
+- [x] **Infra** — circuit breaker `app_settings`, cron keep-alive (free tier), FK de auditoria `generations.credit_event_id`; suíte frontend em 229 testes, todas as fases Nyquist-compliant
 
 ## [v0.2.0 (2026-05-29)](https://github.com/ricasolucoes/Prompty/compare/v0.1.0...v0.2.0)
 
