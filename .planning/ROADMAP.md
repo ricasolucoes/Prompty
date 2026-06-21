@@ -144,5 +144,5 @@ Milestone v1.0 complete. Milestone v0.3.0 in progress — Phases 4–6.
 | 3. L3 Criador | v1.0 | 6/6 | Complete | 2026-05-13 |
 | 3.1. Milestone Gap Closure | v1.0 | 2/2 | Complete | 2026-05-13 |
 | 4. Ledger de Créditos + Bônus de Cadastro | 3/3 | Complete   | 2026-05-31 | - |
-| 5. Ganhar Créditos Contribuindo | v0.3.0 | 0/? | Not started | - |
+| 5. Ganhar Créditos Contribuindo | 1/2 | In Progress|  | - |
 | 6. Geração de Imagem in-app | v0.3.0 | 0/? | Not started | - |

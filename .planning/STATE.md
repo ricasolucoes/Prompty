@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "Completed 04-03-PLAN.md (frontend credits UI: useCredits, AppHeader badge, CreditHistorySheet)"
-last_updated: "2026-05-31T20:12:26.868Z"
+stopped_at: Completed 05-01-PLAN.md (Wave 0 earn smoke scripts)
+last_updated: "2026-06-21T13:34:46.892Z"
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 8
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -169,6 +169,8 @@ Recent decisions affecting current work:
 - [Phase 04-03]: database.types.ts hand-edited (not gen:types) in sandbox — orchestrator must regenerate after DB is live
 - [Phase 04-03]: CreditHistorySheet as bottom sheet not dedicated route — consistent with OptionsSheet/ReportSheet pattern
 - [Phase 04-03]: useCreditHistory has no .eq(user_id) filter — RLS auth.uid() policy scopes rows automatically
+- [Phase 05]: earn scripts seed via auth.users (not profiles directly) so handle_new_user fires and FK-dependent inserts (unlock_events, promptys, prompty_tests) succeed
+- [Phase 05]: earn04 asserts no credit-typed event_type rows in point_events (not count=0) — award_points_on_publish/award_points_on_test legitimately fire in the same transaction
 
 ### Pending Todos
 
@@ -182,6 +184,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-31T20:02:55.226Z
-Stopped at: Completed 04-03-PLAN.md (frontend credits UI: useCredits, AppHeader badge, CreditHistorySheet)
+Last session: 2026-06-21T13:34:42.398Z
+Stopped at: Completed 05-01-PLAN.md (Wave 0 earn smoke scripts)
 Resume file: None

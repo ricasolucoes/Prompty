@@ -16,10 +16,10 @@ Requirements deste milestone. Cada um mapeia para uma fase do roadmap.
 
 ### Ganhar Créditos Contribuindo (EARN)
 
-- [ ] **EARN-01**: Usuário ganha créditos ao subir de nível (ex.: +2 por novo nível, uma vez por nível)
-- [ ] **EARN-02**: Usuário ganha crédito ao publicar um prompty (acoplado ao evento `publish` existente)
-- [ ] **EARN-03**: Usuário ganha crédito ao enviar um resultado aprovado, com teto diário anti-abuso
-- [ ] **EARN-04**: Sistema impede farming — cada evento concede crédito no máximo uma vez e respeita tetos diários (server-side, não confiável no client)
+- [x] **EARN-01**: Usuário ganha créditos ao subir de nível (ex.: +2 por novo nível, uma vez por nível)
+- [x] **EARN-02**: Usuário ganha crédito ao publicar um prompty (acoplado ao evento `publish` existente)
+- [x] **EARN-03**: Usuário ganha crédito ao enviar um resultado aprovado, com teto diário anti-abuso
+- [x] **EARN-04**: Sistema impede farming — cada evento concede crédito no máximo uma vez e respeita tetos diários (server-side, não confiável no client)
 
 ### Geração de Imagem in-app (GEN)
 
@@ -67,10 +67,10 @@ Excluído explicitamente deste milestone.
 | CRED-02 | Phase 4 | Complete |
 | CRED-03 | Phase 4 | Complete |
 | CRED-04 | Phase 4 | Complete |
-| EARN-01 | Phase 5 | Pending |
-| EARN-02 | Phase 5 | Pending |
-| EARN-03 | Phase 5 | Pending |
-| EARN-04 | Phase 5 | Pending |
+| EARN-01 | Phase 5 | Complete |
+| EARN-02 | Phase 5 | Complete |
+| EARN-03 | Phase 5 | Complete |
+| EARN-04 | Phase 5 | Complete |
 | GEN-01 | Phase 6 | Pending |
 | GEN-02 | Phase 6 | Pending |
 | GEN-03 | Phase 6 | Pending |
