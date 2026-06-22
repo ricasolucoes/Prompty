@@ -1,6 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import type { ImageProvider } from './providers/types.ts'
-import { MockProvider } from './providers/mock.ts'
 import { GeminiProvider } from './providers/gemini.ts'
 import { OpenAIProvider } from './providers/openai.ts'
 import { ReplicateProvider } from './providers/replicate.ts'
@@ -19,16 +18,16 @@ const PROMPT_MAX = 1500
 const INJECTION_DENYLIST = [/ignore (all|previous) instructions/i, /system prompt/i]
 
 function pickProvider(): ImageProvider {
-  switch (Deno.env.get('ACTIVE_PROVIDER') ?? 'mock') {
+  // OpenAI (gpt-image-1) is the active default. Gemini/Replicate stubs remain
+  // for future swap via ACTIVE_PROVIDER — provider-agnostic (GEN-08).
+  switch (Deno.env.get('ACTIVE_PROVIDER') ?? 'openai') {
     case 'gemini':
       return new GeminiProvider()
-    case 'openai':
-      return new OpenAIProvider()
     case 'replicate':
       return new ReplicateProvider()
-    case 'mock':
+    case 'openai':
     default:
-      return new MockProvider()
+      return new OpenAIProvider()
   }
 }
 
@@ -129,7 +128,7 @@ Deno.serve(async (req: Request) => {
       prompty_id: promptyId,
       credit_event_id: creditEventId,
       image_path: path,
-      provider: Deno.env.get('ACTIVE_PROVIDER') ?? 'mock',
+      provider: Deno.env.get('ACTIVE_PROVIDER') ?? 'openai',
     })
     if (insErr) throw new Error(`db_error: ${insErr.message}`)
 

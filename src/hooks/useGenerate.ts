@@ -1,8 +1,31 @@
 import { useRef, useState } from 'react'
+import * as Sentry from '@sentry/react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/auth.store'
 
 export type GenState = 'idle' | 'loading' | 'done' | 'error'
+
+interface GenerateResponse {
+  signed_url?: string
+  error?: string
+  balance?: number
+  refunded?: boolean
+}
+
+/** Build the user-facing message and report the failure to Sentry. */
+function reportFailure(
+  promptyId: string,
+  serverError: string | null,
+  fnErrorMessage: string | null,
+): string {
+  const detail = serverError ?? fnErrorMessage ?? 'Erro ao gerar imagem'
+  // Observability: the credit path is critical — capture generation failures.
+  Sentry.captureException(new Error(`generate-image failed: ${detail}`), {
+    tags: { feature: 'image-generation' },
+    extra: { promptyId, serverError },
+  })
+  return detail
+}
 
 export function useGenerate() {
   const [state, setState] = useState<GenState>('idle')
@@ -17,20 +40,24 @@ export function useGenerate() {
     setSignedUrl(null)
     setErrorMsg(null)
 
-    const { data, error } = await supabase.functions.invoke('generate-image', {
+    const res = await supabase.functions.invoke<GenerateResponse>('generate-image', {
       body: { prompty_id: promptyId, rendered_prompt: renderedPrompt },
     })
+    const data = res.data
+    // invoke types `error` loosely (any) — narrow it to read `.message` safely.
+    const fnErrorMessage = res.error ? String((res.error as Error).message ?? '') : null
 
     // Server is the source of truth for credits — refetch on every outcome.
     void useAuthStore.getState().refetchProfile()
     inFlight.current = false
 
-    if (error || !data?.signed_url) {
-      setErrorMsg(data?.error ?? error?.message ?? 'Erro ao gerar imagem')
+    const url = data?.signed_url
+    if (fnErrorMessage || !url) {
+      setErrorMsg(reportFailure(promptyId, data?.error ?? null, fnErrorMessage))
       setState('error')
       return
     }
-    setSignedUrl(data.signed_url)
+    setSignedUrl(url)
     setState('done')
   }
 

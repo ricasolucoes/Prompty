@@ -26,6 +26,8 @@ export default [
       'scripts/**',
       'docs/**',
       '.planning/**',
+      // Deno (Supabase Edge Functions) — outside the frontend TS project; validated by `deno check`.
+      'supabase/functions/**',
     ],
   },
 

@@ -1,10 +1,10 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: unknown
-stopped_at: Phase 6 context updated (OpenAI provider, replan required)
-last_updated: "2026-06-21T22:01:32.522Z"
+milestone: v0.3.0
+milestone_name: Créditos + Geração de Imagem in-app
+status: shipped
+stopped_at: v0.3.0 shipped; post-ship delta (OpenAI gpt-image-1 real provider, mock removed, modal/lightbox, Sentry) implemented and committed
+last_updated: "2026-06-22T00:00:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -19,12 +19,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O usuário copia um prompt pronto, gera uma imagem, e volta para contar como ficou.
-**Current focus:** Phase 06 — geracao-imagem
+**Current focus:** Nenhuma fase ativa — milestone v0.3.0 (Phases 4–6) enviado em 2026-06-21.
 
 ## Current Position
 
-Phase: 06 (geracao-imagem) — EXECUTING
-Plan: 2 of 3
+Milestone: v0.3.0 — SHIPPED (Phases 4, 5, 6 todas Complete)
+Phase: nenhuma em andamento
+Próximo: definir próxima milestone (`/gsd:new-milestone`) quando houver novo escopo.
 
 ## Performance Metrics
 
@@ -184,19 +185,20 @@ Recent decisions affecting current work:
 - [Phase 06-02]: Prompt sanitization (≤1500 chars + injection denylist) runs before spend_credit to avoid wasting credits on rejected input
 - [Phase 06-geracao-imagem]: useGenerate uses inFlight useRef (not state) for GEN-03 double-invoke guard — synchronous early-return
 - [Phase 06-geracao-imagem]: Edge Function exception documented in both CLAUDE.md and AGENTS.md same commit per rule-sync clause
+- [Post-ship v0.3.0]: Provider decided = OpenAI gpt-image-1 (única); mock.ts removido; ACTIVE_PROVIDER default → openai; force-fail hook (__FORCE_FAIL__/GEN_FORCE_FAIL) movido para openai.ts; imagem em modal/lightbox (GeneratedImageModal); Sentry.captureException no useGenerate. Supersede o "ACTIVE_PROVIDER=mock default" da Phase 06-02.
 
 ### Pending Todos
 
-- Provider decision (Gemini/OpenAI/Replicate) needed before Phase 6 starts
-- Set billing alert on chosen provider before Phase 6 deploy
+- Antes do deploy de produção da Edge Function: `supabase secrets set ACTIVE_PROVIDER=openai` + `supabase secrets set OPENAI_API_KEY=<key>` e `supabase functions deploy generate-image`
+- Set billing alert na OpenAI antes de habilitar geração em produção
 
 ### Blockers/Concerns
 
-- Phase 6 blocked on: (1) provider choice, (2) `supabase secrets set ACTIVE_PROVIDER=... GEMINI_API_KEY=...`
+- Geração só fica ativa em produção após setar os secrets acima + deploy da function (provider já decidido = OpenAI)
 - Free tier storage quota (1 GB total): generated images must be WebP < 200KB; not persisted unless submitted as community result
 
 ## Session Continuity
 
-Last session: 2026-06-21T22:01:32.519Z
-Stopped at: Phase 6 context updated (OpenAI provider, replan required)
-Resume file: .planning/phases/06-geracao-imagem/06-CONTEXT.md
+Last session: 2026-06-22
+Stopped at: v0.3.0 shipped; post-ship OpenAI/modal/Sentry delta implemented, tested (229/229) e commitado
+Resume file: —

@@ -14,6 +14,7 @@ import { OptionsSheet } from '@/components/ui/OptionsSheet'
 import { ReportSheet } from '@/components/feed/ReportSheet'
 import { CategorySuggestSheet } from '@/components/feed/CategorySuggestSheet'
 import { CommunityResults } from '@/components/feed/CommunityResults'
+import { GenerateActions } from '@/components/prompty/GenerateActions'
 import { levelOf } from '@/lib/constants/levels'
 import type { Database } from '@/types/database.types'
 
@@ -102,7 +103,7 @@ export function PromptyDetailPage() {
   )
 
   const { copy } = useCopy()
-  const { generate, state: genState, signedUrl, errorMsg } = useGenerate()
+  const { generate, state: genState, signedUrl, errorMsg, reset: resetGen } = useGenerate()
 
   async function handleCopy() {
     if (!prompty) return
@@ -352,69 +353,17 @@ export function PromptyDetailPage() {
           </button>
         )}
 
-        {/* GEN-06: Anonymous user — signup CTA */}
-        {!user && (
-          <button
-            type="button"
-            onClick={() => void nav('/signup')}
-            className="inline-flex w-full items-center justify-center rounded-[14px] px-4 py-3 font-bold"
-            style={{
-              background: 'var(--surface-2)',
-              border: '1px solid var(--line)',
-              color: 'var(--text-1)',
-              fontFamily: 'var(--font-sans, sans-serif)',
-              fontSize: 13.5,
-              lineHeight: 1.2,
-              cursor: 'pointer',
-            }}
-          >
-            Cadastre-se e ganhe 1 crédito para gerar
-          </button>
-        )}
-
-        {/* GEN-07: Logged-in, zero credits — earn nudge (never a paywall) */}
-        {user && (profile?.credits ?? 0) === 0 && (
-          <p
-            style={{
-              margin: 0,
-              fontSize: 13,
-              color: 'var(--text-2)',
-              lineHeight: 1.5,
-              textAlign: 'center',
-            }}
-          >
-            Sem créditos. Contribua para ganhar mais: publique um prompty (+1), envie um resultado
-            aprovado (+1) ou suba de nível (+2).
-          </p>
-        )}
-
-        {/* GEN-01/03/05: Logged-in, has credits — generate button */}
-        {user && (profile?.credits ?? 0) >= 1 && (
-          <PrimaryButton
-            full
-            disabled={genState === 'loading'}
-            icon="wand"
-            onClick={() => void generate(prompty.id, resolved)}
-          >
-            {genState === 'loading' ? 'Gerando imagem (~10s)…' : 'Gerar imagem (1 crédito)'}
-          </PrimaryButton>
-        )}
-
-        {/* GEN-05: Success — inline image */}
-        {genState === 'done' && signedUrl && (
-          <img
-            src={signedUrl}
-            alt="Imagem gerada"
-            style={{ width: '100%', borderRadius: 12, marginTop: 8 }}
-          />
-        )}
-
-        {/* GEN-04/05: Error — message + refund notice */}
-        {genState === 'error' && (
-          <p style={{ color: '#FF3B6B', fontSize: 13, marginTop: 8 }}>
-            {errorMsg} Seu crédito foi devolvido.
-          </p>
-        )}
+        {/* GEN-01/03/04/05/06/07: image-generation states */}
+        <GenerateActions
+          isAnon={!user}
+          credits={profile?.credits ?? 0}
+          genState={genState}
+          signedUrl={signedUrl}
+          errorMsg={errorMsg}
+          onSignup={() => void nav('/signup')}
+          onGenerate={() => void generate(prompty.id, resolved)}
+          onCloseModal={resetGen}
+        />
       </div>
 
       {/* CUR-01 surface: community-uploaded result images — L2+ only */}

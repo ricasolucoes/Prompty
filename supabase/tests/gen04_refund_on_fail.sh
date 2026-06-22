@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# GEN-04: provider failure (mock force-fail) → refund row in credit_events + balance restored.
+# GEN-04: provider failure (force-fail hook) → refund row in credit_events + balance restored.
 # MANUAL-ASSISTED: requires local supabase + functions serve. Force-fail via the __FORCE_FAIL__ prompt.
 set -euo pipefail
 DB="${SUPABASE_DB_URL:-$DATABASE_URL}"
