@@ -186,6 +186,8 @@ Recent decisions affecting current work:
 - [Phase 06-geracao-imagem]: useGenerate uses inFlight useRef (not state) for GEN-03 double-invoke guard — synchronous early-return
 - [Phase 06-geracao-imagem]: Edge Function exception documented in both CLAUDE.md and AGENTS.md same commit per rule-sync clause
 - [Post-ship v0.3.0]: Provider decided = OpenAI gpt-image-1 (única); mock.ts removido; ACTIVE_PROVIDER default → openai; force-fail hook (__FORCE_FAIL__/GEN_FORCE_FAIL) movido para openai.ts; imagem em modal/lightbox (GeneratedImageModal); Sentry.captureException no useGenerate. Supersede o "ACTIVE_PROVIDER=mock default" da Phase 06-02.
+- [Security 2026-06-23]: Review de gamificação achou GAM-001 (CRÍTICO): refund_credit exposto a authenticated sem checar gasto → crédito infinito. Corrigido na migration 20260623000011 (refund só com spent_generation correspondente; REVOKE EXECUTE de update_profile_* — GAM-005). Relatório em .planning/reviews/gamification-review.md. Findings em aberto: GAM-002 (resultados auto-aprovados farmáveis 10/dia), GAM-003 (TOCTOU cap diário no Edge Function), GAM-004 (salto multi-nível sub-credita).
+- [Prod reconcile 2026-06-23]: DB de produção estava ATRÁS do código — faltavam 20260531000010 (app_settings/circuit breaker) e 20260621000010 (phase5 earn). Aplicadas via `supabase db push --include-all` junto com a 011. Edge Function generate-image deployada (ACTIVE v1). Geração in-app agora live: secrets OpenAI + app_settings.generation_enabled=true + função no ar.
 
 ### Pending Todos
 
