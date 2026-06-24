@@ -79,25 +79,23 @@ Deno.serve(async (req: Request) => {
     .maybeSingle()
   if (setting?.value !== 'true') return json({ error: 'generation_disabled' }, 503)
 
-  // 4. Per-user daily cap (count today's generations rows)
-  const since = new Date()
-  since.setUTCHours(0, 0, 0, 0)
-  const { count } = await adminClient
-    .from('generations')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .gte('created_at', since.toISOString())
-  if ((count ?? 0) >= DAILY_CAP) return json({ error: 'daily_cap_reached' }, 429)
-
-  // 5. Pre-mint generation_id BEFORE spend → audit trail (ref_id)
+  // 4. Pre-mint generation_id BEFORE spend → audit trail (ref_id)
   const generationId = crypto.randomUUID()
 
-  // 6. Spend via USER client (auth.uid() must resolve)
-  const { data: spend, error: spendErr } = await userClient.rpc('spend_credit', {
+  // 5. Atomic per-user daily cap + spend via USER client (auth.uid() must resolve).
+  // GAM-003: cap check and spend share one advisory lock in spend_generation_credit,
+  // so concurrent requests cannot exceed DAILY_CAP (no TOCTOU).
+  const { data: spend, error: spendErr } = await userClient.rpc('spend_generation_credit', {
     p_ref: generationId,
+    p_daily_cap: DAILY_CAP,
   })
   const spendRow = Array.isArray(spend) ? spend[0] : spend
-  if (spendErr || !spendRow?.ok) return json({ error: 'no_credits', balance: spendRow?.balance ?? 0 }, 402)
+  if (spendErr || !spendRow?.ok) {
+    if (spendRow?.reason === 'daily_cap') {
+      return json({ error: 'daily_cap_reached', balance: spendRow?.balance ?? 0 }, 429)
+    }
+    return json({ error: 'no_credits', balance: spendRow?.balance ?? 0 }, 402)
+  }
 
   // Resolve the spend ledger row (ref_id = generationId) for the generations audit FK.
   const { data: spendEvent } = await adminClient

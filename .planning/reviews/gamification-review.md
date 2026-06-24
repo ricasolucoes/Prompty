@@ -93,8 +93,11 @@ Por padrão o Postgres concede `EXECUTE` a `PUBLIC`; essas funções ficam expos
 
 ## 5. Checklist de remediação (prioridade)
 
-1. [x] **GAM-001 (crítico):** endurecer `refund_credit` — migration `20260623000011` criada. **Aplicar (`supabase db push`) ANTES do deploy da geração.**
-2. [ ] GAM-005 (low): `REVOKE EXECUTE` de `update_profile_*` (pode ir junto na 011).
-3. [ ] GAM-003 (medium): fechar a janela TOCTOU do cap diário no Edge Function.
-4. [ ] GAM-002 (medium): política de aprovação de resultados (default `false` + moderação) — futuro `LOOP-02`.
-5. [ ] GAM-004 (low): creditar por nível em saltos multi-nível, se desejado.
+1. [x] **GAM-001 (crítico):** `refund_credit` endurecido — migration `20260623000011`, aplicada em prod 2026-06-23.
+2. [x] GAM-005 (low): `REVOKE EXECUTE` de `update_profile_*` — migration `20260623000011`, aplicada.
+3. [x] GAM-003 (medium): cap diário + spend atômicos via `spend_generation_credit` (advisory lock único) + Edge Function — migration `20260624000012`, aplicada e função redeployada (v2).
+4. [x] GAM-002 (medium): crédito de resultado agora exige `image_url` não-vazio (anti-farm) — migration `20260624000012`. Moderação completa (`approved=false` default) segue como futuro `LOOP-02`.
+5. [x] GAM-004 (low): `award_credit_on_level_up` credita +2 POR nível cruzado em saltos multi-nível (ref determinístico por nível) — migration `20260624000012`.
+
+**Status:** todos os achados do review (GAM-001..005) resolvidos e aplicados em produção em 2026-06-24.
+Pendência de processo, não de código: re-rodar o review automatizado multi-agente (interrompido pelo limite de sessão) para cobrir a fundo frontend-trust, app_settings policies e cobertura de testes.
